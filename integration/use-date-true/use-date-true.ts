@@ -47,7 +47,7 @@ export const Todo: MessageFns<Todo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -186,7 +186,7 @@ export const Todo_MapOfTimestampsEntry: MessageFns<Todo_MapOfTimestampsEntry> = 
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

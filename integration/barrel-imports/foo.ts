@@ -27,7 +27,7 @@ export const Foo: MessageFns<Foo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Foo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
     while (reader.pos < end) {
       const tag = reader.uint32();

@@ -1003,7 +1003,7 @@ export const FileDescriptorSet: MessageFns<FileDescriptorSet> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FileDescriptorSet {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileDescriptorSet();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1107,7 +1107,7 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FileDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1307,7 +1307,7 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1438,7 +1438,7 @@ export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_Extensio
 
   decode(input: BinaryReader | Uint8Array, length?: number): DescriptorProto_ExtensionRange {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto_ExtensionRange();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1510,7 +1510,7 @@ export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedR
 
   decode(input: BinaryReader | Uint8Array, length?: number): DescriptorProto_ReservedRange {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto_ReservedRange();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1571,7 +1571,7 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ExtensionRangeOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExtensionRangeOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1667,7 +1667,7 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FieldDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1803,7 +1803,7 @@ export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OneofDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneofDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1876,7 +1876,7 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1964,7 +1964,7 @@ export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorPro
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumDescriptorProto_EnumReservedRange {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumDescriptorProto_EnumReservedRange();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2031,7 +2031,7 @@ export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumValueDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumValueDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2106,7 +2106,7 @@ export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ServiceDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseServiceDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2198,7 +2198,7 @@ export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MethodDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMethodDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2374,7 +2374,7 @@ export const FileOptions: MessageFns<FileOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FileOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2606,7 +2606,7 @@ export const MessageOptions: MessageFns<MessageOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MessageOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessageOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2718,7 +2718,7 @@ export const FieldOptions: MessageFns<FieldOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FieldOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2819,7 +2819,7 @@ export const OneofOptions: MessageFns<OneofOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OneofOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneofOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2878,7 +2878,7 @@ export const EnumOptions: MessageFns<EnumOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2950,7 +2950,7 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumValueOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumValueOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3014,7 +3014,7 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ServiceOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseServiceOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3081,7 +3081,7 @@ export const MethodOptions: MessageFns<MethodOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MethodOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMethodOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3177,7 +3177,7 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): UninterpretedOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUninterpretedOption();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3281,7 +3281,7 @@ export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePa
 
   decode(input: BinaryReader | Uint8Array, length?: number): UninterpretedOption_NamePart {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUninterpretedOption_NamePart();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3342,7 +3342,7 @@ export const SourceCodeInfo: MessageFns<SourceCodeInfo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SourceCodeInfo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSourceCodeInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3418,7 +3418,7 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SourceCodeInfo_Location {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSourceCodeInfo_Location();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3523,7 +3523,7 @@ export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GeneratedCodeInfo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGeneratedCodeInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3587,7 +3587,7 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
 
   decode(input: BinaryReader | Uint8Array, length?: number): GeneratedCodeInfo_Annotation {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGeneratedCodeInfo_Annotation();
     while (reader.pos < end) {
       const tag = reader.uint32();

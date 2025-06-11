@@ -56,7 +56,7 @@ export const Int64FieldOption: MessageFns<Int64FieldOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Int64FieldOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt64FieldOption();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -148,7 +148,7 @@ export const UInt64FieldOption: MessageFns<UInt64FieldOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): UInt64FieldOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUInt64FieldOption();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -240,7 +240,7 @@ export const SInt64FieldOption: MessageFns<SInt64FieldOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SInt64FieldOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSInt64FieldOption();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -332,7 +332,7 @@ export const Fixed64FieldOption: MessageFns<Fixed64FieldOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Fixed64FieldOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFixed64FieldOption();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -424,7 +424,7 @@ export const SFixed64FieldOption: MessageFns<SFixed64FieldOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SFixed64FieldOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSFixed64FieldOption();
     while (reader.pos < end) {
       const tag = reader.uint32();

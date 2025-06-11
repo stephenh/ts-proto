@@ -60,7 +60,7 @@ export const Entity: MessageFns<Entity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Entity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -140,7 +140,7 @@ export const Maps: MessageFns<Maps> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -363,7 +363,7 @@ export const Maps_StrToEntityEntry: MessageFns<Maps_StrToEntityEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_StrToEntityEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_StrToEntityEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -441,7 +441,7 @@ export const Maps_Int32ToInt32Entry: MessageFns<Maps_Int32ToInt32Entry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_Int32ToInt32Entry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_Int32ToInt32Entry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -517,7 +517,7 @@ export const Maps_StringToBytesEntry: MessageFns<Maps_StringToBytesEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_StringToBytesEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_StringToBytesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -593,7 +593,7 @@ export const Maps_Int64ToInt64Entry: MessageFns<Maps_Int64ToInt64Entry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_Int64ToInt64Entry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_Int64ToInt64Entry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -669,7 +669,7 @@ export const Maps_MapOfTimestampsEntry: MessageFns<Maps_MapOfTimestampsEntry> = 
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_MapOfTimestampsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

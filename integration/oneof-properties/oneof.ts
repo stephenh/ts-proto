@@ -135,7 +135,7 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -327,7 +327,7 @@ export const PleaseChoose_Submessage: MessageFns<PleaseChoose_Submessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
       const tag = reader.uint32();

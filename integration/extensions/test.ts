@@ -104,7 +104,7 @@ export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Extendable {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExtendable();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -239,7 +239,7 @@ export const Nested: MessageFns<Nested> & ExtensionHolder<"message", Nested[]> =
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -320,7 +320,7 @@ export const Group: MessageFns<Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();

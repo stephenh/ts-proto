@@ -45,7 +45,7 @@ export const WithEmpty: MessageFns<WithEmpty> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WithEmpty {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -103,7 +103,7 @@ export const WithStruct: MessageFns<WithStruct> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WithStruct {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -161,7 +161,7 @@ export const WithTimestamp: MessageFns<WithTimestamp> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WithTimestamp {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithTimestamp();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -231,7 +231,7 @@ export const WithAll: MessageFns<WithAll> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WithAll {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithAll();
     while (reader.pos < end) {
       const tag = reader.uint32();

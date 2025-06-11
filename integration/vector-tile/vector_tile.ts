@@ -95,7 +95,7 @@ export const Tile: MessageFns<Tile> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -173,7 +173,7 @@ export const Tile_Value: MessageFns<Tile_Value> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile_Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -324,7 +324,7 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile_Feature {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Feature();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -458,7 +458,7 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile_Layer {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Layer();
     while (reader.pos < end) {
       const tag = reader.uint32();

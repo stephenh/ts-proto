@@ -24,7 +24,7 @@ export const SimpleMessage: MessageFns<SimpleMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
