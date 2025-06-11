@@ -1,3 +1,10 @@
+## [2.7.4](https://github.com/stephenh/ts-proto/compare/v2.7.3...v2.7.4) (2025-06-11)
+
+
+### Bug Fixes
+
+* use const for reader end variable ([#1195](https://github.com/stephenh/ts-proto/issues/1195)) ([e97f241](https://github.com/stephenh/ts-proto/commit/e97f241508085e6f1750cd18e15afba68a200412))
+
 ## [2.7.3](https://github.com/stephenh/ts-proto/compare/v2.7.2...v2.7.3) (2025-06-06)
 
 
