@@ -225,7 +225,7 @@ export const GRPCPFieldMaskGRPCS: MessageFns<GRPCPFieldMaskGRPCS> & FieldMaskWra
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPFieldMaskGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPFieldMaskGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();

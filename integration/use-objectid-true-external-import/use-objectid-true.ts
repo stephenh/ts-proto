@@ -47,7 +47,7 @@ export const Todo: MessageFns<Todo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -188,7 +188,7 @@ export const Todo_MapOfOidsEntry: MessageFns<Todo_MapOfOidsEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo_MapOfOidsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfOidsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

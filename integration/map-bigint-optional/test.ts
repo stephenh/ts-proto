@@ -39,7 +39,7 @@ export const MapBigInt: MessageFns<MapBigInt> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMapBigInt();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -150,7 +150,7 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt_MapEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMapBigInt_MapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

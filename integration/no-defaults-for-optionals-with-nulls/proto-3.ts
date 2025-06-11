@@ -61,7 +61,7 @@ export const Proto3TestMessage: MessageFns<Proto3TestMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Proto3TestMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProto3TestMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -221,7 +221,7 @@ export const Proto3TestMessage_MapValueEntry: MessageFns<Proto3TestMessage_MapVa
 
   decode(input: BinaryReader | Uint8Array, length?: number): Proto3TestMessage_MapValueEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProto3TestMessage_MapValueEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

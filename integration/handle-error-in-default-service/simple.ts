@@ -28,7 +28,7 @@ export const GetBasicRequest: MessageFns<GetBasicRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GetBasicRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBasicRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -86,7 +86,7 @@ export const GetBasicResponse: MessageFns<GetBasicResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GetBasicResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBasicResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();

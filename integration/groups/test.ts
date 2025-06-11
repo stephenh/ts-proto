@@ -82,7 +82,7 @@ export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -193,7 +193,7 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -302,7 +302,7 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -455,7 +455,7 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -576,7 +576,7 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -724,7 +724,7 @@ export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -814,7 +814,7 @@ export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Ne
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -904,7 +904,7 @@ export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested_Nested2 {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
     while (reader.pos < end) {
       const tag = reader.uint32();

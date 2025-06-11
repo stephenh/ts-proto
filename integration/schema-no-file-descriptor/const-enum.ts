@@ -78,7 +78,7 @@ export const DividerData: MessageFns<DividerData> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DividerData {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDividerData();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -176,7 +176,7 @@ export const DividerData_TypeMapEntry: MessageFns<DividerData_TypeMapEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DividerData_TypeMapEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDividerData_TypeMapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

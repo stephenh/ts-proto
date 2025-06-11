@@ -59,7 +59,7 @@ export const MyMessage: MessageFns<MyMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MyMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -133,7 +133,7 @@ export const RequestType: MessageFns<RequestType> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): RequestType {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -175,7 +175,7 @@ export const ResponseType: MessageFns<ResponseType> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ResponseType {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
       const tag = reader.uint32();

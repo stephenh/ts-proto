@@ -262,7 +262,7 @@ export const Simple: MessageFns<Simple> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Simple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -418,7 +418,7 @@ export const Child: MessageFns<Child> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -469,7 +469,7 @@ export const Nested: MessageFns<Nested> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -525,7 +525,7 @@ export const Nested_InnerMessage: MessageFns<Nested_InnerMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested_InnerMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -570,7 +570,7 @@ export const Nested_InnerMessage_DeepMessage: MessageFns<Nested_InnerMessage_Dee
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage_DeepMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -610,7 +610,7 @@ export const OneOfMessage: MessageFns<OneOfMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OneOfMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneOfMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -667,7 +667,7 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -736,7 +736,7 @@ export const Entity: MessageFns<Entity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Entity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -785,7 +785,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -872,7 +872,7 @@ export const SimpleWithMap_EntitiesByIdEntry: MessageFns<SimpleWithMap_EntitiesB
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -920,7 +920,7 @@ export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -968,7 +968,7 @@ export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEnt
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1016,7 +1016,7 @@ export const SimpleWithMap_MapOfTimestampsEntry: MessageFns<SimpleWithMap_MapOfT
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_MapOfTimestampsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1064,7 +1064,7 @@ export const SimpleWithMap_MapOfBytesEntry: MessageFns<SimpleWithMap_MapOfBytesE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_MapOfBytesEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfBytesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1109,7 +1109,7 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1152,7 +1152,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry: MessageFns<SimpleWithSnak
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1197,7 +1197,7 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMapOfEnums {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMapOfEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1240,7 +1240,7 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry: MessageFns<SimpleWithMapOfEnum
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMapOfEnums_EnumsByIdEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMapOfEnums_EnumsByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1285,7 +1285,7 @@ export const PingRequest: MessageFns<PingRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PingRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1322,7 +1322,7 @@ export const PingResponse: MessageFns<PingResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PingResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1405,7 +1405,7 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1556,7 +1556,7 @@ export const SimpleButOptional: MessageFns<SimpleButOptional> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleButOptional {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1638,7 +1638,7 @@ export const Empty: MessageFns<Empty> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Empty {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();

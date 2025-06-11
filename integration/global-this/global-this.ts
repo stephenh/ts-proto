@@ -44,7 +44,7 @@ export const Object: MessageFns<Object> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Object {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseObject();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -102,7 +102,7 @@ export const Error: MessageFns<Error> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Error {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -160,7 +160,7 @@ export const String: MessageFns<String> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): String {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseString();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -218,7 +218,7 @@ export const Boolean: MessageFns<Boolean> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Boolean {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBoolean();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -276,7 +276,7 @@ export const Number: MessageFns<Number> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Number {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumber();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -334,7 +334,7 @@ export const Array: MessageFns<Array> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Array {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArray();
     while (reader.pos < end) {
       const tag = reader.uint32();

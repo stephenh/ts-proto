@@ -92,7 +92,7 @@ export const Entity: MessageFns<Entity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Entity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -325,7 +325,7 @@ export const SubEntity: MessageFns<SubEntity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SubEntity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubEntity() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();

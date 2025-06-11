@@ -39,7 +39,7 @@ export const TPartialMessage: MessageFns<TPartialMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartialMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartialMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -123,7 +123,7 @@ export const TPartial: MessageFns<TPartial> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartial {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -324,7 +324,7 @@ export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartial_MapEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial_MapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

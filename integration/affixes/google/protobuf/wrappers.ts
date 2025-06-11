@@ -110,7 +110,7 @@ export const PrefixDoubleValueSuffix: MessageFns<PrefixDoubleValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixDoubleValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixDoubleValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -168,7 +168,7 @@ export const PrefixFloatValueSuffix: MessageFns<PrefixFloatValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixFloatValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixFloatValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -226,7 +226,7 @@ export const PrefixInt64ValueSuffix: MessageFns<PrefixInt64ValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixInt64ValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixInt64ValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -284,7 +284,7 @@ export const PrefixUInt64ValueSuffix: MessageFns<PrefixUInt64ValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixUInt64ValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixUInt64ValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -342,7 +342,7 @@ export const PrefixInt32ValueSuffix: MessageFns<PrefixInt32ValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixInt32ValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixInt32ValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -400,7 +400,7 @@ export const PrefixUInt32ValueSuffix: MessageFns<PrefixUInt32ValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixUInt32ValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixUInt32ValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -458,7 +458,7 @@ export const PrefixBoolValueSuffix: MessageFns<PrefixBoolValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixBoolValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixBoolValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -516,7 +516,7 @@ export const PrefixStringValueSuffix: MessageFns<PrefixStringValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixStringValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixStringValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -574,7 +574,7 @@ export const PrefixBytesValueSuffix: MessageFns<PrefixBytesValueSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixBytesValueSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixBytesValueSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();

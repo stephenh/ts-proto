@@ -273,7 +273,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -914,7 +914,7 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
 
   decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest_TranslationsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -986,7 +986,7 @@ export const Child: MessageFns<Child> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();

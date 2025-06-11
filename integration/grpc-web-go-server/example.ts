@@ -113,7 +113,7 @@ export const DashFlash: MessageFns<DashFlash> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashFlash {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashFlash();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -192,7 +192,7 @@ export const DashUserSettingsState: MessageFns<DashUserSettingsState> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashUserSettingsState {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -283,7 +283,7 @@ export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> 
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashUserSettingsState_URLs {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -365,7 +365,7 @@ export const DashCred: MessageFns<DashCred> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashCred {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashCred();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -467,7 +467,7 @@ export const DashAPICredsCreateReq: MessageFns<DashAPICredsCreateReq> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashAPICredsCreateReq {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsCreateReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -549,7 +549,7 @@ export const DashAPICredsUpdateReq: MessageFns<DashAPICredsUpdateReq> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashAPICredsUpdateReq {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsUpdateReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -651,7 +651,7 @@ export const DashAPICredsDeleteReq: MessageFns<DashAPICredsDeleteReq> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashAPICredsDeleteReq {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsDeleteReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -721,7 +721,7 @@ export const Empty: MessageFns<Empty> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Empty {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();

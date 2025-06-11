@@ -129,7 +129,7 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
 
   decode(input: BinaryReader | Uint8Array, length?: number): Struct {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -240,7 +240,7 @@ export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry, "google.protobuf
 
   decode(input: BinaryReader | Uint8Array, length?: number): Struct_FieldsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -341,7 +341,7 @@ export const Value: MessageFns<Value, "google.protobuf.Value"> & AnyValueWrapper
 
   decode(input: BinaryReader | Uint8Array, length?: number): Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -508,7 +508,7 @@ export const ListValue: MessageFns<ListValue, "google.protobuf.ListValue"> & Lis
 
   decode(input: BinaryReader | Uint8Array, length?: number): ListValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue();
     while (reader.pos < end) {
       const tag = reader.uint32();

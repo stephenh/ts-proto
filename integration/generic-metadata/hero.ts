@@ -41,7 +41,7 @@ export const HeroById: MessageFns<HeroById> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): HeroById {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -99,7 +99,7 @@ export const VillainById: MessageFns<VillainById> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): VillainById {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -160,7 +160,7 @@ export const Hero: MessageFns<Hero> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Hero {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -236,7 +236,7 @@ export const Villain: MessageFns<Villain> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Villain {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
       const tag = reader.uint32();

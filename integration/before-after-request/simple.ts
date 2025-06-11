@@ -94,7 +94,7 @@ export const Simple: MessageFns<Simple> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Simple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -172,7 +172,7 @@ export const DifferentSimple: MessageFns<DifferentSimple> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DifferentSimple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDifferentSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -252,7 +252,7 @@ export const SimpleEnums: MessageFns<SimpleEnums> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleEnums {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -325,7 +325,7 @@ export const FooServiceCreateRequest: MessageFns<FooServiceCreateRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FooServiceCreateRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -383,7 +383,7 @@ export const FooServiceCreateResponse: MessageFns<FooServiceCreateResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FooServiceCreateResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();

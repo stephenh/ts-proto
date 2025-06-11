@@ -29,7 +29,7 @@ export const ProduceRequest: MessageFns<ProduceRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ProduceRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProduceRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -87,7 +87,7 @@ export const ProduceReply: MessageFns<ProduceReply> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ProduceReply {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProduceReply();
     while (reader.pos < end) {
       const tag = reader.uint32();

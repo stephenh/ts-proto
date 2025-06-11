@@ -38,7 +38,7 @@ export const NumPair: MessageFns<NumPair> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): NumPair {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumPair();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -111,7 +111,7 @@ export const NumSingle: MessageFns<NumSingle> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): NumSingle {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumSingle();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -171,7 +171,7 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();

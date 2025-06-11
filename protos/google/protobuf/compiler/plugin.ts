@@ -207,7 +207,7 @@ export const Version = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Version {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseVersion()) as Version;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -331,7 +331,7 @@ export const CodeGeneratorRequest = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseCodeGeneratorRequest()) as CodeGeneratorRequest;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -458,7 +458,7 @@ export const CodeGeneratorResponse = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseCodeGeneratorResponse()) as CodeGeneratorResponse;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -572,7 +572,7 @@ export const CodeGeneratorResponse_File = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse_File {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseCodeGeneratorResponse_File()) as CodeGeneratorResponse_File;
     while (reader.pos < end) {
       const tag = reader.uint32();

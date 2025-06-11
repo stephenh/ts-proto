@@ -119,7 +119,7 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPStructGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPStructGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -225,7 +225,7 @@ export const GRPCPStruct_FieldsEntryGRPCS: MessageFns<GRPCPStruct_FieldsEntryGRP
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPStruct_FieldsEntryGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPStruct_FieldsEntryGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -320,7 +320,7 @@ export const GRPCPValueGRPCS: MessageFns<GRPCPValueGRPCS> & AnyValueWrapperFns =
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPValueGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPValueGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -482,7 +482,7 @@ export const GRPCPListValueGRPCS: MessageFns<GRPCPListValueGRPCS> & ListValueWra
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPListValueGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPListValueGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
