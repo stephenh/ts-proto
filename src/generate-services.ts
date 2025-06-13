@@ -71,7 +71,7 @@ export function generateService(
       const Metadata = imp(options.metadataType);
       params.push(code`metadata?: ${Metadata}`);
     } else if (options.addGrpcMetadata) {
-      const Metadata = imp("Metadata@@grpc/grpc-js");
+      const Metadata = imp("t:Metadata@@grpc/grpc-js");
       params.push(code`metadata?: ${Metadata}`);
     }
 
@@ -113,7 +113,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
-  const metadataType = options.metadataType ? imp(options.metadataType) : imp("Metadata@@grpc/grpc-js");
+  const metadataType = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
 
   const params = [
     ...(options.context ? [code`ctx: Context`] : []),
@@ -421,7 +421,7 @@ function generateCachingRpcMethod(
  */
 export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Code {
   const { options } = ctx;
-  const metadata = options.metadataType ? imp(options.metadataType) : imp("Metadata@@grpc/grpc-js");
+  const metadata = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
   const metadataType = metadata.symbol;
   const maybeContext = options.context ? "<Context>" : "";
   const maybeContextParam = options.context ? "ctx: Context," : "";

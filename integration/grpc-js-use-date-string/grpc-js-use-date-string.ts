@@ -5,13 +5,13 @@
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import {
   type CallOptions,
-  ChannelCredentials,
+  type ChannelCredentials,
   Client,
   type ClientOptions,
   type ClientUnaryCall,
   type handleUnaryCall,
   makeGenericClientConstructor,
-  Metadata,
+  type Metadata,
   type ServiceError,
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";

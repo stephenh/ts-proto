@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto } from "ts-proto-descriptors";
+import type { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.type";
 

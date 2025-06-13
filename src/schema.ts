@@ -13,7 +13,7 @@ import { basicTypeName, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { EnvOption, OutputSchemaOption } from "./options";
 
-const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
+const fileDescriptorProto = imp("t:FileDescriptorProto@ts-proto-descriptors");
 
 const extensionCache: { [key: string]: { [key: string]: FieldDescriptorProto } } = {};
 
