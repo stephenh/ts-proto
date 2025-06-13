@@ -2,7 +2,7 @@
 // source: options.proto
 
 /* eslint-disable */
-import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
+import type { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 import { protoMetadata as protoMetadata2 } from "./something/something";
 

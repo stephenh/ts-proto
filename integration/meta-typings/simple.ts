@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto } from "ts-proto-descriptors";
+import type { FileDescriptorProto } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata3, Timestamp } from "./google/protobuf/timestamp";
 import { BoolValue, Int32Value, protoMetadata as protoMetadata2, StringValue } from "./google/protobuf/wrappers";
 import { DateMessage, protoMetadata as protoMetadata1 } from "./google/type/date";

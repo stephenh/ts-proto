@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { Metadata } from "@grpc/grpc-js";
+import type { Metadata } from "@grpc/grpc-js";
 
 export const protobufPackage = "basic";
 

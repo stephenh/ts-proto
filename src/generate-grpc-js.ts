@@ -7,7 +7,7 @@ import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePref
 import { generateDecoder, generateEncoder } from "./encode";
 
 const CallOptions = imp("t:CallOptions@@grpc/grpc-js");
-const ChannelCredentials = imp("ChannelCredentials@@grpc/grpc-js");
+const ChannelCredentials = imp("t:ChannelCredentials@@grpc/grpc-js");
 const ClientOptions = imp("t:ClientOptions@@grpc/grpc-js");
 const Client = imp("Client@@grpc/grpc-js");
 const ClientDuplexStream = imp("t:ClientDuplexStream@@grpc/grpc-js");
@@ -20,7 +20,7 @@ const handleServerStreamingCall = imp("t:handleServerStreamingCall@@grpc/grpc-js
 const handleUnaryCall = imp("t:handleUnaryCall@@grpc/grpc-js");
 const UntypedServiceImplementation = imp("t:UntypedServiceImplementation@@grpc/grpc-js");
 const makeGenericClientConstructor = imp("makeGenericClientConstructor@@grpc/grpc-js");
-const Metadata = imp("Metadata@@grpc/grpc-js");
+const Metadata = imp("t:Metadata@@grpc/grpc-js");
 const ServiceError = imp("t:ServiceError@@grpc/grpc-js");
 
 /**

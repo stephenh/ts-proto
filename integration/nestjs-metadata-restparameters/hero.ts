@@ -2,7 +2,7 @@
 // source: hero.proto
 
 /* eslint-disable */
-import { Metadata } from "@grpc/grpc-js";
+import type { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 

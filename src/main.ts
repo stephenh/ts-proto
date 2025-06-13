@@ -730,8 +730,8 @@ function makeMessageFns(
   deepPartial: ReturnType<typeof makeDeepPartial>,
   extension: ReturnType<typeof makeExtensionClass>,
 ) {
-  const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
-  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
+  const BinaryWriter = imp("t:BinaryWriter@@bufbuild/protobuf/wire");
+  const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
   const { Exact, DeepPartial } = deepPartial;
   const { Extension } = extension;
   const commonStaticMembers: Code[] = [];
@@ -1372,7 +1372,7 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
 }
 
 function generateEmptyDecode(fullName: string): Code {
-  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
+  const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
 
   return code`
     decode(
