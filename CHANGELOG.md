@@ -1,3 +1,10 @@
+## [2.7.5](https://github.com/stephenh/ts-proto/compare/v2.7.4...v2.7.5) (2025-06-13)
+
+
+### Bug Fixes
+
+* use import type for type-only references ([#1196](https://github.com/stephenh/ts-proto/issues/1196)) ([eab441a](https://github.com/stephenh/ts-proto/commit/eab441a771645683e764ac43e7eb3937fed21e4a))
+
 ## [2.7.4](https://github.com/stephenh/ts-proto/compare/v2.7.3...v2.7.4) (2025-06-11)
 
 
