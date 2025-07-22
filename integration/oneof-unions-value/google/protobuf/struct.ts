@@ -461,7 +461,7 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   wrap(value: any): Value {
     const result = createBaseValue();
     if (value === null) {
-      result.kind = { $case: "nullValue", value };
+      result.kind = { $case: "nullValue", value: NullValue.NULL_VALUE };
     } else if (typeof value === "boolean") {
       result.kind = { $case: "boolValue", value };
     } else if (typeof value === "number") {
@@ -479,7 +479,7 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   },
 
   unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    return message.kind?.value;
+    return (message.kind?.$case === "nullValue") ? null : message.kind?.value;
   },
 };
 
