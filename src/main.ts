@@ -2776,7 +2776,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         const fallback = noDefaultValue ? "undefined" : "[]";
 
         chunks.push(code`
-          ${messageProperty} = ${objectProperty}?.map((e) => ${readSnippet("e")}) || ${fallback};
+          ${messageProperty} = Array.isArray(${objectProperty})? ${objectProperty}.map((e) => ${readSnippet("e")}): ${fallback};
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
