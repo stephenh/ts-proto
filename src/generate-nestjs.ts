@@ -54,7 +54,7 @@ export function generateNestjsServiceController(
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     let returns: Code;
     if (isEmptyType(methodDesc.outputType)) {
-      returns = code`void`;
+      returns = code`void | Promise<void>`;
     } else if (options.returnObservable || methodDesc.serverStreaming) {
       returns = code`${responseObservable(ctx, methodDesc)}`;
     } else {
