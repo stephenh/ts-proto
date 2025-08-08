@@ -141,40 +141,30 @@ function createBaseOptionalsTest(): OptionalsTest {
 
 export const OptionalsTest: MessageFns<OptionalsTest> = {
   encode(message: OptionalsTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    writer.uint32(10).fork();
     for (const v of message.repId) {
-      writer.int32(v);
+      writer.uint32(8).int32(v!);
     }
-    writer.join();
     for (const v of message.repChild) {
       Child.encode(v!, writer.uint32(18).fork()).join();
     }
-    writer.uint32(26).fork();
     for (const v of message.repState) {
-      writer.int32(v);
+      writer.uint32(24).int32(v!);
     }
-    writer.join();
-    writer.uint32(34).fork();
     for (const v of message.repLong) {
-      writer.int64(v);
+      writer.uint32(32).int64(v!);
     }
-    writer.join();
-    writer.uint32(42).fork();
     for (const v of message.repTruth) {
-      writer.bool(v);
+      writer.uint32(40).bool(v!);
     }
-    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(50).string(v!);
     }
     for (const v of message.repData) {
       writer.uint32(58).bytes(v!);
     }
-    writer.uint32(66).fork();
     for (const v of message.repFloat) {
-      writer.float(v);
+      writer.uint32(69).float(v!);
     }
-    writer.join();
     if (message.optId !== undefined && message.optId !== 0) {
       writer.uint32(88).int32(message.optId);
     }
