@@ -415,7 +415,14 @@ export const packed: Extension<number[]> = {
     const values: number[] = [];
     for (const buffer of input) {
       const reader = new BinaryReader(buffer);
-      values.push(reader.int32());
+      if (tag == 42) {
+        const end2 = reader.uint32() + reader.pos;
+        while (reader.pos < end2) {
+          values.push(reader.int32());
+        }
+      } else {
+        values.push(reader.int32());
+      }
     }
 
     return values;
@@ -442,7 +449,14 @@ export const repeated: Extension<number[]> = {
     const values: number[] = [];
     for (const buffer of input) {
       const reader = new BinaryReader(buffer);
-      values.push(reader.int32());
+      if (tag == 50) {
+        const end2 = reader.uint32() + reader.pos;
+        while (reader.pos < end2) {
+          values.push(reader.int32());
+        }
+      } else {
+        values.push(reader.int32());
+      }
     }
 
     return values;

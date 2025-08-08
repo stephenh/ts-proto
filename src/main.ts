@@ -1976,7 +1976,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
   const packedTag =
     isRepeated(extension) && packedType(extension.type) !== undefined ? ((extension.number << 3) | 2) >>> 0 : undefined;
   const singularTag = ((extension.number << 3) | basicWireType(extension.type)) >>> 0;
-  const packed = isRepeated(extension) && packedField(extension, currentFile.isProto3Syntax)
+  const packed = isRepeated(extension) && packedField(extension, currentFile.isProto3Syntax);
   const tag = packed ? packedTag : singularTag;
 
   const chunks: Code[] = [];
@@ -2120,7 +2120,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           const reader = new ${BinaryReader}(buffer);
       `);
 
-      if (!packed) {
+      if (packedTag === undefined) {
         chunks.push(code`
           values.push(${readSnippet});
         `);
