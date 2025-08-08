@@ -1483,7 +1483,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
               ${messageProperty} = [];
             }`
           : "";
-        if (packedType(field.type) === undefined) {
+        if (packedType(field) === undefined) {
           if (options.useOptionals === "all") {
             chunks.push(code`
               ${tagCheck}
@@ -1541,7 +1541,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       `);
     }
 
-    if (!isRepeated(field) || packedType(field.type) === undefined) {
+    if (!isRepeated(field) || packedType(field) === undefined) {
       chunks.push(code`continue; }`);
     }
   });
@@ -1737,7 +1737,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             });
           `);
         }
-      } else if (packedType(field.type) === undefined) {
+      } else if (packedType(field) === undefined) {
         const listWriteSnippet = code`
           for (const v of ${messageProperty}) {
             ${writeSnippet("v!")};
@@ -1965,7 +1965,7 @@ function generateGetExtension(ctx: Context, fullName: string) {
 function generateExtension(ctx: Context, message: DescriptorProto | undefined, extension: FieldDescriptorProto) {
   const type = toTypeName(ctx, message, extension);
   const packedTag =
-    isRepeated(extension) && packedType(extension.type) !== undefined ? ((extension.number << 3) | 2) >>> 0 : undefined;
+    isRepeated(extension) && packedType(extension) !== undefined ? ((extension.number << 3) | 2) >>> 0 : undefined;
   const singularTag = ((extension.number << 3) | basicWireType(extension.type)) >>> 0;
   const tag = packedTag ?? singularTag;
 
@@ -2107,7 +2107,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           const reader = new ${BinaryReader}(buffer);
       `);
 
-      if (packedType(extension.type) === undefined) {
+      if (packedType(extension) === undefined) {
         chunks.push(code`
           values.push(${readSnippet});
         `);

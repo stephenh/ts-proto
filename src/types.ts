@@ -162,8 +162,11 @@ export function toReaderCall(field: FieldDescriptorProto): string {
   }
 }
 
-export function packedType(type: FieldDescriptorProto_Type): number | undefined {
-  switch (type) {
+export function packedType(field: FieldDescriptorProto): number | undefined {
+  if (!field.options?.packed) {
+    return undefined;
+  }
+  switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
       return 1;
     case FieldDescriptorProto_Type.TYPE_FLOAT:
