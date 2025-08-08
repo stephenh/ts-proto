@@ -91,6 +91,9 @@ export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
       if (extension.singularTag !== undefined) {
         delete message._unknownFields[extension.singularTag];
       }
+      if (extension.packedTag !== undefined) {
+        delete message._unknownFields[extension.packedTag];
+      }
     }
 
     if (encoded.length !== 0) {
@@ -151,14 +154,15 @@ export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
       results = extension.decode!(extension.tag, list);
     }
 
-    if (extension.singularTag === undefined) {
+    if (extension.singularTag === undefined || extension.packedTag === undefined) {
       return results;
     }
 
-    list = message._unknownFields[extension.singularTag];
+    const nonDefaultTag = (extension.singularTag === extension.tag) ? extension.packedTag : extension.singularTag;
+    list = message._unknownFields[nonDefaultTag];
 
     if (list !== undefined) {
-      const results2 = extension.decode!(extension.singularTag, list);
+      const results2 = extension.decode!(nonDefaultTag, list);
 
       if (results !== undefined && (results as any).length !== 0) {
         results = (results as any).concat(results2);
@@ -393,33 +397,25 @@ export const Group: MessageFns<Group> = {
 
 export const packed: Extension<number[]> = {
   number: 5,
-  tag: 42,
+  tag: 40,
   singularTag: 40,
+  packedTag: 42,
   repeated: true,
   packed: true,
   encode: (value: number[]): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = new BinaryWriter();
-    writer.fork();
     for (const v of value) {
+      const writer = new BinaryWriter();
       writer.int32(v);
+      encoded.push(writer.finish());
     }
-    writer.join();
-    encoded.push(writer.finish());
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
     for (const buffer of input) {
       const reader = new BinaryReader(buffer);
-      if (tag == 42) {
-        const end2 = reader.uint32() + reader.pos;
-        while (reader.pos < end2) {
-          values.push(reader.int32());
-        }
-      } else {
-        values.push(reader.int32());
-      }
+      values.push(reader.int32());
     }
 
     return values;
@@ -428,33 +424,25 @@ export const packed: Extension<number[]> = {
 
 export const repeated: Extension<number[]> = {
   number: 6,
-  tag: 50,
+  tag: 48,
   singularTag: 48,
+  packedTag: 50,
   repeated: true,
   packed: false,
   encode: (value: number[]): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = new BinaryWriter();
-    writer.fork();
     for (const v of value) {
+      const writer = new BinaryWriter();
       writer.int32(v);
+      encoded.push(writer.finish());
     }
-    writer.join();
-    encoded.push(writer.finish());
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
     for (const buffer of input) {
       const reader = new BinaryReader(buffer);
-      if (tag == 50) {
-        const end2 = reader.uint32() + reader.pos;
-        while (reader.pos < end2) {
-          values.push(reader.int32());
-        }
-      } else {
-        values.push(reader.int32());
-      }
+      values.push(reader.int32());
     }
 
     return values;
@@ -599,6 +587,7 @@ export interface Extension<T> {
   number: number;
   tag: number;
   singularTag?: number;
+  packedTag?: number;
   encode?: (message: T) => Uint8Array[];
   decode?: (tag: number, input: Uint8Array[]) => T;
   repeated: boolean;

@@ -2953,16 +2953,12 @@ function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
 
 export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
   encode(message: SourceCodeInfo_Location, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    writer.uint32(10).fork();
     for (const v of message.path) {
-      writer.int32(v);
+      writer.uint32(8).int32(v!);
     }
-    writer.join();
-    writer.uint32(18).fork();
     for (const v of message.span) {
-      writer.int32(v);
+      writer.uint32(16).int32(v!);
     }
-    writer.join();
     if (message.leadingComments !== undefined && message.leadingComments !== "") {
       writer.uint32(26).string(message.leadingComments);
     }
@@ -3095,11 +3091,9 @@ function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation 
 
 export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotation> = {
   encode(message: GeneratedCodeInfo_Annotation, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    writer.uint32(10).fork();
     for (const v of message.path) {
-      writer.int32(v);
+      writer.uint32(8).int32(v!);
     }
-    writer.join();
     if (message.sourceFile !== undefined && message.sourceFile !== "") {
       writer.uint32(18).string(message.sourceFile);
     }

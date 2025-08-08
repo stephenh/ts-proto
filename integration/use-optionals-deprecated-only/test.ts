@@ -137,11 +137,9 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     }
     writer.join();
     if (message.repState !== undefined && message.repState.length !== 0) {
-      writer.uint32(66).fork();
       for (const v of message.repState) {
-        writer.int32(v);
+        writer.uint32(64).int32(v!);
       }
-      writer.join();
     }
     writer.uint32(74).fork();
     for (const v of message.repStateV2) {

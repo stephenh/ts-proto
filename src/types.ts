@@ -162,11 +162,17 @@ export function toReaderCall(field: FieldDescriptorProto): string {
   }
 }
 
-export function packedType(field: FieldDescriptorProto): number | undefined {
-  if (!field.options?.packed) {
+export function packedField(field: FieldDescriptorProto, isProto3Syntax: boolean): number | undefined {
+  if (isProto3Syntax && field.options?.packed === false) {
+    return undefined;
+  } else if (!isProto3Syntax && !!field.options?.packed) {
     return undefined;
   }
-  switch (field.type) {
+  return packedType(field.type);
+}
+
+export function packedType(type: FieldDescriptorProto_Type): number | undefined {
+  switch (type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
       return 1;
     case FieldDescriptorProto_Type.TYPE_FLOAT:
