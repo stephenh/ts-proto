@@ -88,6 +88,7 @@ import {
   isWithinOneOf,
   isWithinOneOfThatShouldBeUnion,
   notDefaultCheck,
+  packedField,
   packedType,
   shouldGenerateJSMapType,
   toReaderCall,
@@ -1116,6 +1117,7 @@ function makeExtensionClass(options: Options) {
         number: number;
         tag: number;
         singularTag?: number;
+        packedTag?: number;
         encode?: (message: T) => Uint8Array[];
         decode?: (tag: number, input: Uint8Array[]) => T;
         repeated: boolean;
@@ -1737,7 +1739,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             });
           `);
         }
-      } else if (packedType(field.type) === undefined) {
+      } else if (packedField(field, currentFile.isProto3Syntax) === undefined) {
         const listWriteSnippet = code`
           for (const v of ${messageProperty}) {
             ${writeSnippet("v!")};
@@ -1913,6 +1915,9 @@ function generateSetExtension(ctx: Context, fullName: string) {
         if (extension.singularTag !== undefined) {
           delete message._unknownFields[extension.singularTag];
         }
+        if (extension.packedTag !== undefined) {
+          delete message._unknownFields[extension.packedTag];
+        }
       }
 
       if (encoded.length !== 0) {
@@ -1941,14 +1946,17 @@ function generateGetExtension(ctx: Context, fullName: string) {
         results = extension.decode!(extension.tag, list);
       }
 
-      if (extension.singularTag === undefined) {
+      if (extension.singularTag === undefined ||
+          extension.packedTag === undefined) {
         return results;
       }
 
-      list = message._unknownFields[extension.singularTag];
+      const nonDefaultTag = (extension.singularTag === extension.tag) ?
+          extension.packedTag : extension.singularTag;
+      list = message._unknownFields[nonDefaultTag];
 
       if (list !== undefined) {
-        const results2 = extension.decode!(extension.singularTag, list);
+        const results2 = extension.decode!(nonDefaultTag, list);
 
         if (results !== undefined && (results as any).length !== 0) {
           results = (results as any).concat(results2);
@@ -1964,10 +1972,12 @@ function generateGetExtension(ctx: Context, fullName: string) {
 
 function generateExtension(ctx: Context, message: DescriptorProto | undefined, extension: FieldDescriptorProto) {
   const type = toTypeName(ctx, message, extension);
+  const { currentFile } = ctx;
   const packedTag =
     isRepeated(extension) && packedType(extension.type) !== undefined ? ((extension.number << 3) | 2) >>> 0 : undefined;
   const singularTag = ((extension.number << 3) | basicWireType(extension.type)) >>> 0;
-  const tag = packedTag ?? singularTag;
+  const packed = isRepeated(extension) && packedField(extension, currentFile.isProto3Syntax);
+  const tag = packed ? packedTag : singularTag;
 
   const chunks: Code[] = [];
 
@@ -1976,7 +1986,10 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
   chunks.push(code`number: ${extension.number},`);
   chunks.push(code`tag: ${tag},`);
 
-  if (packedTag !== undefined) chunks.push(code`singularTag: ${singularTag},`);
+  if (packedTag !== undefined) {
+    chunks.push(code`singularTag: ${singularTag},`);
+    chunks.push(code`packedTag: ${packedTag},`);
+  }
   chunks.push(code`repeated: ${extension.label == FieldDescriptorProto_Label.LABEL_REPEATED},`);
   chunks.push(code`packed: ${extension.options?.packed ? true : false},`);
 
@@ -2048,7 +2061,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
     const writeSnippet = getEncodeSnippet(ctx, extension);
 
     if (isRepeated(extension)) {
-      if (packedTag === undefined) {
+      if (!packed) {
         chunks.push(code`
           for (const v of value) {
             const writer = new ${BinaryWriter}();
@@ -2107,7 +2120,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           const reader = new ${BinaryReader}(buffer);
       `);
 
-      if (packedType(extension.type) === undefined) {
+      if (packedTag === undefined) {
         chunks.push(code`
           values.push(${readSnippet});
         `);
