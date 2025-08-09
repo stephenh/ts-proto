@@ -689,7 +689,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     "Builtin",
     code`type Builtin = Date | Function | Uint8Array | string | number | boolean |${
       options.forceLong === LongOption.BIGINT ? " bigint |" : ""
-    } undefined;`,
+    } ${options.useNullAsOptional === true ? "null |" : ""} undefined;`,
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
