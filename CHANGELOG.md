@@ -1,3 +1,10 @@
+## [2.7.7](https://github.com/stephenh/ts-proto/compare/v2.7.6...v2.7.7) (2025-08-09)
+
+
+### Bug Fixes
+
+* Honour packed repeated fields encoding for proto2 ([#1210](https://github.com/stephenh/ts-proto/issues/1210)) ([8b071d3](https://github.com/stephenh/ts-proto/commit/8b071d35f48fcf901d83a019d3620ad672ce2048))
+
 ## [2.7.6](https://github.com/stephenh/ts-proto/compare/v2.7.5...v2.7.6) (2025-08-08)
 
 
