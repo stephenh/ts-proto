@@ -163,12 +163,8 @@ export function toReaderCall(field: FieldDescriptorProto): string {
 }
 
 export function packedField(field: FieldDescriptorProto, isProto3Syntax: boolean): number | undefined {
-  if (isProto3Syntax && field.options?.packed === false) {
-    return undefined;
-  } else if (!isProto3Syntax && !!field.options?.packed) {
-    return undefined;
-  }
-  return packedType(field.type);
+  const shouldPack = field.options?.packed ?? isProto3Syntax;
+  return shouldPack ? packedType(field.type) : undefined;
 }
 
 export function packedType(type: FieldDescriptorProto_Type): number | undefined {

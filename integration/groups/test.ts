@@ -271,11 +271,9 @@ function createBaseGroupsRepeatedTest(): GroupsRepeatedTest {
 export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
   encode(message: GroupsRepeatedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
-      writer.uint32(10).fork();
       for (const v of message.int1) {
-        writer.int32(v);
+        writer.uint32(8).int32(v!);
       }
-      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -283,11 +281,9 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
       }
     }
     if (message.int3 !== undefined && message.int3.length !== 0) {
-      writer.uint32(26).fork();
       for (const v of message.int3) {
-        writer.int32(v);
+        writer.uint32(24).int32(v!);
       }
-      writer.join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
@@ -545,11 +541,9 @@ function createBaseGroupsNestedTest(): GroupsNestedTest {
 export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
   encode(message: GroupsNestedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
-      writer.uint32(10).fork();
       for (const v of message.int1) {
-        writer.int32(v);
+        writer.uint32(8).int32(v!);
       }
-      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -557,11 +551,9 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
       }
     }
     if (message.int3 !== undefined && message.int3.length !== 0) {
-      writer.uint32(26).fork();
       for (const v of message.int3) {
-        writer.int32(v);
+        writer.uint32(24).int32(v!);
       }
-      writer.join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {

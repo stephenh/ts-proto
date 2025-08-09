@@ -112,11 +112,9 @@ export const TPartial: MessageFns<TPartial> = {
       }
     }
     if (message.repeatedNumber !== undefined && message.repeatedNumber.length !== 0) {
-      writer.uint32(58).fork();
       for (const v of message.repeatedNumber) {
-        writer.int32(v);
+        writer.uint32(56).int32(v!);
       }
-      writer.join();
     }
     return writer;
   },
