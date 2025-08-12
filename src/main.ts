@@ -717,7 +717,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
         ? globalThis.Array<DeepPartial<U>>
         : T extends ReadonlyArray<infer U>
         ? ReadonlyArray<DeepPartial<U>>${oneofCase}
-        : T extends {}
+        : T extends object
         ? { [K in ${keys}]?: DeepPartial<T[K]> }
         : Partial<T>;
     `,
