@@ -76,6 +76,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
         ${requestMessage}.fromPartial(request),
+        ${requestMessage}.toJSON(request as any),
         metadata,
         ${useAbortSignal ? "abortSignal," : ""}
       );
@@ -181,6 +182,7 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       request: any,
+      protoReq: any,
       metadata: grpc.Metadata | undefined,
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${wrapper}<any>;
@@ -255,6 +257,7 @@ function createPromiseUnaryMethod(ctx: Context): Code {
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
+      protoReq: any,
       metadata: grpc.Metadata | undefined,
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): Promise<any> {
@@ -300,6 +303,7 @@ function createObservableUnaryMethod(ctx: Context): Code {
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
+      protoReq: any,
       metadata: grpc.Metadata | undefined,
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${observableType(ctx)}<any> {
