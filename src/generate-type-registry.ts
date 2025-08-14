@@ -48,7 +48,7 @@ function generateMessageType(ctx: BaseContext): Code {
 
   if (ctx.options.outputJsonMethods) {
     chunks.push(code`fromJSON(object: any): Message;`);
-    chunks.push(code`toJSON(message: Message): unknown;`);
+    chunks.push(code`toJSON(message: Message, isProto?: boolean): unknown;`);
   }
 
   if (ctx.options.outputPartialMethods) {

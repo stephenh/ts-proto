@@ -76,7 +76,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
         ${requestMessage}.fromPartial(request),
-        ${requestMessage}.toJSON(request as any),
+        ${requestMessage}.toJSON(request as any, true),
         metadata,
         ${useAbortSignal ? "abortSignal," : ""}
       );

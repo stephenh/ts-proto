@@ -789,7 +789,7 @@ function makeMessageFns(
       commonStaticMembers.push(code`fromJSON(object: any): T;`);
     }
     if (options.outputJsonMethods === true || options.outputJsonMethods === "to-only") {
-      commonStaticMembers.push(code`toJSON(message: T): unknown;`);
+      commonStaticMembers.push(code`toJSON(message: T, isProto?: boolean): unknown;`);
     }
   }
 
@@ -2461,9 +2461,11 @@ function generateToJson(
   }
 
   // create the basic function declaration
+  // isProto 是否返回proto原始命名字段
   chunks.push(code`
-    toJSON(${messageDesc.field.length > 0 ? "message" : "_"}: ${fullName}): unknown {
+    toJSON(${messageDesc.field.length > 0 ? "message" : "_"}: ${fullName}, isProto?: boolean): unknown {
       const obj: any = {};
+      const obj2: any = {};
   `);
 
   let currentIfTarget = "";
@@ -2473,6 +2475,7 @@ function generateToJson(
     const fieldName = getFieldName(field, options);
     const jsonName = getFieldJsonName(field, options);
     const jsonProperty = getPropertyAccessor("obj", jsonName);
+    const protoProperty = getPropertyAccessor("obj2", field.name);
     const messageProperty = getPropertyAccessor("message", fieldName);
 
     const readSnippet = (from: string): Code => {
@@ -2565,8 +2568,10 @@ function generateToJson(
         chunks.push(code`
           if (${messageProperty}?.size) {
             ${jsonProperty} = {};
+            ${protoProperty} = {};
             ${messageProperty}.forEach((v, k) => {
               ${jsonProperty}[${i}] = ${readSnippet("v")};
+              ${protoProperty}[${i}] = ${readSnippet("v")};
             });
           }
         `);
@@ -2576,8 +2581,10 @@ function generateToJson(
             const entries = Object.entries(${messageProperty});
             if (entries.length > 0) {
               ${jsonProperty} = {};
+              ${protoProperty} = {};
               entries.forEach(([k, v]) => {
                 ${jsonProperty}[${i}] = ${readSnippet("v")};
+                ${protoProperty}[${i}] = ${readSnippet("v")};
               });
             }
           }
@@ -2590,6 +2597,7 @@ function generateToJson(
       chunks.push(code`
         if (${messageProperty}?.length) {
           ${jsonProperty} = ${messageProperty}${maybeMap};
+          ${protoProperty} = ${messageProperty}${maybeMap};
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -2603,6 +2611,7 @@ function generateToJson(
           currentIfTarget === oneofNameWithMessage ? "else " : ""
         }if (${oneofNameWithMessage}?.$case === '${fieldName}') {
           ${jsonProperty} = ${readSnippet(`${oneofNameWithMessage}.${valueName}`)};
+          ${protoProperty} = ${readSnippet(`${oneofNameWithMessage}.${valueName}`)};
         }
       `);
       currentIfTarget = oneofNameWithMessage;
@@ -2616,11 +2625,12 @@ function generateToJson(
       chunks.push(code`
         if (${check}) {
           ${jsonProperty} = ${readSnippet(`${messageProperty}`)};
+          ${protoProperty} = ${readSnippet(`${messageProperty}`)};
         }
       `);
     }
   });
-  chunks.push(code`return obj;`);
+  chunks.push(code`return isProto ? obj2 : obj;`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
 }
