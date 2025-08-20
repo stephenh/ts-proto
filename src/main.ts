@@ -130,6 +130,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     options.useOptionals = "messages";
   }
 
+
   // Google's protofiles are organized like Java, where package == the folder the file
   // is in, and file == a specific service within the package. I.e. you can have multiple
   // company/foo.proto and company/bar.proto files, where package would be 'company'.
@@ -356,6 +357,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     );
   }
 
+  // 生成的代码将包含 proto2 扩展
   if (options.outputExtensions) {
     for (const extension of fileDesc.extension) {
       const { name, type, extensionInfo } = generateExtension(ctx, undefined, extension);
@@ -2478,7 +2480,7 @@ function generateToJson(
     const protoProperty = getPropertyAccessor("obj2", field.name);
     const messageProperty = getPropertyAccessor("message", fieldName);
 
-    const readSnippet = (from: string): Code => {
+    const readSnippet = (from: string, isProto?: boolean): Code => {
       if (isEnum(field)) {
         const toJson = getEnumMethod(ctx, field.typeName, "ToJSON");
         return code`${toJson}(${from})`;
@@ -2527,16 +2529,16 @@ function generateToJson(
           return code`${from}`;
         } else {
           const type = basicTypeName(ctx, valueType);
-          return code`${type}.toJSON(${from})`;
+          return code`${type}.toJSON(${from}${isProto ? ', true' : ''})`;
         }
       } else if (isAnyValueType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.toJSON(${type}.wrap(${from}))`;
+        return code`${type}.toJSON(${type}.wrap(${from})${isProto ? ', true' : ''})`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.toJSON(${from})`;
+        return code`${type}.toJSON(${from}${isProto ? ', true' : ''})`;
       } else if (isBytes(field)) {
         return code`${utils.base64FromBytes}(${from})`;
       } else if (isLong(field) && isJsTypeFieldOption(options, field)) {
@@ -2594,10 +2596,11 @@ function generateToJson(
       // Arrays might need their elements transformed
       const needMap = readSnippet("e").toCodeString([]) !== "e";
       const maybeMap = needMap ? code`.map(e => ${readSnippet("e")})` : "";
+      const maybeMap2 = needMap ? code`.map(e => ${readSnippet("e", true)})` : "";
       chunks.push(code`
         if (${messageProperty}?.length) {
           ${jsonProperty} = ${messageProperty}${maybeMap};
-          ${protoProperty} = ${messageProperty}${maybeMap};
+          ${protoProperty} = ${messageProperty}${maybeMap2};
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
