@@ -73,10 +73,11 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
       metadata?: grpc.Metadata,
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${returns} {
+      const _request = ${requestMessage}.fromPartial(request)
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
-        ${requestMessage}.fromPartial(request),
-        ${requestMessage}.toJSON(request as any, true),
+        _request,
+        ${requestMessage}.toJSON(_request, true),
         metadata,
         ${useAbortSignal ? "abortSignal," : ""}
       );
