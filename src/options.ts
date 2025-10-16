@@ -11,6 +11,7 @@ export enum DateOption {
   DATE = "date",
   STRING = "string",
   STRING_NANO = "string-nano",
+  TEMPORAL = "temporal",
   TIMESTAMP = "timestamp",
 }
 
