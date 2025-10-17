@@ -992,15 +992,16 @@ function makeTimestampMethods(
         : options.useDate === DateOption.TEMPORAL
           ? code`
             function toTimestamp(instant: Temporal.Instant): ${Timestamp} {
-              const epochSeconds = Math.trunc(instant.epochMilliseconds / 1e3);
+              const date = {
+                getTime: (): number => Math.trunc(instant.epochMilliseconds / 1_000),
+              } as const;
+              const seconds = ${seconds};
               const remainder = ${bytes.globalThis}.Temporal.Instant
-                .fromEpochMilliseconds(epochSeconds * 1e3)
+                .fromEpochMilliseconds(instant.epochMilliseconds)
                 .until(instant);
+              const nanos = (remainder.milliseconds * 1_000_000) + (remainder.microseconds * 1_000) + remainder.nanoseconds;
             
-              return {
-                seconds: epochSeconds,
-                nanos: (remainder.milliseconds * 1e6) + (remainder.microseconds * 1e3) + remainder.nanoseconds,
-              };
+              return { ${maybeTypeField} seconds, nanos };
             }
           `
           : code`
@@ -1041,8 +1042,9 @@ function makeTimestampMethods(
         : options.useDate === DateOption.TEMPORAL
           ? code`
             function fromTimestamp(t: ${Timestamp}): Temporal.Instant {
+              const seconds = ${toNumberCode} || 0;
               return ${bytes.globalThis}.Temporal.Instant
-                .fromEpochMilliseconds(t.seconds * 1e3)
+                .fromEpochMilliseconds(seconds * 1_000)
                 .add(${bytes.globalThis}.Temporal.Duration.from({ nanoseconds: t.nanos }));
             }
           `
