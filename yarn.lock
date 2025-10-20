@@ -7608,7 +7608,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"temporal-spec@npm:0.3.0":
+"temporal-spec@npm:0.3.0, temporal-spec@npm:^0.3.0":
   version: 0.3.0
   resolution: "temporal-spec@npm:0.3.0"
   checksum: 10/5863e3e3f364a5cf64bf999c85bf19b08924a91ee8d618489d9bf6cfff2452e4f916080c8ede93fc91de609200fc20002928e0146c7fc15375b123b20234799b
@@ -7854,6 +7854,7 @@ __metadata:
     rxjs: "npm:^7.8.1"
     semantic-release: "npm:^24.0.0"
     temporal-polyfill: "npm:^0.3.0"
+    temporal-spec: "npm:^0.3.0"
     ts-jest: "npm:^29.3.4"
     ts-poet: "npm:^6.12.0"
     ts-proto-descriptors: "npm:2.0.0"
