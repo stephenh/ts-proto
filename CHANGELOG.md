@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/stephenh/ts-proto/compare/v2.7.7...v2.8.0) (2025-10-21)
+
+
+### Features
+
+* add option for using Temporal timestamp representation ([#1219](https://github.com/stephenh/ts-proto/issues/1219)) ([c46c020](https://github.com/stephenh/ts-proto/commit/c46c0201125821fe44bdc7db8bf917054d01b600))
+
 ## [2.7.7](https://github.com/stephenh/ts-proto/compare/v2.7.6...v2.7.7) (2025-08-09)
 
 
