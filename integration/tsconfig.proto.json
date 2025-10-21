@@ -4,7 +4,8 @@
     "lib": ["es2018", "DOM"],
     "esModuleInterop": false,
     "noUnusedParameters": false,
-    "noUnusedLocals": false
+    "noUnusedLocals": false,
+    "types": ["temporal-spec/global.d.ts"]
   },
   "include": [
     "**/*.ts"

@@ -666,6 +666,10 @@ export function messageToTypeName(
       return code`Date`;
     }
 
+    if (options.useDate === DateOption.TEMPORAL) {
+      return code`Temporal.Instant`;
+    }
+
     if (options.useDate == DateOption.STRING || options.useDate == DateOption.STRING_NANO) {
       return code`string`;
     }

@@ -1072,13 +1072,15 @@ ExampleMessage.encode({ anything: true });
 The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
 The `useJsonTimestamp` flag controls precision when `useDate` is `false`.
 
-| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` | `useDate=string-nano` |
-| --------------------------- | ---------------------- | ------------------------------------ | ---------------- | --------------------- |
-| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         | `string`              |
+| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` | `useDate=string-nano` | `useDate=temporal` |
+| --------------------------- | ---------------------- | ------------------------------------ | ---------------- | --------------------- | ------------------ |
+| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         | `string`              | `Temporal.Instant` |
 
 When using `useDate=false` and `useJsonTimestamp=raw` timestamp is represented as `{ seconds: number, nanos: number }`, but has nanosecond precision.
 
 When using `useDate=string-nano` timestamp is represented as an ISO string with nanosecond precision `1970-01-01T14:27:59.987654321Z` and relies on [nano-date](https://www.npmjs.com/package/nano-date) library for conversion. You'll need to install it in your project.
+
+When using `useDate=temporal` timestamp is represented as a [Temporal.Instant](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/Instant) object with nanosecond precision. Since the [Temporal](https://github.com/tc39/proposal-temporal) proposal isn't yet fully implemented in all browsers, this will rely on having a polyfilled environment, such as through [temporal-polyfill](https://www.npmjs.com/package/temporal-polyfill). You'll need to install it in your project. Enabling this feature _may_ also require ensuring you have `BigInt` support, either directly or through a polyfill, depending on your choice of `Temporal` library.
 
 # Number Types
 

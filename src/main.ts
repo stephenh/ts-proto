@@ -685,11 +685,19 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   const maybeLong =
     options.forceLong === LongOption.LONG ? code` : T extends ${longs.Long} ? string | number | Long ` : "";
 
+  const optionalBuiltins: string[] = [];
+  if (options.forceLong === LongOption.BIGINT) {
+    optionalBuiltins.push("bigint");
+  }
+  if (options.useDate === DateOption.TEMPORAL) {
+    optionalBuiltins.push("Temporal.Instant");
+  }
+
   const Builtin = conditionalOutput(
     "Builtin",
-    code`type Builtin = Date | Function | Uint8Array | string | number | boolean |${
-      options.forceLong === LongOption.BIGINT ? " bigint |" : ""
-    } undefined;`,
+    code`type Builtin = Date | Function | Uint8Array | string | number | boolean ${
+      optionalBuiltins.length ? `| ${optionalBuiltins.join(" | ")} ` : ""
+    }| undefined;`,
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
@@ -981,7 +989,22 @@ function makeTimestampMethods(
             return { ${maybeTypeField} seconds, nanos };
           }
         `
-        : code`
+        : options.useDate === DateOption.TEMPORAL
+          ? code`
+            function toTimestamp(instant: Temporal.Instant): ${Timestamp} {
+              const date = {
+                getTime: (): number => Math.trunc(instant.epochMilliseconds / 1_000),
+              } as const;
+              const seconds = ${seconds};
+              const remainder = ${bytes.globalThis}.Temporal.Instant
+                .fromEpochMilliseconds(instant.epochMilliseconds)
+                .until(instant);
+              const nanos = (remainder.milliseconds * 1_000_000) + (remainder.microseconds * 1_000) + remainder.nanoseconds;
+            
+              return { ${maybeTypeField} seconds, nanos };
+            }
+          `
+          : code`
           function toTimestamp(date: Date): ${Timestamp} {
             const seconds = ${seconds};
             const nanos = (date.getTime() % 1_000) * 1_000_000;
@@ -1016,7 +1039,16 @@ function makeTimestampMethods(
             return nanoDate.toISOStringFull();
           }
         `
-        : code`
+        : options.useDate === DateOption.TEMPORAL
+          ? code`
+            function fromTimestamp(t: ${Timestamp}): Temporal.Instant {
+              const seconds = ${toNumberCode} || 0;
+              return ${bytes.globalThis}.Temporal.Instant
+                .fromEpochMilliseconds(seconds * 1_000)
+                .add(${bytes.globalThis}.Temporal.Duration.from({ nanoseconds: t.nanos }));
+            }
+          `
+          : code`
           function fromTimestamp(t: ${Timestamp}): Date {
             let millis = (${toNumberCode} || 0) * 1_000;
             millis += (t.nanos || 0) / 1_000_000;
@@ -1039,7 +1071,19 @@ function makeTimestampMethods(
           }
         }
       `
-      : code`
+      : options.useDate === DateOption.TEMPORAL
+        ? code`
+          function fromJsonTimestamp(o: any): Temporal.Instant {
+            if (o instanceof ${bytes.globalThis}.Date) {
+              return ${bytes.globalThis}.Temporal.Instant.fromEpochMilliseconds(o.getTime());
+            } else if (typeof o === "string") {
+              return ${bytes.globalThis}.Temporal.Instant.from(o);
+            } else {
+              return ${fromTimestamp}(${wrapTypeName(options, "Timestamp")}.fromJSON(o));
+            }
+          }
+        `
+        : code`
         function fromJsonTimestamp(o: any): ${wrapTypeName(options, "Timestamp")} {
           if (o instanceof ${bytes.globalThis}.Date) {
             return ${toTimestamp}(o);
@@ -1351,7 +1395,8 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
     isTimestamp(field) &&
     (options.useDate === DateOption.DATE ||
       options.useDate === DateOption.STRING ||
-      options.useDate === DateOption.STRING_NANO)
+      options.useDate === DateOption.STRING_NANO ||
+      options.useDate === DateOption.TEMPORAL)
   ) {
     const type = basicTypeName(ctx, field, { keepValueType: true });
     readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
@@ -1634,7 +1679,8 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     isTimestamp(field) &&
     (options.useDate === DateOption.DATE ||
       options.useDate === DateOption.STRING ||
-      options.useDate === DateOption.STRING_NANO)
+      options.useDate === DateOption.STRING_NANO ||
+      options.useDate === DateOption.TEMPORAL)
   ) {
     const tag = ((field.number << 3) | 2) >>> 0;
     const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -2028,7 +2074,8 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
         isTimestamp(field) &&
         (options.useDate === DateOption.DATE ||
           options.useDate === DateOption.STRING ||
-          options.useDate === DateOption.STRING_NANO)
+          options.useDate === DateOption.STRING_NANO ||
+          options.useDate === DateOption.TEMPORAL)
       ) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
         return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).join()`;
@@ -2255,7 +2302,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         return code`${utils.globalThis}.String(${from})`;
       } else if (
         isTimestamp(field) &&
-        (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
+        (options.useDate === DateOption.DATE ||
+          options.useDate === DateOption.TEMPORAL ||
+          options.useDate === DateOption.TIMESTAMP)
       ) {
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isAnyValueType(field) || isStructType(field)) {
@@ -2307,7 +2356,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             return code`${utils.globalThis}.String(${from})`;
           } else if (
             isTimestamp(valueField) &&
-            (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
+            (options.useDate === DateOption.DATE ||
+              options.useDate === DateOption.TEMPORAL ||
+              options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
           } else if (isValueType(ctx, valueField)) {
@@ -2493,6 +2544,8 @@ function generateToJson(
         return code`${from}.toString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
         return code`${from}.toISOString()`;
+      } else if (isTimestamp(field) && options.useDate === DateOption.TEMPORAL) {
+        return code`${from}.toString()`;
       } else if (
         isTimestamp(field) &&
         (options.useDate === DateOption.STRING || options.useDate === DateOption.STRING_NANO)
@@ -2515,6 +2568,8 @@ function generateToJson(
           return code`${from}.toString()`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.DATE) {
           return code`${from}.toISOString()`;
+        } else if (isTimestamp(valueType) && options.useDate === DateOption.TEMPORAL) {
+          return code`${from}.toString()`;
         } else if (
           isTimestamp(valueType) &&
           (options.useDate === DateOption.STRING || options.useDate === DateOption.STRING_NANO)
@@ -2702,7 +2757,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         (isTimestamp(field) &&
           (options.useDate === DateOption.DATE ||
             options.useDate === DateOption.STRING ||
-            options.useDate === DateOption.STRING_NANO)) ||
+            options.useDate === DateOption.STRING_NANO ||
+            options.useDate === DateOption.TEMPORAL)) ||
         isValueType(ctx, field)
       ) {
         return code`${from}`;
@@ -2730,7 +2786,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             isTimestamp(valueField) &&
             (options.useDate === DateOption.DATE ||
               options.useDate === DateOption.STRING ||
-              options.useDate === DateOption.STRING_NANO)
+              options.useDate === DateOption.STRING_NANO ||
+              options.useDate === DateOption.TEMPORAL)
           ) {
             return code`${from}`;
           } else if (isValueType(ctx, valueField)) {

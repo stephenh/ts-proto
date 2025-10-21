@@ -7599,6 +7599,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"temporal-polyfill@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "temporal-polyfill@npm:0.3.0"
+  dependencies:
+    temporal-spec: "npm:0.3.0"
+  checksum: 10/e4f5c0e546bf663720569b8b68fc41aa43ea891a77043a5614f6c1f2109cd01fe60c90b9de2f5d4f92f3155bfbdd17ad3ec7de1e9aaf01fa3cf156f230a0e41a
+  languageName: node
+  linkType: hard
+
+"temporal-spec@npm:0.3.0, temporal-spec@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "temporal-spec@npm:0.3.0"
+  checksum: 10/5863e3e3f364a5cf64bf999c85bf19b08924a91ee8d618489d9bf6cfff2452e4f916080c8ede93fc91de609200fc20002928e0146c7fc15375b123b20234799b
+  languageName: node
+  linkType: hard
+
 "tempy@npm:^3.0.0":
   version: 3.0.0
   resolution: "tempy@npm:3.0.0"
@@ -7837,6 +7853,8 @@ __metadata:
     reflect-metadata: "npm:^0.1.13"
     rxjs: "npm:^7.8.1"
     semantic-release: "npm:^24.0.0"
+    temporal-polyfill: "npm:^0.3.0"
+    temporal-spec: "npm:^0.3.0"
     ts-jest: "npm:^29.3.4"
     ts-poet: "npm:^6.12.0"
     ts-proto-descriptors: "npm:2.0.0"
