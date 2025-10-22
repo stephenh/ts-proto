@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/stephenh/ts-proto/compare/v2.8.0...v2.8.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* fix double division, fix loss of millisecond unit ([#1221](https://github.com/stephenh/ts-proto/issues/1221)) ([d25e922](https://github.com/stephenh/ts-proto/commit/d25e922ccd3ee5b78064df1012d79def00075032))
+
 # [2.8.0](https://github.com/stephenh/ts-proto/compare/v2.7.7...v2.8.0) (2025-10-21)
 
 
