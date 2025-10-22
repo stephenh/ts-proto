@@ -160,9 +160,9 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(instant: Temporal.Instant): Timestamp {
-  const date = { getTime: (): number => Math.trunc(instant.epochMilliseconds / 1_000) } as const;
+  const date = { getTime: (): number => instant.epochMilliseconds } as const;
   const seconds = BigInt(Math.trunc(date.getTime() / 1_000));
-  const remainder = globalThis.Temporal.Instant.fromEpochMilliseconds(instant.epochMilliseconds).until(instant);
+  const remainder = instant.round({ smallestUnit: "seconds", roundingMode: "floor" }).until(instant);
   const nanos = (remainder.milliseconds * 1_000_000) + (remainder.microseconds * 1_000) + remainder.nanoseconds;
 
   return { seconds, nanos };

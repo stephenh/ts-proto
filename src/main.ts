@@ -993,12 +993,10 @@ function makeTimestampMethods(
           ? code`
             function toTimestamp(instant: Temporal.Instant): ${Timestamp} {
               const date = {
-                getTime: (): number => Math.trunc(instant.epochMilliseconds / 1_000),
+                getTime: (): number => instant.epochMilliseconds,
               } as const;
               const seconds = ${seconds};
-              const remainder = ${bytes.globalThis}.Temporal.Instant
-                .fromEpochMilliseconds(instant.epochMilliseconds)
-                .until(instant);
+              const remainder = instant.round({ smallestUnit: "seconds",  roundingMode: "floor" }).until(instant);
               const nanos = (remainder.milliseconds * 1_000_000) + (remainder.microseconds * 1_000) + remainder.nanoseconds;
             
               return { ${maybeTypeField} seconds, nanos };
