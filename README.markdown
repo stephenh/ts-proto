@@ -392,6 +392,16 @@ Generated code will be placed in the Gradle build directory.
 
   `FooBar.FOO_BAR_BAZ = "FOO_BAR_BAZ"` will generate `FooBar.BAZ = "FOO_BAR_BAZ"`
 
+  If any value in the enum would be made invalid by removing the enum name, the enum name will be present for all the values in the enum.
+
+  `FooBar.FOO_BAR_1 = "FOO_BAR_BAZ"` will generate `FooBar.FOO_BAR_1 = "FOO_BAR_BAZ"`
+
+  `FooBar.FOO_BAR_1A = "FOO_BAR_BAZ"` will generate `FooBar.FOO_BAR_1A = "FOO_BAR_BAZ"`
+
+  `FooBar.FOO_BAR_Infinity = "FOO_BAR_BAZ"` will generate `FooBar.FOO_BAR_Infinity = "FOO_BAR_BAZ"` (this is technically valid but is likely to lead to downstream issues)
+
+  `FooBar.FOO_BAR_INFINITY = "FOO_BAR_BAZ"` will generate `FooBar.INFINITY = "FOO_BAR_BAZ"`
+
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 - With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case in both the message keys and the `toJSON` / `fromJSON` methods.
