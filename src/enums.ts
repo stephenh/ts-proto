@@ -258,7 +258,7 @@ export function generateEnumToNumber(
 
 const withoutEnumPrefix = (valueName: string, enumName: string) => valueName.replace(`${camelToSnake(enumName)}_`, "");
 
-const isNumeric = (str: string) => isNaN(Number(str));
+const isNumeric = (str: string) => !isNaN(Number(str));
 
 export function getMemberName(
   ctx: Context,
