@@ -1,3 +1,10 @@
+## [2.8.3](https://github.com/stephenh/ts-proto/compare/v2.8.2...v2.8.3) (2025-10-29)
+
+
+### Bug Fixes
+
+* NullValue handling when oneof=unions-value is set ([#1203](https://github.com/stephenh/ts-proto/issues/1203)) ([6d57de9](https://github.com/stephenh/ts-proto/commit/6d57de9151b0971cb3adff9fa9029f379e9946c1)), closes [#1202](https://github.com/stephenh/ts-proto/issues/1202)
+
 ## [2.8.2](https://github.com/stephenh/ts-proto/compare/v2.8.1...v2.8.2) (2025-10-29)
 
 
