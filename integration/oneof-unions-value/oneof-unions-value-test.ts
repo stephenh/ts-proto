@@ -137,4 +137,17 @@ describe('oneof=unions-value', () => {
     let decoded = PleaseChoose.decode(encoded);
     expect(decoded).toEqual(obj);
   });
+
+  it('handles null values', () => {
+    let obj: PleaseChoose = {
+      name: 'Debbie',
+      age: 37,
+      choice: { $case: 'aNumber', value: 42 },
+      signature: new Uint8Array([0xab, 0xcd]),
+      value: null,
+    };
+    let encoded = PleaseChoose.encode(obj).finish();
+    let decoded = PleaseChoose.decode(encoded);
+    expect(decoded).toEqual(obj);
+  });
 });

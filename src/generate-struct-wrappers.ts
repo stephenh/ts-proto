@@ -226,7 +226,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', value };
+          result.kind = {$case: '${fieldNames.nullValue}', value: ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', value };
         } else if (typeof value === 'number') {
@@ -343,7 +343,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         ctx.options,
         "Value",
       )}): string | number | boolean | Object | null | Array<any> | undefined {
-        return message.kind?.value;
+        return (message.kind?.$case === '${fieldNames.nullValue}') ? null : message.kind?.value;
       }`);
     } else {
       chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
