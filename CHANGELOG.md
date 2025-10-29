@@ -1,3 +1,10 @@
+## [2.8.2](https://github.com/stephenh/ts-proto/compare/v2.8.1...v2.8.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* Keep enum prefix if would be numeric without ([#1223](https://github.com/stephenh/ts-proto/issues/1223)) ([a6bad92](https://github.com/stephenh/ts-proto/commit/a6bad92255bcb735c64e16d5c44c0f71dc784fdc))
+
 ## [2.8.1](https://github.com/stephenh/ts-proto/compare/v2.8.0...v2.8.1) (2025-10-22)
 
 
