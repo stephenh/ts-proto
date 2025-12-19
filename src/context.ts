@@ -35,9 +35,5 @@ function isProto3Edition(edition: Edition | undefined): boolean {
   if (edition === undefined) {
     return false;
   }
-  return (
-    edition === Edition.EDITION_PROTO3 ||
-    edition === Edition.EDITION_2023 ||
-    edition === Edition.EDITION_2024
-  );
+  return edition === Edition.EDITION_PROTO3 || edition === Edition.EDITION_2023 || edition === Edition.EDITION_2024;
 }
