@@ -76,7 +76,8 @@ async function main() {
 
   const response = CodeGeneratorResponse.fromPartial({
     file: files,
-    supportedFeatures: CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL,
+    supportedFeatures:
+      CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL | CodeGeneratorResponse_Feature.FEATURE_SUPPORTS_EDITIONS,
   });
   const buffer = CodeGeneratorResponse.encode(response).finish();
   const write = promisify(process.stdout.write as (buffer: Buffer) => boolean).bind(process.stdout);

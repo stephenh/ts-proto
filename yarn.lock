@@ -7805,12 +7805,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-proto-descriptors@npm:2.0.0":
+"ts-proto-descriptors@file:protos::locator=ts-proto%40workspace%3A.":
   version: 2.0.0
-  resolution: "ts-proto-descriptors@npm:2.0.0"
+  resolution: "ts-proto-descriptors@file:protos#protos::hash=16666f&locator=ts-proto%40workspace%3A."
   dependencies:
     "@bufbuild/protobuf": "npm:^2.0.0"
-  checksum: 10/409abadbcbd06fba36d25ba1bb65ff0003680b60183e203f42511846eb4352142fb3b8a033f1dbe33e44c19867e8540b27c186b674fa1f317114ffe22e82390c
+  checksum: 10/5dbefb752c757cc0d48c1bbd9caab6ff5cca009929c791516558ff5903767799b497ade11798b92ff7fd9280e5b4f5d9e2227d1ca5970576aa9e760cdd28cb2e
   languageName: node
   linkType: hard
 
@@ -7857,7 +7857,7 @@ __metadata:
     temporal-spec: "npm:^0.3.0"
     ts-jest: "npm:^29.3.4"
     ts-poet: "npm:^6.12.0"
-    ts-proto-descriptors: "npm:2.0.0"
+    ts-proto-descriptors: "file:protos"
     tsx: "npm:^4.19.4"
     typescript: "npm:^5.8.3"
     uglify-js: "npm:^3.17.4"

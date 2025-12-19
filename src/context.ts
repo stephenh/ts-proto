@@ -1,7 +1,7 @@
 import { TypeMap } from "./types";
 import { Utils } from "./main";
 import { Options } from "./options";
-import { FileDescriptorProto } from "ts-proto-descriptors";
+import { Edition, FileDescriptorProto } from "ts-proto-descriptors";
 
 /** Provides a parameter object for passing around the various context/config data. */
 export interface BaseContext {
@@ -16,8 +16,28 @@ export interface Context extends BaseContext {
 
 export interface FileContext {
   isProto3Syntax: boolean;
+  isEdition: boolean;
+  edition: Edition | undefined;
 }
 
-export function createFileContext(file: FileDescriptorProto) {
-  return { isProto3Syntax: file.syntax === "proto3" };
+export function createFileContext(file: FileDescriptorProto): FileContext {
+  const edition = file.edition !== Edition.EDITION_UNKNOWN ? file.edition : undefined;
+  const isEdition = edition !== undefined;
+  const isProto3Syntax = file.syntax === "proto3" || (file.syntax !== "proto2" && isProto3Edition(edition));
+  return {
+    isProto3Syntax,
+    isEdition,
+    edition,
+  };
+}
+
+function isProto3Edition(edition: Edition | undefined): boolean {
+  if (edition === undefined) {
+    return false;
+  }
+  return (
+    edition === Edition.EDITION_PROTO3 ||
+    edition === Edition.EDITION_2023 ||
+    edition === Edition.EDITION_2024
+  );
 }
