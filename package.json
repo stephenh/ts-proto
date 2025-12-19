@@ -56,6 +56,7 @@
     "nice-grpc": "^2.1.4",
     "object-hash": "^3.0.0",
     "prettier": "^3.5.3",
+    "prettier-legacy": "npm:prettier@2.8.8",
     "protobufjs": "^7.2.4",
     "protobufjs-cli": "^1.1.1",
     "reflect-metadata": "^0.1.13",

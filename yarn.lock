@@ -6625,6 +6625,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier-legacy@npm:prettier@2.8.8":
+  version: 2.8.8
+  resolution: "prettier@npm:2.8.8"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 10/00cdb6ab0281f98306cd1847425c24cbaaa48a5ff03633945ab4c701901b8e96ad558eb0777364ffc312f437af9b5a07d0f45346266e8245beaf6247b9c62b24
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^3.5.3":
   version: 3.5.3
   resolution: "prettier@npm:3.5.3"
@@ -7848,6 +7857,7 @@ __metadata:
     nice-grpc: "npm:^2.1.4"
     object-hash: "npm:^3.0.0"
     prettier: "npm:^3.5.3"
+    prettier-legacy: "npm:prettier@2.8.8"
     protobufjs: "npm:^7.2.4"
     protobufjs-cli: "npm:^1.1.1"
     reflect-metadata: "npm:^0.1.13"
