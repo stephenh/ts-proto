@@ -2,7 +2,7 @@ import { Context } from "../src/context";
 import { getMemberName } from "../src/enums";
 import { makeUtils } from "../src/main";
 import { Options, optionsFromParameter } from "../src/options";
-import { EnumDescriptorProto, EnumValueDescriptorProto } from "ts-proto-descriptors";
+import { EnumDescriptorProto, EnumValueDescriptorProto, SymbolVisibility } from "ts-proto-descriptors";
 
 const contextFromParameter = (parameter?: string): Context => {
   const opts: Options = optionsFromParameter(parameter);
@@ -12,6 +12,8 @@ const contextFromParameter = (parameter?: string): Context => {
     utils: makeUtils(opts),
     currentFile: {
       isProto3Syntax: true,
+      isEdition: false,
+      edition: undefined,
     },
   };
 };
@@ -25,6 +27,7 @@ const createEnumDescriptor = (name: string, values: EnumValueDescriptorProto[]):
   options: undefined,
   reservedRange: [],
   reservedName: [],
+  visibility: SymbolVisibility.VISIBILITY_UNSET,
 });
 
 const EnumWithoutNumerics = createEnumDescriptor("NoNumerics", [
