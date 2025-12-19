@@ -458,6 +458,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": [],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "DoubleValue",
       "field": [{
@@ -481,6 +482,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FloatValue",
       "field": [{
@@ -504,6 +506,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Int64Value",
       "field": [{
@@ -527,6 +530,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "UInt64Value",
       "field": [{
@@ -550,6 +554,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Int32Value",
       "field": [{
@@ -573,6 +578,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "UInt32Value",
       "field": [{
@@ -596,6 +602,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "BoolValue",
       "field": [{
@@ -619,6 +626,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "StringValue",
       "field": [{
@@ -642,6 +650,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "BytesValue",
       "field": [{
@@ -665,6 +674,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -680,7 +690,6 @@ export const protoMetadata: ProtoMetadata = {
       "ccGenericServices": false,
       "javaGenericServices": false,
       "pyGenericServices": false,
-      "phpGenericServices": false,
       "deprecated": false,
       "ccEnableArenas": true,
       "objcClassPrefix": "GPB",
@@ -690,6 +699,7 @@ export const protoMetadata: ProtoMetadata = {
       "phpNamespace": "",
       "phpMetadataNamespace": "",
       "rubyPackage": "",
+      "features": undefined,
       "uninterpretedOption": [],
     },
     "sourceCodeInfo": {
@@ -813,6 +823,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: {
     ".google.protobuf.DoubleValue": DoubleValue,

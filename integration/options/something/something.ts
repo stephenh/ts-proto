@@ -101,6 +101,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": ["google/protobuf/descriptor.proto"],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "Something",
       "field": [{
@@ -136,6 +137,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -155,6 +157,7 @@ export const protoMetadata: ProtoMetadata = {
     "options": undefined,
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: { ".something.Something": Something },
   dependencies: [protoMetadata1],
