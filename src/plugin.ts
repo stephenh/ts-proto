@@ -12,6 +12,8 @@ import { BaseContext, createFileContext } from "./context";
 import { getTsPoetOpts, optionsFromParameter } from "./options";
 import { generateTypeRegistry } from "./generate-type-registry";
 
+const FEATURE_SUPPORTS_EDITIONS = 2;
+
 // this would be the plugin called by the protoc compiler
 async function main() {
   const stdin = await readToBuffer(process.stdin);
@@ -76,7 +78,7 @@ async function main() {
 
   const response = CodeGeneratorResponse.fromPartial({
     file: files,
-    supportedFeatures: CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL,
+    supportedFeatures: CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL | FEATURE_SUPPORTS_EDITIONS,
   });
   const buffer = CodeGeneratorResponse.encode(response).finish();
   const write = promisify(process.stdout.write as (buffer: Buffer) => boolean).bind(process.stdout);

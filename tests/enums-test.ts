@@ -12,6 +12,8 @@ const contextFromParameter = (parameter?: string): Context => {
     utils: makeUtils(opts),
     currentFile: {
       isProto3Syntax: true,
+      isEdition: false,
+      edition: undefined,
     },
   };
 };
