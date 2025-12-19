@@ -2,6 +2,7 @@ import {
   CodeGeneratorRequest,
   CodeGeneratorResponse,
   CodeGeneratorResponse_Feature,
+  Edition,
   FileDescriptorProto,
 } from "ts-proto-descriptors";
 import { promisify } from "util";
@@ -78,6 +79,8 @@ async function main() {
     file: files,
     supportedFeatures:
       CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL | CodeGeneratorResponse_Feature.FEATURE_SUPPORTS_EDITIONS,
+    minimumEdition: Edition.EDITION_PROTO2,
+    maximumEdition: Edition.EDITION_2024,
   });
   const buffer = CodeGeneratorResponse.encode(response).finish();
   const write = promisify(process.stdout.write as (buffer: Buffer) => boolean).bind(process.stdout);
