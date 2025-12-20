@@ -70,8 +70,9 @@ jobs:
       - name: Release
         id: release
         run: yarn semantic-release
+        # Use ADMIN_TOKEN so we're allowed to git push the changelog
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     outputs:
       release_version: ${{ steps.release.outputs.release_version }}
