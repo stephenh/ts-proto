@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/stephenh/ts-proto/compare/v2.8.3...v2.9.0) (2025-12-20)
+
+
+### Features
+
+* **editions:** support editions in plugin ([#1234](https://github.com/stephenh/ts-proto/issues/1234)) ([19ce1e3](https://github.com/stephenh/ts-proto/commit/19ce1e3eba0c61c3c9ba5da318c559d3929ee5f8))
+
 ## [2.8.3](https://github.com/stephenh/ts-proto/compare/v2.8.2...v2.8.3) (2025-10-29)
 
 
