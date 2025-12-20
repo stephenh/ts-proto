@@ -58,6 +58,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        # Keep this persist-credentials so that ADMIN_TOKEN below works & we can git push
         with:
           persist-credentials: false
       - name: Setup Node.js
