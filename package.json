@@ -3,7 +3,10 @@
   "version": "2.8.3",
   "description": "",
   "main": "build/src/plugin.js",
-  "repository": "github:stephenh/ts-proto",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:stephenh/ts-proto.git"
+  },
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },
