@@ -77,6 +77,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": ["google/protobuf/timestamp.proto"],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "ImportedThing",
       "field": [{
@@ -100,6 +101,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -107,6 +109,7 @@ export const protoMetadata: ProtoMetadata = {
     "options": undefined,
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: { ".simple.ImportedThing": ImportedThing },
   dependencies: [protoMetadata1],

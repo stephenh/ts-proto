@@ -982,6 +982,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": [],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "FileDescriptorSet",
       "field": [{
@@ -1005,6 +1006,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FileDescriptorProto",
       "field": [{
@@ -1160,6 +1162,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "DescriptorProto",
       "field": [{
@@ -1331,6 +1334,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "ReservedRange",
         "field": [{
@@ -1366,6 +1370,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -1373,6 +1378,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ExtensionRangeOptions",
       "field": [{
@@ -1396,6 +1402,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FieldDescriptorProto",
       "field": [{
@@ -1558,6 +1565,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "Label",
         "value": [{ "name": "LABEL_OPTIONAL", "number": 1, "options": undefined }, {
@@ -1568,12 +1576,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "OneofDescriptorProto",
       "field": [{
@@ -1609,6 +1619,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumDescriptorProto",
       "field": [{
@@ -1708,6 +1719,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -1715,6 +1727,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumValueDescriptorProto",
       "field": [{
@@ -1762,6 +1775,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ServiceDescriptorProto",
       "field": [{
@@ -1809,6 +1823,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "MethodDescriptorProto",
       "field": [{
@@ -1892,6 +1907,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FileOptions",
       "field": [{
@@ -1945,8 +1961,15 @@ export const protoMetadata: ProtoMetadata = {
           "packed": false,
           "jstype": 0,
           "lazy": false,
+          "unverifiedLazy": false,
           "deprecated": true,
           "weak": false,
+          "debugRedact": false,
+          "retention": 0,
+          "targets": [],
+          "editionDefaults": [],
+          "features": undefined,
+          "featureSupport": undefined,
           "uninterpretedOption": [],
         },
         "proto3Optional": false,
@@ -2167,12 +2190,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [{ "start": 38, "end": 39 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "MessageOptions",
       "field": [{
@@ -2247,6 +2272,7 @@ export const protoMetadata: ProtoMetadata = {
         "end": 9,
       }, { "start": 9, "end": 10 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FieldOptions",
       "field": [{
@@ -2346,6 +2372,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "JSType",
         "value": [{ "name": "JS_NORMAL", "number": 0, "options": undefined }, {
@@ -2356,12 +2383,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [{ "start": 4, "end": 5 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "OneofOptions",
       "field": [{
@@ -2385,6 +2414,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumOptions",
       "field": [{
@@ -2432,6 +2462,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [{ "start": 5, "end": 6 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumValueOptions",
       "field": [{
@@ -2467,6 +2498,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ServiceOptions",
       "field": [{
@@ -2502,6 +2534,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "MethodOptions",
       "field": [{
@@ -2553,12 +2586,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "UninterpretedOption",
       "field": [{
@@ -2682,6 +2717,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -2689,6 +2725,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SourceCodeInfo",
       "field": [{
@@ -2722,8 +2759,15 @@ export const protoMetadata: ProtoMetadata = {
             "packed": true,
             "jstype": 0,
             "lazy": false,
+            "unverifiedLazy": false,
             "deprecated": false,
             "weak": false,
+            "debugRedact": false,
+            "retention": 0,
+            "targets": [],
+            "editionDefaults": [],
+            "features": undefined,
+            "featureSupport": undefined,
             "uninterpretedOption": [],
           },
           "proto3Optional": false,
@@ -2742,8 +2786,15 @@ export const protoMetadata: ProtoMetadata = {
             "packed": true,
             "jstype": 0,
             "lazy": false,
+            "unverifiedLazy": false,
             "deprecated": false,
             "weak": false,
+            "debugRedact": false,
+            "retention": 0,
+            "targets": [],
+            "editionDefaults": [],
+            "features": undefined,
+            "featureSupport": undefined,
             "uninterpretedOption": [],
           },
           "proto3Optional": false,
@@ -2792,6 +2843,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -2799,6 +2851,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "GeneratedCodeInfo",
       "field": [{
@@ -2832,8 +2885,15 @@ export const protoMetadata: ProtoMetadata = {
             "packed": true,
             "jstype": 0,
             "lazy": false,
+            "unverifiedLazy": false,
             "deprecated": false,
             "weak": false,
+            "debugRedact": false,
+            "retention": 0,
+            "targets": [],
+            "editionDefaults": [],
+            "features": undefined,
+            "featureSupport": undefined,
             "uninterpretedOption": [],
           },
           "proto3Optional": false,
@@ -2882,6 +2942,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -2889,6 +2950,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -2904,7 +2966,6 @@ export const protoMetadata: ProtoMetadata = {
       "ccGenericServices": false,
       "javaGenericServices": false,
       "pyGenericServices": false,
-      "phpGenericServices": false,
       "deprecated": false,
       "ccEnableArenas": true,
       "objcClassPrefix": "GPB",
@@ -2914,6 +2975,7 @@ export const protoMetadata: ProtoMetadata = {
       "phpNamespace": "",
       "phpMetadataNamespace": "",
       "rubyPackage": "",
+      "features": undefined,
       "uninterpretedOption": [],
     },
     "sourceCodeInfo": {
@@ -3745,6 +3807,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "",
+    "edition": 0,
   },
   references: {
     ".google.protobuf.FieldDescriptorProto.Type": FieldDescriptorProto_Type,

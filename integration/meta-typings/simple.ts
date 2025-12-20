@@ -1710,6 +1710,7 @@ export const protoMetadata: ProtoMetadata = {
     ],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "Simple",
       "field": [{
@@ -1877,6 +1878,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Child",
       "field": [{
@@ -1916,12 +1918,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Nested",
       "field": [{
@@ -2013,6 +2017,7 @@ export const protoMetadata: ProtoMetadata = {
           "options": undefined,
           "reservedRange": [],
           "reservedName": [],
+          "visibility": 0,
         }],
         "enumType": [],
         "extensionRange": [],
@@ -2020,6 +2025,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [{
         "name": "InnerEnum",
@@ -2031,12 +2037,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "OneOfMessage",
       "field": [{
@@ -2072,6 +2080,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SimpleWithWrappers",
       "field": [{
@@ -2143,6 +2152,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Entity",
       "field": [{
@@ -2166,6 +2176,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SimpleWithMap",
       "field": [{
@@ -2267,10 +2278,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "NameLookupEntry",
         "field": [{
@@ -2308,10 +2322,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "IntLookupEntry",
         "field": [{
@@ -2349,10 +2366,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "MapOfTimestampsEntry",
         "field": [{
@@ -2390,10 +2410,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "MapOfBytesEntry",
         "field": [{
@@ -2431,10 +2454,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -2442,6 +2468,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SimpleWithSnakeCaseMap",
       "field": [{
@@ -2495,10 +2522,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -2506,6 +2536,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SimpleWithMapOfEnums",
       "field": [{
@@ -2559,10 +2590,13 @@ export const protoMetadata: ProtoMetadata = {
           "noStandardDescriptorAccessor": false,
           "deprecated": false,
           "mapEntry": true,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
           "uninterpretedOption": [],
         },
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -2570,6 +2604,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "PingRequest",
       "field": [{
@@ -2593,6 +2628,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "PingResponse",
       "field": [{
@@ -2616,6 +2652,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Numbers",
       "field": [{
@@ -2771,6 +2808,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SimpleButOptional",
       "field": [{
@@ -2874,6 +2912,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "Empty",
       "field": [],
@@ -2885,6 +2924,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [{
       "name": "StateEnum",
@@ -2896,6 +2936,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "service": [{
       "name": "PingService",
@@ -2990,6 +3031,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: {
     ".simple.StateEnum": StateEnum,

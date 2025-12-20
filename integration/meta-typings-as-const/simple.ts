@@ -84,6 +84,7 @@ export const protoMetadata = {
     "dependency": ["google/protobuf/descriptor.proto"],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "Test",
       "field": [{
@@ -107,17 +108,35 @@ export const protoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [{
       "name": "TestEnum",
-      "value": [{ "name": "VALUE_A", "number": 0, "options": { "deprecated": false, "uninterpretedOption": [] } }, {
+      "value": [{
+        "name": "VALUE_A",
+        "number": 0,
+        "options": {
+          "deprecated": false,
+          "features": undefined,
+          "debugRedact": false,
+          "featureSupport": undefined,
+          "uninterpretedOption": [],
+        },
+      }, {
         "name": "VALUE_B",
         "number": 1,
-        "options": { "deprecated": false, "uninterpretedOption": [] },
+        "options": {
+          "deprecated": false,
+          "features": undefined,
+          "debugRedact": false,
+          "featureSupport": undefined,
+          "uninterpretedOption": [],
+        },
       }],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "service": [],
     "extension": [{
@@ -144,6 +163,7 @@ export const protoMetadata = {
       }],
     },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: { ".simple.TestEnum": TestEnum, ".simple.Test": Test },
   dependencies: [protoMetadata1],
