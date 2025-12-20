@@ -1,6 +1,5 @@
 module.exports = {
   branches: ["main", { name: "alpha", prerelease: true }],
-  repositoryUrl: "https://github.com/stephenh/ts-proto.git",
   plugins: [
     ["@semantic-release/commit-analyzer", { preset: "conventionalcommits" }],
     "@semantic-release/release-notes-generator",

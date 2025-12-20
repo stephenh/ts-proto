@@ -59,6 +59,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        env:
+          token: ${{ secrets.ADMIN_TOKEN }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
