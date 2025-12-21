@@ -442,6 +442,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@bufbuild/protobuf@npm:^2.10.2":
+  version: 2.10.2
+  resolution: "@bufbuild/protobuf@npm:2.10.2"
+  checksum: 10/1e31a696153ef4e0b466792b298aaeec044ec5d9d84846db870ca18abdc06672323c0aa47c5df7e9492829f5aa7f9f2bb8028b48dc944cf1d75367c4d769967a
+  languageName: node
+  linkType: hard
+
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -7821,7 +7828,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts-proto@workspace:."
   dependencies:
-    "@bufbuild/protobuf": "npm:^2.0.0"
+    "@bufbuild/protobuf": "npm:^2.10.2"
     "@grpc/grpc-js": "npm:^1.8.17"
     "@grpc/proto-loader": "npm:^0.7.8"
     "@improbable-eng/grpc-web": "npm:^0.14.1"
