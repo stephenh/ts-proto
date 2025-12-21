@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/stephenh/ts-proto/compare/v2.9.0...v2.10.0) (2025-12-21)
+
+
+### Features
+
+* Upgrade buf/protobuf. ([#1236](https://github.com/stephenh/ts-proto/issues/1236)) ([88e38b6](https://github.com/stephenh/ts-proto/commit/88e38b6fa3222af4e7914d6bc12bca3b68e33cd2))
+
 # [2.9.0](https://github.com/stephenh/ts-proto/compare/v2.8.3...v2.9.0) (2025-12-20)
 
 
