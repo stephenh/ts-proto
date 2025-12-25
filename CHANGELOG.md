@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/stephenh/ts-proto/compare/v2.10.0...v2.10.1) (2025-12-25)
+
+
+### Bug Fixes
+
+* Use globalThis.Object to avoid name collision with the message name ([#1240](https://github.com/stephenh/ts-proto/issues/1240)) ([d5713c9](https://github.com/stephenh/ts-proto/commit/d5713c999821e32619953d2449bdef8fd3fb012f)), closes [#1239](https://github.com/stephenh/ts-proto/issues/1239) [#988](https://github.com/stephenh/ts-proto/issues/988)
+
 # [2.10.0](https://github.com/stephenh/ts-proto/compare/v2.9.0...v2.10.0) (2025-12-21)
 
 
