@@ -115,7 +115,7 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
   $type: "google.protobuf.Struct" as const,
 
   encode(message: Struct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    globalThis.Object.entries(message.fields).forEach(([key, value]: [string, any | undefined]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode(
           { $type: "google.protobuf.Struct.FieldsEntry", key: key as any, value },
@@ -157,10 +157,13 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
     return {
       $type: Struct.$type,
       fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
+          (acc: { [key: string]: any | undefined }, [key, value]: [string, any]) => {
+            acc[key] = value as any | undefined;
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -168,7 +171,7 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
   toJSON(message: Struct): unknown {
     const obj: any = {};
     if (message.fields) {
-      const entries = Object.entries(message.fields);
+      const entries = globalThis.Object.entries(message.fields) as [string, any | undefined][];
       if (entries.length > 0) {
         obj.fields = {};
         entries.forEach(([k, v]) => {
@@ -184,8 +187,8 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
   },
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct();
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
+    message.fields = (globalThis.Object.entries(object.fields ?? {}) as [string, any | undefined][]).reduce(
+      (acc: { [key: string]: any | undefined }, [key, value]: [string, any | undefined]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -200,7 +203,7 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields[key] = object[key];
       }
     }
@@ -210,7 +213,7 @@ export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrappe
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of Object.keys(message.fields)) {
+      for (const key of globalThis.Object.keys(message.fields)) {
         object[key] = message.fields[key];
       }
     }

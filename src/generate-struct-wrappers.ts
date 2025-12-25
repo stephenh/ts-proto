@@ -43,7 +43,7 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
-        for (const key of Object.keys(object)) {
+        for (const key of ${ctx.utils.globalThis}.Object.keys(object)) {
           ${setStatement}
         }
       }
@@ -116,7 +116,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
       chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
-          for (const key of Object.keys(message.fields)) {
+          for (const key of ${ctx.utils.globalThis}.Object.keys(message.fields)) {
             object[key] = Value.unwrap(message.fields[key]);
           }
         }
@@ -190,7 +190,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
-        for (const key of Object.keys(object)) {
+        for (const key of ${ctx.utils.globalThis}.Object.keys(object)) {
           ${setStatement}
         }
       }
@@ -307,7 +307,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
       chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
-          for (const key of Object.keys(message.fields)) {
+          for (const key of ${ctx.utils.globalThis}.Object.keys(message.fields)) {
             object[key] = message.fields[key];
           }
         }

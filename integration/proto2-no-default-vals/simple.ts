@@ -255,7 +255,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optDefvalFloat !== undefined && message.optDefvalFloat !== 0) {
       writer.uint32(389).float(message.optDefvalFloat);
     }
-    Object.entries(message.translations).forEach(([key, value]) => {
+    globalThis.Object.entries(message.translations).forEach(([key, value]: [string, string]) => {
       OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(402).fork()).join();
     });
     return writer;
@@ -687,10 +687,13 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       optDefvalData: isSet(object.optDefvalData) ? bytesFromBase64(object.optDefvalData) : new Uint8Array(0),
       optDefvalFloat: isSet(object.optDefvalFloat) ? globalThis.Number(object.optDefvalFloat) : 0,
       translations: isObject(object.translations)
-        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.translations) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -812,7 +815,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.optDefvalFloat = message.optDefvalFloat;
     }
     if (message.translations) {
-      const entries = Object.entries(message.translations);
+      const entries = globalThis.Object.entries(message.translations) as [string, string][];
       if (entries.length > 0) {
         obj.translations = {};
         entries.forEach(([k, v]) => {
@@ -870,8 +873,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.optDefvalDescription = object.optDefvalDescription ?? "";
     message.optDefvalData = object.optDefvalData ?? new Uint8Array(0);
     message.optDefvalFloat = object.optDefvalFloat ?? 0;
-    message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.translations = (globalThis.Object.entries(object.translations ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = globalThis.String(value);
         }

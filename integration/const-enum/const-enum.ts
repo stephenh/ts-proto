@@ -86,7 +86,7 @@ export const DividerData: MessageFns<DividerData> = {
     if (message.type !== DividerData_DividerType.DOUBLE) {
       writer.uint32(8).int32(dividerData_DividerTypeToNumber(message.type));
     }
-    Object.entries(message.typeMap).forEach(([key, value]) => {
+    globalThis.Object.entries(message.typeMap).forEach(([key, value]: [string, DividerData_DividerType]) => {
       DividerData_TypeMapEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
     return writer;
@@ -131,10 +131,13 @@ export const DividerData: MessageFns<DividerData> = {
     return {
       type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE,
       typeMap: isObject(object.typeMap)
-        ? Object.entries(object.typeMap).reduce<{ [key: string]: DividerData_DividerType }>((acc, [key, value]) => {
-          acc[key] = dividerData_DividerTypeFromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.typeMap) as [string, any][]).reduce(
+          (acc: { [key: string]: DividerData_DividerType }, [key, value]: [string, any]) => {
+            acc[key] = dividerData_DividerTypeFromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -145,7 +148,7 @@ export const DividerData: MessageFns<DividerData> = {
       obj.type = dividerData_DividerTypeToJSON(message.type);
     }
     if (message.typeMap) {
-      const entries = Object.entries(message.typeMap);
+      const entries = globalThis.Object.entries(message.typeMap) as [string, DividerData_DividerType][];
       if (entries.length > 0) {
         obj.typeMap = {};
         entries.forEach(([k, v]) => {
@@ -162,8 +165,8 @@ export const DividerData: MessageFns<DividerData> = {
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
     const message = createBaseDividerData();
     message.type = object.type ?? DividerData_DividerType.DOUBLE;
-    message.typeMap = Object.entries(object.typeMap ?? {}).reduce<{ [key: string]: DividerData_DividerType }>(
-      (acc, [key, value]) => {
+    message.typeMap = (globalThis.Object.entries(object.typeMap ?? {}) as [string, DividerData_DividerType][]).reduce(
+      (acc: { [key: string]: DividerData_DividerType }, [key, value]: [string, DividerData_DividerType]) => {
         if (value !== undefined) {
           acc[key] = value as DividerData_DividerType;
         }

@@ -1758,7 +1758,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     const isOptional = isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
-        const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
+        const mapInfo = detectMapType(ctx, messageDesc, field)!;
+        const valueType = mapInfo.valueField;
         const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
         const entryWriteSnippet = isValueType(ctx, valueType)
           ? code`
@@ -1778,7 +1779,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           `);
         } else {
           chunks.push(code`
-            Object.entries(${messageProperty}${optionalAlternative}).forEach(([key, value]) => {
+            ${utils.globalThis}.Object.entries(${messageProperty}${optionalAlternative}).forEach(([key, value]: [string, ${mapInfo.valueType}]) => {
               ${entryWriteSnippet}
             });
           `);
@@ -1934,7 +1935,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   if (options.unknownFields) {
     chunks.push(code`if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of ${utils.globalThis}.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2343,7 +2344,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               return code`${fromJson}(${from})`;
             } else {
               const cstr = capitalize(valueType.toCodeString([]));
-              return code`${cstr}(${from})`;
+              return code`${utils.globalThis}.${cstr}(${from})`;
             }
           } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${utils.fromJsonObjectId}(${from})`;
@@ -2384,6 +2385,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       chunks.push(code`${fieldName}: ${canonicalFromJson[fullTypeName][fieldName]("object")},`);
     } else if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
+        const mapInfo = detectMapType(ctx, messageDesc, field)!;
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
@@ -2392,7 +2394,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
           chunks.push(code`
             ${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
-              ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
+              ? (${ctx.utils.globalThis}.Object.entries(${jsonProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
                   acc.set(${i}, ${readSnippet("value")});
                   return acc;
                 }, new Map())
@@ -2403,7 +2405,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
           chunks.push(code`
             ${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
-              ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
+              ? (${ctx.utils.globalThis}.Object.entries(${jsonProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
                   acc[${i}] = ${readSnippet("value")};
                   return acc;
                 }, {})
@@ -2634,9 +2636,10 @@ function generateToJson(
           }
         `);
       } else {
+        const mapInfo = detectMapType(ctx, messageDesc, field)!;
         chunks.push(code`
         if (${messageProperty}) {
-            const entries = Object.entries(${messageProperty});
+            const entries = ${utils.globalThis}.Object.entries(${messageProperty}) as [string, ${mapInfo.valueType}][];
             if (entries.length > 0) {
               ${jsonProperty} = {};
               entries.forEach(([k, v]) => {
@@ -2811,6 +2814,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
+        const mapInfo = detectMapType(ctx, messageDesc, field)!;
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
@@ -2832,12 +2836,15 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           `);
         } else {
           chunks.push(code`
-            ${messageProperty} = ${noValueSnippet} Object.entries(${objectProperty} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
-              if (value !== undefined) {
-                acc[${i}] = ${readSnippet("value")};
-              }
-              return acc;
-            }, {});
+            ${messageProperty} = ${noValueSnippet} (${utils.globalThis}.Object.entries(${objectProperty} ?? {}) as [string, ${mapInfo.valueType}][]).reduce(
+              (acc: ${fieldType}, [key, value]: [string, ${mapInfo.valueType}]) => {
+                if (value !== undefined) {
+                  acc[${i}] = ${readSnippet("value")};
+                }
+                return acc;
+              },
+              {},
+            );
           `);
         }
       } else {

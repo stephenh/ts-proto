@@ -1221,27 +1221,27 @@ function createBaseSimpleWithMap(): SimpleWithMap {
 
 export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entitiesById).forEach(([key, value]: [string, Entity]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
-    Object.entries(message.nameLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.nameLookup).forEach(([key, value]: [string, string]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
-    Object.entries(message.intLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.intLookup).forEach(([key, value]: [string, number]) => {
       SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
-    Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfTimestamps).forEach(([key, value]: [string, Date]) => {
       SimpleWithMap_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
-    Object.entries(message.mapOfBytes).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfBytes).forEach(([key, value]: [string, Uint8Array]) => {
       SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
-    Object.entries(message.mapOfStringValues).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfStringValues).forEach(([key, value]: [string, string | undefined]) => {
       if (value !== undefined) {
         SimpleWithMap_MapOfStringValuesEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).join();
       }
     });
-    Object.entries(message.longLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.longLookup).forEach(([key, value]: [string, number]) => {
       SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).join();
     });
     message.boolLookup.forEach((value, key) => {
@@ -1357,38 +1357,53 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   fromJSON(object: any): SimpleWithMap {
     return {
       entitiesById: isObject(object.entitiesById)
-        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Entity.fromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       nameLookup: isObject(object.nameLookup)
-        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.nameLookup) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       intLookup: isObject(object.intLookup)
-        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Number(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.intLookup) as [string, any][]).reduce(
+          (acc: { [key: number]: number }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = globalThis.Number(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       mapOfTimestamps: isObject(object.mapOfTimestamps)
-        ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date }>((acc, [key, value]) => {
-          acc[key] = fromJsonTimestamp(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
+          (acc: { [key: string]: Date }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonTimestamp(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       mapOfBytes: isObject(object.mapOfBytes)
-        ? Object.entries(object.mapOfBytes).reduce<{ [key: string]: Uint8Array }>((acc, [key, value]) => {
-          acc[key] = bytesFromBase64(value as string);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapOfBytes) as [string, any][]).reduce(
+          (acc: { [key: string]: Uint8Array }, [key, value]: [string, any]) => {
+            acc[key] = bytesFromBase64(value as string);
+            return acc;
+          },
+          {},
+        )
         : {},
       mapOfStringValues: isObject(object.mapOfStringValues)
-        ? Object.entries(object.mapOfStringValues).reduce<{ [key: string]: string | undefined }>(
-          (acc, [key, value]) => {
+        ? (globalThis.Object.entries(object.mapOfStringValues) as [string, any][]).reduce(
+          (acc: { [key: string]: string | undefined }, [key, value]: [string, any]) => {
             acc[key] = value as string | undefined;
             return acc;
           },
@@ -1396,16 +1411,22 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
         )
         : {},
       longLookup: isObject(object.longLookup)
-        ? Object.entries(object.longLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Number(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.longLookup) as [string, any][]).reduce(
+          (acc: { [key: number]: number }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = globalThis.Number(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       boolLookup: isObject(object.boolLookup)
-        ? Object.entries(object.boolLookup).reduce<Map<boolean, number>>((acc, [key, value]) => {
-          acc.set(globalThis.Boolean(key), Number(value));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.boolLookup) as [string, any][]).reduce(
+          (acc: Map<boolean, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Boolean(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
     };
   },
@@ -1413,7 +1434,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
     if (message.entitiesById) {
-      const entries = Object.entries(message.entitiesById);
+      const entries = globalThis.Object.entries(message.entitiesById) as [string, Entity][];
       if (entries.length > 0) {
         obj.entitiesById = {};
         entries.forEach(([k, v]) => {
@@ -1422,7 +1443,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.nameLookup) {
-      const entries = Object.entries(message.nameLookup);
+      const entries = globalThis.Object.entries(message.nameLookup) as [string, string][];
       if (entries.length > 0) {
         obj.nameLookup = {};
         entries.forEach(([k, v]) => {
@@ -1431,7 +1452,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.intLookup) {
-      const entries = Object.entries(message.intLookup);
+      const entries = globalThis.Object.entries(message.intLookup) as [string, number][];
       if (entries.length > 0) {
         obj.intLookup = {};
         entries.forEach(([k, v]) => {
@@ -1440,7 +1461,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.mapOfTimestamps) {
-      const entries = Object.entries(message.mapOfTimestamps);
+      const entries = globalThis.Object.entries(message.mapOfTimestamps) as [string, Date][];
       if (entries.length > 0) {
         obj.mapOfTimestamps = {};
         entries.forEach(([k, v]) => {
@@ -1449,7 +1470,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.mapOfBytes) {
-      const entries = Object.entries(message.mapOfBytes);
+      const entries = globalThis.Object.entries(message.mapOfBytes) as [string, Uint8Array][];
       if (entries.length > 0) {
         obj.mapOfBytes = {};
         entries.forEach(([k, v]) => {
@@ -1458,7 +1479,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.mapOfStringValues) {
-      const entries = Object.entries(message.mapOfStringValues);
+      const entries = globalThis.Object.entries(message.mapOfStringValues) as [string, string | undefined][];
       if (entries.length > 0) {
         obj.mapOfStringValues = {};
         entries.forEach(([k, v]) => {
@@ -1467,7 +1488,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.longLookup) {
-      const entries = Object.entries(message.longLookup);
+      const entries = globalThis.Object.entries(message.longLookup) as [string, number][];
       if (entries.length > 0) {
         obj.longLookup = {};
         entries.forEach(([k, v]) => {
@@ -1489,8 +1510,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   },
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = createBaseSimpleWithMap();
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
-      (acc, [key, value]) => {
+    message.entitiesById = (globalThis.Object.entries(object.entitiesById ?? {}) as [string, Entity][]).reduce(
+      (acc: { [key: number]: Entity }, [key, value]: [string, Entity]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = Entity.fromPartial(value);
         }
@@ -1498,8 +1519,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.nameLookup = (globalThis.Object.entries(object.nameLookup ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = globalThis.String(value);
         }
@@ -1507,8 +1528,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
+    message.intLookup = (globalThis.Object.entries(object.intLookup ?? {}) as [string, number][]).reduce(
+      (acc: { [key: number]: number }, [key, value]: [string, number]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = globalThis.Number(value);
         }
@@ -1516,8 +1537,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
-      (acc, [key, value]) => {
+    message.mapOfTimestamps = (globalThis.Object.entries(object.mapOfTimestamps ?? {}) as [string, Date][]).reduce(
+      (acc: { [key: string]: Date }, [key, value]: [string, Date]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -1525,8 +1546,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.mapOfBytes = Object.entries(object.mapOfBytes ?? {}).reduce<{ [key: string]: Uint8Array }>(
-      (acc, [key, value]) => {
+    message.mapOfBytes = (globalThis.Object.entries(object.mapOfBytes ?? {}) as [string, Uint8Array][]).reduce(
+      (acc: { [key: string]: Uint8Array }, [key, value]: [string, Uint8Array]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -1534,16 +1555,18 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.mapOfStringValues = Object.entries(object.mapOfStringValues ?? {}).reduce<
-      { [key: string]: string | undefined }
-    >((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {});
-    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
+    message.mapOfStringValues =
+      (globalThis.Object.entries(object.mapOfStringValues ?? {}) as [string, string | undefined][]).reduce(
+        (acc: { [key: string]: string | undefined }, [key, value]: [string, string | undefined]) => {
+          if (value !== undefined) {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {},
+      );
+    message.longLookup = (globalThis.Object.entries(object.longLookup ?? {}) as [string, number][]).reduce(
+      (acc: { [key: number]: number }, [key, value]: [string, number]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = globalThis.Number(value);
         }
@@ -2198,7 +2221,7 @@ function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
 
 export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   encode(message: SimpleWithSnakeCaseMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entitiesById).forEach(([key, value]: [string, Entity]) => {
       SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
@@ -2234,10 +2257,13 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     return {
       entitiesById: isObject(object.entitiesById)
-        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Entity.fromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -2245,7 +2271,7 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
     const obj: any = {};
     if (message.entitiesById) {
-      const entries = Object.entries(message.entitiesById);
+      const entries = globalThis.Object.entries(message.entitiesById) as [string, Entity][];
       if (entries.length > 0) {
         obj.entitiesById = {};
         entries.forEach(([k, v]) => {
@@ -2261,8 +2287,8 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   },
   fromPartial<I extends Exact<DeepPartial<SimpleWithSnakeCaseMap>, I>>(object: I): SimpleWithSnakeCaseMap {
     const message = createBaseSimpleWithSnakeCaseMap();
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
-      (acc, [key, value]) => {
+    message.entitiesById = (globalThis.Object.entries(object.entitiesById ?? {}) as [string, Entity][]).reduce(
+      (acc: { [key: number]: Entity }, [key, value]: [string, Entity]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = Entity.fromPartial(value);
         }
@@ -2362,7 +2388,7 @@ function createBaseSimpleWithMapOfEnums(): SimpleWithMapOfEnums {
 
 export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
   encode(message: SimpleWithMapOfEnums, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.enumsById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.enumsById).forEach(([key, value]: [string, StateEnum]) => {
       SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
@@ -2398,10 +2424,13 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
   fromJSON(object: any): SimpleWithMapOfEnums {
     return {
       enumsById: isObject(object.enumsById)
-        ? Object.entries(object.enumsById).reduce<{ [key: number]: StateEnum }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = stateEnumFromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.enumsById) as [string, any][]).reduce(
+          (acc: { [key: number]: StateEnum }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = stateEnumFromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -2409,7 +2438,7 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
   toJSON(message: SimpleWithMapOfEnums): unknown {
     const obj: any = {};
     if (message.enumsById) {
-      const entries = Object.entries(message.enumsById);
+      const entries = globalThis.Object.entries(message.enumsById) as [string, StateEnum][];
       if (entries.length > 0) {
         obj.enumsById = {};
         entries.forEach(([k, v]) => {
@@ -2425,8 +2454,8 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
   },
   fromPartial<I extends Exact<DeepPartial<SimpleWithMapOfEnums>, I>>(object: I): SimpleWithMapOfEnums {
     const message = createBaseSimpleWithMapOfEnums();
-    message.enumsById = Object.entries(object.enumsById ?? {}).reduce<{ [key: number]: StateEnum }>(
-      (acc, [key, value]) => {
+    message.enumsById = (globalThis.Object.entries(object.enumsById ?? {}) as [string, StateEnum][]).reduce(
+      (acc: { [key: number]: StateEnum }, [key, value]: [string, StateEnum]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = value as StateEnum;
         }

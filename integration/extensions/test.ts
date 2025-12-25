@@ -72,7 +72,7 @@ export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -231,7 +231,7 @@ export const Nested: MessageFns<Nested> & ExtensionHolder<"message", Nested[]> =
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -312,7 +312,7 @@ export const Group: MessageFns<Group> = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);

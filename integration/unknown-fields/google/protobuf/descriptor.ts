@@ -991,7 +991,7 @@ export const FileDescriptorSet: MessageFns<FileDescriptorSet> = {
       FileDescriptorProto.encode(v!, writer.uint32(10).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1091,7 +1091,7 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
       writer.uint32(98).string(message.syntax);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1291,7 +1291,7 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
       writer.uint32(82).string(v!);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1422,7 +1422,7 @@ export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_Extensio
       ExtensionRangeOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1494,7 +1494,7 @@ export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedR
       writer.uint32(16).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1555,7 +1555,7 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1651,7 +1651,7 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
       writer.uint32(136).bool(message.proto3Optional);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1787,7 +1787,7 @@ export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
       OneofOptions.encode(message.options, writer.uint32(18).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1860,7 +1860,7 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
       writer.uint32(42).string(v!);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -1948,7 +1948,7 @@ export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorPro
       writer.uint32(16).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2015,7 +2015,7 @@ export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
       EnumValueOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2090,7 +2090,7 @@ export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
       ServiceOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2182,7 +2182,7 @@ export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
       writer.uint32(48).bool(message.serverStreaming);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2358,7 +2358,7 @@ export const FileOptions: MessageFns<FileOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2590,7 +2590,7 @@ export const MessageOptions: MessageFns<MessageOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2702,7 +2702,7 @@ export const FieldOptions: MessageFns<FieldOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2803,7 +2803,7 @@ export const OneofOptions: MessageFns<OneofOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2862,7 +2862,7 @@ export const EnumOptions: MessageFns<EnumOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2934,7 +2934,7 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -2998,7 +2998,7 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3065,7 +3065,7 @@ export const MethodOptions: MessageFns<MethodOptions> = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3161,7 +3161,7 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
       writer.uint32(66).string(message.aggregateValue);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3265,7 +3265,7 @@ export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePa
       writer.uint32(16).bool(message.isExtension);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3326,7 +3326,7 @@ export const SourceCodeInfo: MessageFns<SourceCodeInfo> = {
       SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3402,7 +3402,7 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
       writer.uint32(50).string(v!);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3507,7 +3507,7 @@ export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
       GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -3571,7 +3571,7 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
       writer.uint32(32).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);

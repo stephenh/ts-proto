@@ -33,7 +33,7 @@ export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
     if (message.stringValue !== undefined && message.stringValue !== null) {
       writer.uint32(26).string(message.stringValue);
     }
-    Object.entries(message.mapValue).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapValue).forEach(([key, value]: [string, string]) => {
       Proto2TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
     return writer;
@@ -96,10 +96,13 @@ export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
       intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : null,
       stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : null,
       mapValue: isObject(object.mapValue)
-        ? Object.entries(object.mapValue).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapValue) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -116,7 +119,7 @@ export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
       obj.stringValue = message.stringValue;
     }
     if (message.mapValue) {
-      const entries = Object.entries(message.mapValue);
+      const entries = globalThis.Object.entries(message.mapValue) as [string, string][];
       if (entries.length > 0) {
         obj.mapValue = {};
         entries.forEach(([k, v]) => {
@@ -135,12 +138,15 @@ export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
     message.boolValue = object.boolValue ?? null;
     message.intValue = object.intValue ?? null;
     message.stringValue = object.stringValue ?? null;
-    message.mapValue = Object.entries(object.mapValue ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = globalThis.String(value);
-      }
-      return acc;
-    }, {});
+    message.mapValue = (globalThis.Object.entries(object.mapValue ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
+        if (value !== undefined) {
+          acc[key] = globalThis.String(value);
+        }
+        return acc;
+      },
+      {},
+    );
     return message;
   },
 };

@@ -38,7 +38,7 @@ export const Todo: MessageFns<Todo> = {
     if (message.optionalTimestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.optionalTimestamp), writer.uint32(34).fork()).join();
     }
-    Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfTimestamps).forEach(([key, value]: [string, string]) => {
       Todo_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
@@ -112,10 +112,13 @@ export const Todo: MessageFns<Todo> = {
         : [],
       optionalTimestamp: isSet(object.optionalTimestamp) ? globalThis.String(object.optionalTimestamp) : undefined,
       mapOfTimestamps: isObject(object.mapOfTimestamps)
-        ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = globalThis.String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -135,7 +138,7 @@ export const Todo: MessageFns<Todo> = {
       obj.optionalTimestamp = message.optionalTimestamp;
     }
     if (message.mapOfTimestamps) {
-      const entries = Object.entries(message.mapOfTimestamps);
+      const entries = globalThis.Object.entries(message.mapOfTimestamps) as [string, string][];
       if (entries.length > 0) {
         obj.mapOfTimestamps = {};
         entries.forEach(([k, v]) => {
@@ -155,8 +158,8 @@ export const Todo: MessageFns<Todo> = {
     message.timestamp = object.timestamp ?? undefined;
     message.repeatedTimestamp = object.repeatedTimestamp?.map((e) => e) || [];
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
-    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.mapOfTimestamps = (globalThis.Object.entries(object.mapOfTimestamps ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = value;
         }

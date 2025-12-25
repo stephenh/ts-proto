@@ -92,7 +92,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of gt.Object.keys(object)) {
         struct.fields[key] = Value.wrap(object[key]);
       }
     }
@@ -102,7 +102,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of Object.keys(message.fields)) {
+      for (const key of gt.Object.keys(message.fields)) {
         object[key] = Value.unwrap(message.fields[key]);
       }
     }
