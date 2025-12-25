@@ -8,6 +8,12 @@ export const protobufPackage = "simple";
 
 export interface Object {
   name: string;
+  metadata: { [key: string]: string };
+}
+
+export interface Object_MetadataEntry {
+  key: string;
+  value: string;
 }
 
 export interface Error {
@@ -31,7 +37,7 @@ export interface Array {
 }
 
 function createBaseObject(): Object {
-  return { name: "" };
+  return { name: "", metadata: {} };
 }
 
 export const Object: MessageFns<Object> = {
@@ -39,6 +45,9 @@ export const Object: MessageFns<Object> = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
+    gt.Object.entries(message.metadata).forEach(([key, value]: [string, string]) => {
+      Object_MetadataEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
+    });
     return writer;
   },
 
@@ -57,6 +66,17 @@ export const Object: MessageFns<Object> = {
           message.name = reader.string();
           continue;
         }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const entry2 = Object_MetadataEntry.decode(reader, reader.uint32());
+          if (entry2.value !== undefined) {
+            message.metadata[entry2.key] = entry2.value;
+          }
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -67,13 +87,33 @@ export const Object: MessageFns<Object> = {
   },
 
   fromJSON(object: any): Object {
-    return { name: isSet(object.name) ? gt.String(object.name) : "" };
+    return {
+      name: isSet(object.name) ? gt.String(object.name) : "",
+      metadata: isObject(object.metadata)
+        ? (gt.Object.entries(object.metadata) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = gt.String(value);
+            return acc;
+          },
+          {},
+        )
+        : {},
+    };
   },
 
   toJSON(message: Object): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
+    }
+    if (message.metadata) {
+      const entries = gt.Object.entries(message.metadata) as [string, string][];
+      if (entries.length > 0) {
+        obj.metadata = {};
+        entries.forEach(([k, v]) => {
+          obj.metadata[k] = v;
+        });
+      }
     }
     return obj;
   },
@@ -84,6 +124,91 @@ export const Object: MessageFns<Object> = {
   fromPartial<I extends Exact<DeepPartial<Object>, I>>(object: I): Object {
     const message = createBaseObject();
     message.name = object.name ?? "";
+    message.metadata = (gt.Object.entries(object.metadata ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
+        if (value !== undefined) {
+          acc[key] = gt.String(value);
+        }
+        return acc;
+      },
+      {},
+    );
+    return message;
+  },
+};
+
+function createBaseObject_MetadataEntry(): Object_MetadataEntry {
+  return { key: "", value: "" };
+}
+
+export const Object_MetadataEntry: MessageFns<Object_MetadataEntry> = {
+  encode(message: Object_MetadataEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Object_MetadataEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseObject_MetadataEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Object_MetadataEntry {
+    return {
+      key: isSet(object.key) ? gt.String(object.key) : "",
+      value: isSet(object.value) ? gt.String(object.value) : "",
+    };
+  },
+
+  toJSON(message: Object_MetadataEntry): unknown {
+    const obj: any = {};
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Object_MetadataEntry>, I>>(base?: I): Object_MetadataEntry {
+    return Object_MetadataEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Object_MetadataEntry>, I>>(object: I): Object_MetadataEntry {
+    const message = createBaseObject_MetadataEntry();
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -408,6 +533,10 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function isObject(value: any): boolean {
+  return typeof value === "object" && value !== null;
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

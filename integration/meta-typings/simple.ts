@@ -765,19 +765,19 @@ function createBaseSimpleWithMap(): SimpleWithMap {
 
 export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entitiesById).forEach(([key, value]: [string, Entity]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
-    Object.entries(message.nameLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.nameLookup).forEach(([key, value]: [string, string]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
-    Object.entries(message.intLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.intLookup).forEach(([key, value]: [string, number]) => {
       SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
-    Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfTimestamps).forEach(([key, value]: [string, Date]) => {
       SimpleWithMap_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
-    Object.entries(message.mapOfBytes).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfBytes).forEach(([key, value]: [string, Uint8Array]) => {
       SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
@@ -1101,7 +1101,7 @@ function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
 
 export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   encode(message: SimpleWithSnakeCaseMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entitiesById).forEach(([key, value]: [string, Entity]) => {
       SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
@@ -1189,7 +1189,7 @@ function createBaseSimpleWithMapOfEnums(): SimpleWithMapOfEnums {
 
 export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
   encode(message: SimpleWithMapOfEnums, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.enumsById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.enumsById).forEach(([key, value]: [string, StateEnum]) => {
       SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;

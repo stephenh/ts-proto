@@ -3,6 +3,7 @@ package simple;
 
 message Object {
   string name = 1;
+  map<string, string> metadata = 2;
 }
 
 message Error {

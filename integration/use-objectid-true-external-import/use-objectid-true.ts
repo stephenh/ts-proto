@@ -39,7 +39,7 @@ export const Todo: MessageFns<Todo> = {
     if (message.optionalOid !== undefined) {
       ObjectId.encode(toProtoObjectId(message.optionalOid), writer.uint32(34).fork()).join();
     }
-    Object.entries(message.mapOfOids).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfOids).forEach(([key, value]: [string, mongodb.ObjectId]) => {
       Todo_MapOfOidsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
@@ -113,10 +113,13 @@ export const Todo: MessageFns<Todo> = {
         : [],
       optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
       mapOfOids: isObject(object.mapOfOids)
-        ? Object.entries(object.mapOfOids).reduce<{ [key: string]: mongodb.ObjectId }>((acc, [key, value]) => {
-          acc[key] = fromJsonObjectId(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapOfOids) as [string, any][]).reduce(
+          (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonObjectId(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -136,7 +139,7 @@ export const Todo: MessageFns<Todo> = {
       obj.optionalOid = message.optionalOid.toString();
     }
     if (message.mapOfOids) {
-      const entries = Object.entries(message.mapOfOids);
+      const entries = globalThis.Object.entries(message.mapOfOids) as [string, mongodb.ObjectId][];
       if (entries.length > 0) {
         obj.mapOfOids = {};
         entries.forEach(([k, v]) => {
@@ -158,8 +161,8 @@ export const Todo: MessageFns<Todo> = {
     message.optionalOid = (object.optionalOid !== undefined && object.optionalOid !== null)
       ? object.optionalOid as mongodb.ObjectId
       : undefined;
-    message.mapOfOids = Object.entries(object.mapOfOids ?? {}).reduce<{ [key: string]: mongodb.ObjectId }>(
-      (acc, [key, value]) => {
+    message.mapOfOids = (globalThis.Object.entries(object.mapOfOids ?? {}) as [string, mongodb.ObjectId][]).reduce(
+      (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, mongodb.ObjectId]) => {
         if (value !== undefined) {
           acc[key] = value as mongodb.ObjectId;
         }

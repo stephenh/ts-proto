@@ -28,7 +28,7 @@ export const MapBigInt: MessageFns<MapBigInt> = {
       MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -83,10 +83,13 @@ export const MapBigInt: MessageFns<MapBigInt> = {
   fromJSON(object: any): MapBigInt {
     return {
       map: isObject(object.map)
-        ? Object.entries(object.map).reduce<Map<Long, Long>>((acc, [key, value]) => {
-          acc.set(Long.fromValue(key), Long.fromValue(value as Long | string));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.map) as [string, any][]).reduce(
+          (acc: Map<Long, Long>, [key, value]: [string, any]) => {
+            acc.set(Long.fromValue(key), Long.fromValue(value as Long | string));
+            return acc;
+          },
+          new Map(),
+        )
         : undefined,
     };
   },
@@ -133,7 +136,7 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
       writer.uint32(16).int64(message.value.toString());
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);

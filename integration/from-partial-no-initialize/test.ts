@@ -95,7 +95,7 @@ export const TPartial: MessageFns<TPartial> = {
     if (message.string !== undefined && message.string !== "") {
       writer.uint32(18).string(message.string);
     }
-    Object.entries(message.map || {}).forEach(([key, value]) => {
+    globalThis.Object.entries(message.map || {}).forEach(([key, value]: [string, string]) => {
       TPartial_MapEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     if (message.message !== undefined) {
@@ -230,10 +230,13 @@ export const TPartial: MessageFns<TPartial> = {
       number: isSet(object.number) ? globalThis.Number(object.number) : undefined,
       string: isSet(object.string) ? globalThis.String(object.string) : undefined,
       map: isObject(object.map)
-        ? Object.entries(object.map).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.map) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : undefined,
       message: isSet(object.message) ? TPartialMessage.fromJSON(object.message) : undefined,
       repeatedMessage: globalThis.Array.isArray(object?.repeatedMessage)
@@ -257,7 +260,7 @@ export const TPartial: MessageFns<TPartial> = {
       obj.string = message.string;
     }
     if (message.map) {
-      const entries = Object.entries(message.map);
+      const entries = globalThis.Object.entries(message.map) as [string, string][];
       if (entries.length > 0) {
         obj.map = {};
         entries.forEach(([k, v]) => {
@@ -289,12 +292,15 @@ export const TPartial: MessageFns<TPartial> = {
     message.string = object.string ?? undefined;
     message.map = (object.map === undefined || object.map === null)
       ? undefined
-      : Object.entries(object.map ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = globalThis.String(value);
-        }
-        return acc;
-      }, {});
+      : (globalThis.Object.entries(object.map ?? {}) as [string, string][]).reduce(
+        (acc: { [key: string]: string }, [key, value]: [string, string]) => {
+          if (value !== undefined) {
+            acc[key] = globalThis.String(value);
+          }
+          return acc;
+        },
+        {},
+      );
     message.message = (object.message !== undefined && object.message !== null)
       ? TPartialMessage.fromPartial(object.message)
       : undefined;

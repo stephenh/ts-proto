@@ -198,7 +198,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optData !== undefined) {
       writer.uint32(218).bytes(message.optData);
     }
-    Object.entries(message.translations || {}).forEach(([key, value]) => {
+    globalThis.Object.entries(message.translations || {}).forEach(([key, value]: [string, string]) => {
       OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).join();
     });
     if (message.timestamp !== undefined) {
@@ -498,10 +498,13 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : undefined,
       optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
       translations: isObject(object.translations)
-        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.translations) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       struct: isObject(object.struct) ? object.struct : undefined,
@@ -574,7 +577,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.optData = base64FromBytes(message.optData);
     }
     if (message.translations) {
-      const entries = Object.entries(message.translations);
+      const entries = globalThis.Object.entries(message.translations) as [string, string][];
       if (entries.length > 0) {
         obj.translations = {};
         entries.forEach(([k, v]) => {
@@ -619,8 +622,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.optTruth = object.optTruth ?? undefined;
     message.optDescription = object.optDescription ?? undefined;
     message.optData = object.optData ?? undefined;
-    message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.translations = (globalThis.Object.entries(object.translations ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = globalThis.String(value);
         }

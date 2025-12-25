@@ -109,7 +109,7 @@ function createBaseStruct(): Struct {
 
 export const Struct: MessageFns<Struct> & StructWrapperFns = {
   encode(message: Struct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    globalThis.Object.entries(message.fields).forEach(([key, value]: [string, any | undefined]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
       }
@@ -147,10 +147,13 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   fromJSON(object: any): Struct {
     return {
       fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
+          (acc: { [key: string]: any | undefined }, [key, value]: [string, any]) => {
+            acc[key] = value as any | undefined;
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -158,7 +161,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   toJSON(message: Struct): unknown {
     const obj: any = {};
     if (message.fields) {
-      const entries = Object.entries(message.fields);
+      const entries = globalThis.Object.entries(message.fields) as [string, any | undefined][];
       if (entries.length > 0) {
         obj.fields = {};
         entries.forEach(([k, v]) => {
@@ -174,8 +177,8 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   },
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct();
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
+    message.fields = (globalThis.Object.entries(object.fields ?? {}) as [string, any | undefined][]).reduce(
+      (acc: { [key: string]: any | undefined }, [key, value]: [string, any | undefined]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -190,7 +193,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields[key] = object[key];
       }
     }
@@ -200,7 +203,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of Object.keys(message.fields)) {
+      for (const key of globalThis.Object.keys(message.fields)) {
         object[key] = message.fields[key];
       }
     }

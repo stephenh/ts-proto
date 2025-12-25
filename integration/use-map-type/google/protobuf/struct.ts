@@ -147,10 +147,13 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   fromJSON(object: any): Struct {
     return {
       fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<Map<string, any | undefined>>((acc, [key, value]) => {
-          acc.set(key, value as any | undefined);
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
+          (acc: Map<string, any | undefined>, [key, value]: [string, any]) => {
+            acc.set(key, value as any | undefined);
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
     };
   },
@@ -187,7 +190,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields.set(key, object[key]);
       }
     }

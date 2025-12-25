@@ -93,7 +93,7 @@ export const Simple: MessageFns<Simple> = {
     if (message.nullValue !== NullValue.NULL_VALUE) {
       writer.uint32(48).int32(nullValueToNumber(message.nullValue));
     }
-    Object.entries(message.stateMap).forEach(([key, value]) => {
+    globalThis.Object.entries(message.stateMap).forEach(([key, value]: [string, StateEnum]) => {
       Simple_StateMapEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).join();
     });
     return writer;
@@ -175,10 +175,13 @@ export const Simple: MessageFns<Simple> = {
       states: globalThis.Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
       stateMap: isObject(object.stateMap)
-        ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
-          acc[key] = stateEnumFromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.stateMap) as [string, any][]).reduce(
+          (acc: { [key: string]: StateEnum }, [key, value]: [string, any]) => {
+            acc[key] = stateEnumFromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -198,7 +201,7 @@ export const Simple: MessageFns<Simple> = {
       obj.nullValue = nullValueToJSON(message.nullValue);
     }
     if (message.stateMap) {
-      const entries = Object.entries(message.stateMap);
+      const entries = globalThis.Object.entries(message.stateMap) as [string, StateEnum][];
       if (entries.length > 0) {
         obj.stateMap = {};
         entries.forEach(([k, v]) => {
@@ -218,8 +221,8 @@ export const Simple: MessageFns<Simple> = {
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = object.states?.map((e) => e) || [];
     message.nullValue = object.nullValue ?? NullValue.NULL_VALUE;
-    message.stateMap = Object.entries(object.stateMap ?? {}).reduce<{ [key: string]: StateEnum }>(
-      (acc, [key, value]) => {
+    message.stateMap = (globalThis.Object.entries(object.stateMap ?? {}) as [string, StateEnum][]).reduce(
+      (acc: { [key: string]: StateEnum }, [key, value]: [string, StateEnum]) => {
         if (value !== undefined) {
           acc[key] = value as StateEnum;
         }

@@ -229,7 +229,7 @@ function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
 
 export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   encode(message: BatchMapQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entities).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entities).forEach(([key, value]: [string, Entity]) => {
       BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
@@ -265,10 +265,13 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   fromJSON(object: any): BatchMapQueryResponse {
     return {
       entities: isObject(object.entities)
-        ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-          acc[key] = Entity.fromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.entities) as [string, any][]).reduce(
+          (acc: { [key: string]: Entity }, [key, value]: [string, any]) => {
+            acc[key] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -276,7 +279,7 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
-      const entries = Object.entries(message.entities);
+      const entries = globalThis.Object.entries(message.entities) as [string, Entity][];
       if (entries.length > 0) {
         obj.entities = {};
         entries.forEach(([k, v]) => {
@@ -292,12 +295,15 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   },
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(object: I): BatchMapQueryResponse {
     const message = createBaseBatchMapQueryResponse();
-    message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = Entity.fromPartial(value);
-      }
-      return acc;
-    }, {});
+    message.entities = (globalThis.Object.entries(object.entities ?? {}) as [string, Entity][]).reduce(
+      (acc: { [key: string]: Entity }, [key, value]: [string, Entity]) => {
+        if (value !== undefined) {
+          acc[key] = Entity.fromPartial(value);
+        }
+        return acc;
+      },
+      {},
+    );
     return message;
   },
 };
