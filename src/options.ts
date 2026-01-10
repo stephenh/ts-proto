@@ -54,6 +54,7 @@ export enum OutputSchemaOption {
 export type Options = {
   context: boolean;
   snakeToCamel: Array<"json" | "keys">;
+  fromJsonSnakeAndCamel: boolean;
   forceLong: LongOption;
   useJsTypeOverride: boolean;
   globalThisPolyfill: boolean;
@@ -127,6 +128,7 @@ export function defaultOptions(): Options {
   return {
     context: false,
     snakeToCamel: ["json", "keys"],
+    fromJsonSnakeAndCamel: false,
     emitDefaultValues: [],
     globalThisPolyfill: false,
     forceLong: LongOption.NUMBER,
