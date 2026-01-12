@@ -186,30 +186,30 @@ function createBaseValue(): Value {
 export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   fromJSON(object: any): Value {
     return {
-      kind: isSet(object.null_value)
-        ? { $case: "nullValue", value: nullValueFromJSON(object.null_value) }
-        : isSet(object.nullValue)
+      kind: isSet(object.nullValue)
         ? { $case: "nullValue", value: nullValueFromJSON(object.nullValue) }
-        : isSet(object.number_value)
-        ? { $case: "numberValue", value: globalThis.Number(object.number_value) }
+        : isSet(object.null_value)
+        ? { $case: "nullValue", value: nullValueFromJSON(object.null_value) }
         : isSet(object.numberValue)
         ? { $case: "numberValue", value: globalThis.Number(object.numberValue) }
-        : isSet(object.string_value)
-        ? { $case: "stringValue", value: globalThis.String(object.string_value) }
+        : isSet(object.number_value)
+        ? { $case: "numberValue", value: globalThis.Number(object.number_value) }
         : isSet(object.stringValue)
         ? { $case: "stringValue", value: globalThis.String(object.stringValue) }
-        : isSet(object.bool_value)
-        ? { $case: "boolValue", value: globalThis.Boolean(object.bool_value) }
+        : isSet(object.string_value)
+        ? { $case: "stringValue", value: globalThis.String(object.string_value) }
         : isSet(object.boolValue)
         ? { $case: "boolValue", value: globalThis.Boolean(object.boolValue) }
-        : isSet(object.struct_value)
-        ? { $case: "structValue", value: object.struct_value }
+        : isSet(object.bool_value)
+        ? { $case: "boolValue", value: globalThis.Boolean(object.bool_value) }
         : isSet(object.structValue)
         ? { $case: "structValue", value: object.structValue }
-        : isSet(object.list_value)
-        ? { $case: "listValue", value: [...object.list_value] }
+        : isSet(object.struct_value)
+        ? { $case: "structValue", value: object.struct_value }
         : isSet(object.listValue)
         ? { $case: "listValue", value: [...object.listValue] }
+        : isSet(object.list_value)
+        ? { $case: "listValue", value: [...object.list_value] }
         : undefined,
     };
   },
@@ -217,17 +217,17 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.kind?.$case === "nullValue") {
-      obj.null_value = nullValueToJSON(message.kind.value);
+      obj.nullValue = nullValueToJSON(message.kind.value);
     } else if (message.kind?.$case === "numberValue") {
-      obj.number_value = message.kind.value;
+      obj.numberValue = message.kind.value;
     } else if (message.kind?.$case === "stringValue") {
-      obj.string_value = message.kind.value;
+      obj.stringValue = message.kind.value;
     } else if (message.kind?.$case === "boolValue") {
-      obj.bool_value = message.kind.value;
+      obj.boolValue = message.kind.value;
     } else if (message.kind?.$case === "structValue") {
-      obj.struct_value = message.kind.value;
+      obj.structValue = message.kind.value;
     } else if (message.kind?.$case === "listValue") {
-      obj.list_value = message.kind.value;
+      obj.listValue = message.kind.value;
     }
     return obj;
   },

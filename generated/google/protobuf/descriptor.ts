@@ -2344,19 +2344,19 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
       obj.dependency = message.dependency;
     }
     if (message.publicDependency?.length) {
-      obj.public_dependency = message.publicDependency.map((e) => Math.round(e));
+      obj.publicDependency = message.publicDependency.map((e) => Math.round(e));
     }
     if (message.weakDependency?.length) {
-      obj.weak_dependency = message.weakDependency.map((e) => Math.round(e));
+      obj.weakDependency = message.weakDependency.map((e) => Math.round(e));
     }
     if (message.optionDependency?.length) {
-      obj.option_dependency = message.optionDependency;
+      obj.optionDependency = message.optionDependency;
     }
     if (message.messageType?.length) {
-      obj.message_type = message.messageType.map((e) => DescriptorProto.toJSON(e));
+      obj.messageType = message.messageType.map((e) => DescriptorProto.toJSON(e));
     }
     if (message.enumType?.length) {
-      obj.enum_type = message.enumType.map((e) => EnumDescriptorProto.toJSON(e));
+      obj.enumType = message.enumType.map((e) => EnumDescriptorProto.toJSON(e));
     }
     if (message.service?.length) {
       obj.service = message.service.map((e) => ServiceDescriptorProto.toJSON(e));
@@ -2368,7 +2368,7 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
       obj.options = FileOptions.toJSON(message.options);
     }
     if (message.sourceCodeInfo !== undefined) {
-      obj.source_code_info = SourceCodeInfo.toJSON(message.sourceCodeInfo);
+      obj.sourceCodeInfo = SourceCodeInfo.toJSON(message.sourceCodeInfo);
     }
     if (message.syntax !== undefined && message.syntax !== "") {
       obj.syntax = message.syntax;
@@ -2437,25 +2437,25 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
       obj.extension = message.extension.map((e) => FieldDescriptorProto.toJSON(e));
     }
     if (message.nestedType?.length) {
-      obj.nested_type = message.nestedType.map((e) => DescriptorProto.toJSON(e));
+      obj.nestedType = message.nestedType.map((e) => DescriptorProto.toJSON(e));
     }
     if (message.enumType?.length) {
-      obj.enum_type = message.enumType.map((e) => EnumDescriptorProto.toJSON(e));
+      obj.enumType = message.enumType.map((e) => EnumDescriptorProto.toJSON(e));
     }
     if (message.extensionRange?.length) {
-      obj.extension_range = message.extensionRange.map((e) => DescriptorProto_ExtensionRange.toJSON(e));
+      obj.extensionRange = message.extensionRange.map((e) => DescriptorProto_ExtensionRange.toJSON(e));
     }
     if (message.oneofDecl?.length) {
-      obj.oneof_decl = message.oneofDecl.map((e) => OneofDescriptorProto.toJSON(e));
+      obj.oneofDecl = message.oneofDecl.map((e) => OneofDescriptorProto.toJSON(e));
     }
     if (message.options !== undefined) {
       obj.options = MessageOptions.toJSON(message.options);
     }
     if (message.reservedRange?.length) {
-      obj.reserved_range = message.reservedRange.map((e) => DescriptorProto_ReservedRange.toJSON(e));
+      obj.reservedRange = message.reservedRange.map((e) => DescriptorProto_ReservedRange.toJSON(e));
     }
     if (message.reservedName?.length) {
-      obj.reserved_name = message.reservedName;
+      obj.reservedName = message.reservedName;
     }
     if (message.visibility !== undefined && message.visibility !== 0) {
       obj.visibility = symbolVisibilityToJSON(message.visibility);
@@ -2529,7 +2529,7 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
   toJSON(message: ExtensionRangeOptions): unknown {
     const obj: any = {};
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     if (message.declaration?.length) {
       obj.declaration = message.declaration.map((e) => ExtensionRangeOptions_Declaration.toJSON(e));
@@ -2565,7 +2565,7 @@ export const ExtensionRangeOptions_Declaration: MessageFns<ExtensionRangeOptions
       obj.number = Math.round(message.number);
     }
     if (message.fullName !== undefined && message.fullName !== "") {
-      obj.full_name = message.fullName;
+      obj.fullName = message.fullName;
     }
     if (message.type !== undefined && message.type !== "") {
       obj.type = message.type;
@@ -2632,25 +2632,25 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
       obj.type = fieldDescriptorProto_TypeToJSON(message.type);
     }
     if (message.typeName !== undefined && message.typeName !== "") {
-      obj.type_name = message.typeName;
+      obj.typeName = message.typeName;
     }
     if (message.extendee !== undefined && message.extendee !== "") {
       obj.extendee = message.extendee;
     }
     if (message.defaultValue !== undefined && message.defaultValue !== "") {
-      obj.default_value = message.defaultValue;
+      obj.defaultValue = message.defaultValue;
     }
     if (message.oneofIndex !== undefined && message.oneofIndex !== 0) {
-      obj.oneof_index = Math.round(message.oneofIndex);
+      obj.oneofIndex = Math.round(message.oneofIndex);
     }
     if (message.jsonName !== undefined && message.jsonName !== "") {
-      obj.json_name = message.jsonName;
+      obj.jsonName = message.jsonName;
     }
     if (message.options !== undefined) {
       obj.options = FieldOptions.toJSON(message.options);
     }
     if (message.proto3Optional !== undefined && message.proto3Optional !== false) {
-      obj.proto3_optional = message.proto3Optional;
+      obj.proto3Optional = message.proto3Optional;
     }
     return obj;
   },
@@ -2710,10 +2710,10 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
       obj.options = EnumOptions.toJSON(message.options);
     }
     if (message.reservedRange?.length) {
-      obj.reserved_range = message.reservedRange.map((e) => EnumDescriptorProto_EnumReservedRange.toJSON(e));
+      obj.reservedRange = message.reservedRange.map((e) => EnumDescriptorProto_EnumReservedRange.toJSON(e));
     }
     if (message.reservedName?.length) {
-      obj.reserved_name = message.reservedName;
+      obj.reservedName = message.reservedName;
     }
     if (message.visibility !== undefined && message.visibility !== 0) {
       obj.visibility = symbolVisibilityToJSON(message.visibility);
@@ -2826,19 +2826,19 @@ export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
       obj.name = message.name;
     }
     if (message.inputType !== undefined && message.inputType !== "") {
-      obj.input_type = message.inputType;
+      obj.inputType = message.inputType;
     }
     if (message.outputType !== undefined && message.outputType !== "") {
-      obj.output_type = message.outputType;
+      obj.outputType = message.outputType;
     }
     if (message.options !== undefined) {
       obj.options = MethodOptions.toJSON(message.options);
     }
     if (message.clientStreaming !== undefined && message.clientStreaming !== false) {
-      obj.client_streaming = message.clientStreaming;
+      obj.clientStreaming = message.clientStreaming;
     }
     if (message.serverStreaming !== undefined && message.serverStreaming !== false) {
-      obj.server_streaming = message.serverStreaming;
+      obj.serverStreaming = message.serverStreaming;
     }
     return obj;
   },
@@ -2950,67 +2950,67 @@ export const FileOptions: MessageFns<FileOptions> = {
   toJSON(message: FileOptions): unknown {
     const obj: any = {};
     if (message.javaPackage !== undefined && message.javaPackage !== "") {
-      obj.java_package = message.javaPackage;
+      obj.javaPackage = message.javaPackage;
     }
     if (message.javaOuterClassname !== undefined && message.javaOuterClassname !== "") {
-      obj.java_outer_classname = message.javaOuterClassname;
+      obj.javaOuterClassname = message.javaOuterClassname;
     }
     if (message.javaMultipleFiles !== undefined && message.javaMultipleFiles !== false) {
-      obj.java_multiple_files = message.javaMultipleFiles;
+      obj.javaMultipleFiles = message.javaMultipleFiles;
     }
     if (message.javaGenerateEqualsAndHash !== undefined && message.javaGenerateEqualsAndHash !== false) {
-      obj.java_generate_equals_and_hash = message.javaGenerateEqualsAndHash;
+      obj.javaGenerateEqualsAndHash = message.javaGenerateEqualsAndHash;
     }
     if (message.javaStringCheckUtf8 !== undefined && message.javaStringCheckUtf8 !== false) {
-      obj.java_string_check_utf8 = message.javaStringCheckUtf8;
+      obj.javaStringCheckUtf8 = message.javaStringCheckUtf8;
     }
     if (message.optimizeFor !== undefined && message.optimizeFor !== 1) {
-      obj.optimize_for = fileOptions_OptimizeModeToJSON(message.optimizeFor);
+      obj.optimizeFor = fileOptions_OptimizeModeToJSON(message.optimizeFor);
     }
     if (message.goPackage !== undefined && message.goPackage !== "") {
-      obj.go_package = message.goPackage;
+      obj.goPackage = message.goPackage;
     }
     if (message.ccGenericServices !== undefined && message.ccGenericServices !== false) {
-      obj.cc_generic_services = message.ccGenericServices;
+      obj.ccGenericServices = message.ccGenericServices;
     }
     if (message.javaGenericServices !== undefined && message.javaGenericServices !== false) {
-      obj.java_generic_services = message.javaGenericServices;
+      obj.javaGenericServices = message.javaGenericServices;
     }
     if (message.pyGenericServices !== undefined && message.pyGenericServices !== false) {
-      obj.py_generic_services = message.pyGenericServices;
+      obj.pyGenericServices = message.pyGenericServices;
     }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       obj.deprecated = message.deprecated;
     }
     if (message.ccEnableArenas !== undefined && message.ccEnableArenas !== true) {
-      obj.cc_enable_arenas = message.ccEnableArenas;
+      obj.ccEnableArenas = message.ccEnableArenas;
     }
     if (message.objcClassPrefix !== undefined && message.objcClassPrefix !== "") {
-      obj.objc_class_prefix = message.objcClassPrefix;
+      obj.objcClassPrefix = message.objcClassPrefix;
     }
     if (message.csharpNamespace !== undefined && message.csharpNamespace !== "") {
-      obj.csharp_namespace = message.csharpNamespace;
+      obj.csharpNamespace = message.csharpNamespace;
     }
     if (message.swiftPrefix !== undefined && message.swiftPrefix !== "") {
-      obj.swift_prefix = message.swiftPrefix;
+      obj.swiftPrefix = message.swiftPrefix;
     }
     if (message.phpClassPrefix !== undefined && message.phpClassPrefix !== "") {
-      obj.php_class_prefix = message.phpClassPrefix;
+      obj.phpClassPrefix = message.phpClassPrefix;
     }
     if (message.phpNamespace !== undefined && message.phpNamespace !== "") {
-      obj.php_namespace = message.phpNamespace;
+      obj.phpNamespace = message.phpNamespace;
     }
     if (message.phpMetadataNamespace !== undefined && message.phpMetadataNamespace !== "") {
-      obj.php_metadata_namespace = message.phpMetadataNamespace;
+      obj.phpMetadataNamespace = message.phpMetadataNamespace;
     }
     if (message.rubyPackage !== undefined && message.rubyPackage !== "") {
-      obj.ruby_package = message.rubyPackage;
+      obj.rubyPackage = message.rubyPackage;
     }
     if (message.features !== undefined) {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3052,27 +3052,27 @@ export const MessageOptions: MessageFns<MessageOptions> = {
   toJSON(message: MessageOptions): unknown {
     const obj: any = {};
     if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== false) {
-      obj.message_set_wire_format = message.messageSetWireFormat;
+      obj.messageSetWireFormat = message.messageSetWireFormat;
     }
     if (message.noStandardDescriptorAccessor !== undefined && message.noStandardDescriptorAccessor !== false) {
-      obj.no_standard_descriptor_accessor = message.noStandardDescriptorAccessor;
+      obj.noStandardDescriptorAccessor = message.noStandardDescriptorAccessor;
     }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       obj.deprecated = message.deprecated;
     }
     if (message.mapEntry !== undefined && message.mapEntry !== false) {
-      obj.map_entry = message.mapEntry;
+      obj.mapEntry = message.mapEntry;
     }
     if (
       message.deprecatedLegacyJsonFieldConflicts !== undefined && message.deprecatedLegacyJsonFieldConflicts !== false
     ) {
-      obj.deprecated_legacy_json_field_conflicts = message.deprecatedLegacyJsonFieldConflicts;
+      obj.deprecatedLegacyJsonFieldConflicts = message.deprecatedLegacyJsonFieldConflicts;
     }
     if (message.features !== undefined) {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3135,7 +3135,7 @@ export const FieldOptions: MessageFns<FieldOptions> = {
       obj.lazy = message.lazy;
     }
     if (message.unverifiedLazy !== undefined && message.unverifiedLazy !== false) {
-      obj.unverified_lazy = message.unverifiedLazy;
+      obj.unverifiedLazy = message.unverifiedLazy;
     }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       obj.deprecated = message.deprecated;
@@ -3144,7 +3144,7 @@ export const FieldOptions: MessageFns<FieldOptions> = {
       obj.weak = message.weak;
     }
     if (message.debugRedact !== undefined && message.debugRedact !== false) {
-      obj.debug_redact = message.debugRedact;
+      obj.debugRedact = message.debugRedact;
     }
     if (message.retention !== undefined && message.retention !== 0) {
       obj.retention = fieldOptions_OptionRetentionToJSON(message.retention);
@@ -3153,16 +3153,16 @@ export const FieldOptions: MessageFns<FieldOptions> = {
       obj.targets = message.targets.map((e) => fieldOptions_OptionTargetTypeToJSON(e));
     }
     if (message.editionDefaults?.length) {
-      obj.edition_defaults = message.editionDefaults.map((e) => FieldOptions_EditionDefault.toJSON(e));
+      obj.editionDefaults = message.editionDefaults.map((e) => FieldOptions_EditionDefault.toJSON(e));
     }
     if (message.features !== undefined) {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.featureSupport !== undefined) {
-      obj.feature_support = FieldOptions_FeatureSupport.toJSON(message.featureSupport);
+      obj.featureSupport = FieldOptions_FeatureSupport.toJSON(message.featureSupport);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3217,16 +3217,16 @@ export const FieldOptions_FeatureSupport: MessageFns<FieldOptions_FeatureSupport
   toJSON(message: FieldOptions_FeatureSupport): unknown {
     const obj: any = {};
     if (message.editionIntroduced !== undefined && message.editionIntroduced !== 0) {
-      obj.edition_introduced = editionToJSON(message.editionIntroduced);
+      obj.editionIntroduced = editionToJSON(message.editionIntroduced);
     }
     if (message.editionDeprecated !== undefined && message.editionDeprecated !== 0) {
-      obj.edition_deprecated = editionToJSON(message.editionDeprecated);
+      obj.editionDeprecated = editionToJSON(message.editionDeprecated);
     }
     if (message.deprecationWarning !== undefined && message.deprecationWarning !== "") {
-      obj.deprecation_warning = message.deprecationWarning;
+      obj.deprecationWarning = message.deprecationWarning;
     }
     if (message.editionRemoved !== undefined && message.editionRemoved !== 0) {
-      obj.edition_removed = editionToJSON(message.editionRemoved);
+      obj.editionRemoved = editionToJSON(message.editionRemoved);
     }
     return obj;
   },
@@ -3250,7 +3250,7 @@ export const OneofOptions: MessageFns<OneofOptions> = {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3282,7 +3282,7 @@ export const EnumOptions: MessageFns<EnumOptions> = {
   toJSON(message: EnumOptions): unknown {
     const obj: any = {};
     if (message.allowAlias !== undefined && message.allowAlias !== false) {
-      obj.allow_alias = message.allowAlias;
+      obj.allowAlias = message.allowAlias;
     }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       obj.deprecated = message.deprecated;
@@ -3290,13 +3290,13 @@ export const EnumOptions: MessageFns<EnumOptions> = {
     if (
       message.deprecatedLegacyJsonFieldConflicts !== undefined && message.deprecatedLegacyJsonFieldConflicts !== false
     ) {
-      obj.deprecated_legacy_json_field_conflicts = message.deprecatedLegacyJsonFieldConflicts;
+      obj.deprecatedLegacyJsonFieldConflicts = message.deprecatedLegacyJsonFieldConflicts;
     }
     if (message.features !== undefined) {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3334,13 +3334,13 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.debugRedact !== undefined && message.debugRedact !== false) {
-      obj.debug_redact = message.debugRedact;
+      obj.debugRedact = message.debugRedact;
     }
     if (message.featureSupport !== undefined) {
-      obj.feature_support = FieldOptions_FeatureSupport.toJSON(message.featureSupport);
+      obj.featureSupport = FieldOptions_FeatureSupport.toJSON(message.featureSupport);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3368,7 +3368,7 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
       obj.deprecated = message.deprecated;
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3398,13 +3398,13 @@ export const MethodOptions: MessageFns<MethodOptions> = {
       obj.deprecated = message.deprecated;
     }
     if (message.idempotencyLevel !== undefined && message.idempotencyLevel !== 0) {
-      obj.idempotency_level = methodOptions_IdempotencyLevelToJSON(message.idempotencyLevel);
+      obj.idempotencyLevel = methodOptions_IdempotencyLevelToJSON(message.idempotencyLevel);
     }
     if (message.features !== undefined) {
       obj.features = FeatureSet.toJSON(message.features);
     }
     if (message.uninterpretedOption?.length) {
-      obj.uninterpreted_option = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
+      obj.uninterpretedOption = message.uninterpretedOption.map((e) => UninterpretedOption.toJSON(e));
     }
     return obj;
   },
@@ -3455,22 +3455,22 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
       obj.name = message.name.map((e) => UninterpretedOption_NamePart.toJSON(e));
     }
     if (message.identifierValue !== undefined && message.identifierValue !== "") {
-      obj.identifier_value = message.identifierValue;
+      obj.identifierValue = message.identifierValue;
     }
     if (message.positiveIntValue !== undefined && message.positiveIntValue !== 0) {
-      obj.positive_int_value = Math.round(message.positiveIntValue);
+      obj.positiveIntValue = Math.round(message.positiveIntValue);
     }
     if (message.negativeIntValue !== undefined && message.negativeIntValue !== 0) {
-      obj.negative_int_value = Math.round(message.negativeIntValue);
+      obj.negativeIntValue = Math.round(message.negativeIntValue);
     }
     if (message.doubleValue !== undefined && message.doubleValue !== 0) {
-      obj.double_value = message.doubleValue;
+      obj.doubleValue = message.doubleValue;
     }
     if (message.stringValue !== undefined && message.stringValue.length !== 0) {
-      obj.string_value = base64FromBytes(message.stringValue);
+      obj.stringValue = base64FromBytes(message.stringValue);
     }
     if (message.aggregateValue !== undefined && message.aggregateValue !== "") {
-      obj.aggregate_value = message.aggregateValue;
+      obj.aggregateValue = message.aggregateValue;
     }
     return obj;
   },
@@ -3495,10 +3495,10 @@ export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePa
   toJSON(message: UninterpretedOption_NamePart): unknown {
     const obj: any = {};
     if (message.namePart !== "") {
-      obj.name_part = message.namePart;
+      obj.namePart = message.namePart;
     }
     if (message.isExtension !== false) {
-      obj.is_extension = message.isExtension;
+      obj.isExtension = message.isExtension;
     }
     return obj;
   },
@@ -3553,28 +3553,28 @@ export const FeatureSet: MessageFns<FeatureSet> = {
   toJSON(message: FeatureSet): unknown {
     const obj: any = {};
     if (message.fieldPresence !== undefined && message.fieldPresence !== 0) {
-      obj.field_presence = featureSet_FieldPresenceToJSON(message.fieldPresence);
+      obj.fieldPresence = featureSet_FieldPresenceToJSON(message.fieldPresence);
     }
     if (message.enumType !== undefined && message.enumType !== 0) {
-      obj.enum_type = featureSet_EnumTypeToJSON(message.enumType);
+      obj.enumType = featureSet_EnumTypeToJSON(message.enumType);
     }
     if (message.repeatedFieldEncoding !== undefined && message.repeatedFieldEncoding !== 0) {
-      obj.repeated_field_encoding = featureSet_RepeatedFieldEncodingToJSON(message.repeatedFieldEncoding);
+      obj.repeatedFieldEncoding = featureSet_RepeatedFieldEncodingToJSON(message.repeatedFieldEncoding);
     }
     if (message.utf8Validation !== undefined && message.utf8Validation !== 0) {
-      obj.utf8_validation = featureSet_Utf8ValidationToJSON(message.utf8Validation);
+      obj.utf8Validation = featureSet_Utf8ValidationToJSON(message.utf8Validation);
     }
     if (message.messageEncoding !== undefined && message.messageEncoding !== 0) {
-      obj.message_encoding = featureSet_MessageEncodingToJSON(message.messageEncoding);
+      obj.messageEncoding = featureSet_MessageEncodingToJSON(message.messageEncoding);
     }
     if (message.jsonFormat !== undefined && message.jsonFormat !== 0) {
-      obj.json_format = featureSet_JsonFormatToJSON(message.jsonFormat);
+      obj.jsonFormat = featureSet_JsonFormatToJSON(message.jsonFormat);
     }
     if (message.enforceNamingStyle !== undefined && message.enforceNamingStyle !== 0) {
-      obj.enforce_naming_style = featureSet_EnforceNamingStyleToJSON(message.enforceNamingStyle);
+      obj.enforceNamingStyle = featureSet_EnforceNamingStyleToJSON(message.enforceNamingStyle);
     }
     if (message.defaultSymbolVisibility !== undefined && message.defaultSymbolVisibility !== 0) {
-      obj.default_symbol_visibility = featureSet_VisibilityFeature_DefaultSymbolVisibilityToJSON(
+      obj.defaultSymbolVisibility = featureSet_VisibilityFeature_DefaultSymbolVisibilityToJSON(
         message.defaultSymbolVisibility,
       );
     }
@@ -3618,10 +3618,10 @@ export const FeatureSetDefaults: MessageFns<FeatureSetDefaults> = {
       obj.defaults = message.defaults.map((e) => FeatureSetDefaults_FeatureSetEditionDefault.toJSON(e));
     }
     if (message.minimumEdition !== undefined && message.minimumEdition !== 0) {
-      obj.minimum_edition = editionToJSON(message.minimumEdition);
+      obj.minimumEdition = editionToJSON(message.minimumEdition);
     }
     if (message.maximumEdition !== undefined && message.maximumEdition !== 0) {
-      obj.maximum_edition = editionToJSON(message.maximumEdition);
+      obj.maximumEdition = editionToJSON(message.maximumEdition);
     }
     return obj;
   },
@@ -3650,10 +3650,10 @@ export const FeatureSetDefaults_FeatureSetEditionDefault: MessageFns<FeatureSetD
       obj.edition = editionToJSON(message.edition);
     }
     if (message.overridableFeatures !== undefined) {
-      obj.overridable_features = FeatureSet.toJSON(message.overridableFeatures);
+      obj.overridableFeatures = FeatureSet.toJSON(message.overridableFeatures);
     }
     if (message.fixedFeatures !== undefined) {
-      obj.fixed_features = FeatureSet.toJSON(message.fixedFeatures);
+      obj.fixedFeatures = FeatureSet.toJSON(message.fixedFeatures);
     }
     return obj;
   },
@@ -3711,13 +3711,13 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
       obj.span = message.span.map((e) => Math.round(e));
     }
     if (message.leadingComments !== undefined && message.leadingComments !== "") {
-      obj.leading_comments = message.leadingComments;
+      obj.leadingComments = message.leadingComments;
     }
     if (message.trailingComments !== undefined && message.trailingComments !== "") {
-      obj.trailing_comments = message.trailingComments;
+      obj.trailingComments = message.trailingComments;
     }
     if (message.leadingDetachedComments?.length) {
-      obj.leading_detached_comments = message.leadingDetachedComments;
+      obj.leadingDetachedComments = message.leadingDetachedComments;
     }
     return obj;
   },
@@ -3764,7 +3764,7 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
       obj.path = message.path.map((e) => Math.round(e));
     }
     if (message.sourceFile !== undefined && message.sourceFile !== "") {
-      obj.source_file = message.sourceFile;
+      obj.sourceFile = message.sourceFile;
     }
     if (message.begin !== undefined && message.begin !== 0) {
       obj.begin = Math.round(message.begin);

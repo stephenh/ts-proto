@@ -389,7 +389,7 @@ export const Http: MessageFns<Http> = {
       obj.rules = message.rules.map((e) => HttpRule.toJSON(e));
     }
     if (message.fullyDecodeReservedExpansion !== false) {
-      obj.fully_decode_reserved_expansion = message.fullyDecodeReservedExpansion;
+      obj.fullyDecodeReservedExpansion = message.fullyDecodeReservedExpansion;
     }
     return obj;
   },
@@ -448,10 +448,10 @@ export const HttpRule: MessageFns<HttpRule> = {
       obj.body = message.body;
     }
     if (message.responseBody !== "") {
-      obj.response_body = message.responseBody;
+      obj.responseBody = message.responseBody;
     }
     if (message.additionalBindings?.length) {
-      obj.additional_bindings = message.additionalBindings.map((e) => HttpRule.toJSON(e));
+      obj.additionalBindings = message.additionalBindings.map((e) => HttpRule.toJSON(e));
     }
     return obj;
   },

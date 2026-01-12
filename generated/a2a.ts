@@ -905,13 +905,13 @@ export const SendMessageConfiguration: MessageFns<SendMessageConfiguration> = {
   toJSON(message: SendMessageConfiguration): unknown {
     const obj: any = {};
     if (message.acceptedOutputModes?.length) {
-      obj.accepted_output_modes = message.acceptedOutputModes;
+      obj.acceptedOutputModes = message.acceptedOutputModes;
     }
     if (message.pushNotification !== undefined) {
-      obj.push_notification = PushNotificationConfig.toJSON(message.pushNotification);
+      obj.pushNotification = PushNotificationConfig.toJSON(message.pushNotification);
     }
     if (message.historyLength !== 0) {
-      obj.history_length = Math.round(message.historyLength);
+      obj.historyLength = Math.round(message.historyLength);
     }
     if (message.blocking !== false) {
       obj.blocking = message.blocking;
@@ -946,7 +946,7 @@ export const Task: MessageFns<Task> = {
       obj.id = message.id;
     }
     if (message.contextId !== "") {
-      obj.context_id = message.contextId;
+      obj.contextId = message.contextId;
     }
     if (message.status !== undefined) {
       obj.status = TaskStatus.toJSON(message.status);
@@ -968,11 +968,7 @@ export const TaskStatus: MessageFns<TaskStatus> = {
   fromJSON(object: any): TaskStatus {
     return {
       state: isSet(object.state) ? taskStateFromJSON(object.state) : 0,
-      update: isSet(object.message)
-        ? Message.fromJSON(object.message)
-        : isSet(object.update)
-        ? Message.fromJSON(object.update)
-        : undefined,
+      update: isSet(object.message) ? Message.fromJSON(object.message) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
     };
   },
@@ -1021,14 +1017,14 @@ export const Part: MessageFns<Part> = {
 export const FilePart: MessageFns<FilePart> = {
   fromJSON(object: any): FilePart {
     return {
-      file: isSet(object.file_with_uri)
-        ? { $case: "fileWithUri", value: globalThis.String(object.file_with_uri) }
-        : isSet(object.fileWithUri)
+      file: isSet(object.fileWithUri)
         ? { $case: "fileWithUri", value: globalThis.String(object.fileWithUri) }
-        : isSet(object.file_with_bytes)
-        ? { $case: "fileWithBytes", value: Buffer.from(bytesFromBase64(object.file_with_bytes)) }
+        : isSet(object.file_with_uri)
+        ? { $case: "fileWithUri", value: globalThis.String(object.file_with_uri) }
         : isSet(object.fileWithBytes)
         ? { $case: "fileWithBytes", value: Buffer.from(bytesFromBase64(object.fileWithBytes)) }
+        : isSet(object.file_with_bytes)
+        ? { $case: "fileWithBytes", value: Buffer.from(bytesFromBase64(object.file_with_bytes)) }
         : undefined,
       mimeType: isSet(object.mime_type)
         ? globalThis.String(object.mime_type)
@@ -1041,12 +1037,12 @@ export const FilePart: MessageFns<FilePart> = {
   toJSON(message: FilePart): unknown {
     const obj: any = {};
     if (message.file?.$case === "fileWithUri") {
-      obj.file_with_uri = message.file.value;
+      obj.fileWithUri = message.file.value;
     } else if (message.file?.$case === "fileWithBytes") {
-      obj.file_with_bytes = base64FromBytes(message.file.value);
+      obj.fileWithBytes = base64FromBytes(message.file.value);
     }
     if (message.mimeType !== "") {
-      obj.mime_type = message.mimeType;
+      obj.mimeType = message.mimeType;
     }
     return obj;
   },
@@ -1098,13 +1094,13 @@ export const Message: MessageFns<Message> = {
   toJSON(message: Message): unknown {
     const obj: any = {};
     if (message.messageId !== "") {
-      obj.message_id = message.messageId;
+      obj.messageId = message.messageId;
     }
     if (message.contextId !== "") {
-      obj.context_id = message.contextId;
+      obj.contextId = message.contextId;
     }
     if (message.taskId !== "") {
-      obj.task_id = message.taskId;
+      obj.taskId = message.taskId;
     }
     if (message.role !== 0) {
       obj.role = roleToJSON(message.role);
@@ -1145,7 +1141,7 @@ export const Artifact: MessageFns<Artifact> = {
   toJSON(message: Artifact): unknown {
     const obj: any = {};
     if (message.artifactId !== "") {
-      obj.artifact_id = message.artifactId;
+      obj.artifactId = message.artifactId;
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -1188,10 +1184,10 @@ export const TaskStatusUpdateEvent: MessageFns<TaskStatusUpdateEvent> = {
   toJSON(message: TaskStatusUpdateEvent): unknown {
     const obj: any = {};
     if (message.taskId !== "") {
-      obj.task_id = message.taskId;
+      obj.taskId = message.taskId;
     }
     if (message.contextId !== "") {
-      obj.context_id = message.contextId;
+      obj.contextId = message.contextId;
     }
     if (message.status !== undefined) {
       obj.status = TaskStatus.toJSON(message.status);
@@ -1233,10 +1229,10 @@ export const TaskArtifactUpdateEvent: MessageFns<TaskArtifactUpdateEvent> = {
   toJSON(message: TaskArtifactUpdateEvent): unknown {
     const obj: any = {};
     if (message.taskId !== "") {
-      obj.task_id = message.taskId;
+      obj.taskId = message.taskId;
     }
     if (message.contextId !== "") {
-      obj.context_id = message.contextId;
+      obj.contextId = message.contextId;
     }
     if (message.artifact !== undefined) {
       obj.artifact = Artifact.toJSON(message.artifact);
@@ -1245,7 +1241,7 @@ export const TaskArtifactUpdateEvent: MessageFns<TaskArtifactUpdateEvent> = {
       obj.append = message.append;
     }
     if (message.lastChunk !== false) {
-      obj.last_chunk = message.lastChunk;
+      obj.lastChunk = message.lastChunk;
     }
     if (message.metadata !== undefined) {
       obj.metadata = message.metadata;
@@ -1398,7 +1394,7 @@ export const AgentCard: MessageFns<AgentCard> = {
   toJSON(message: AgentCard): unknown {
     const obj: any = {};
     if (message.protocolVersion !== "") {
-      obj.protocol_version = message.protocolVersion;
+      obj.protocolVersion = message.protocolVersion;
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -1410,10 +1406,10 @@ export const AgentCard: MessageFns<AgentCard> = {
       obj.url = message.url;
     }
     if (message.preferredTransport !== "") {
-      obj.preferred_transport = message.preferredTransport;
+      obj.preferredTransport = message.preferredTransport;
     }
     if (message.additionalInterfaces?.length) {
-      obj.additional_interfaces = message.additionalInterfaces.map((e) => AgentInterface.toJSON(e));
+      obj.additionalInterfaces = message.additionalInterfaces.map((e) => AgentInterface.toJSON(e));
     }
     if (message.provider !== undefined) {
       obj.provider = AgentProvider.toJSON(message.provider);
@@ -1422,7 +1418,7 @@ export const AgentCard: MessageFns<AgentCard> = {
       obj.version = message.version;
     }
     if (message.documentationUrl !== "") {
-      obj.documentation_url = message.documentationUrl;
+      obj.documentationUrl = message.documentationUrl;
     }
     if (message.capabilities !== undefined) {
       obj.capabilities = AgentCapabilities.toJSON(message.capabilities);
@@ -1430,9 +1426,9 @@ export const AgentCard: MessageFns<AgentCard> = {
     if (message.securitySchemes) {
       const entries = globalThis.Object.entries(message.securitySchemes) as [string, SecurityScheme][];
       if (entries.length > 0) {
-        obj.security_schemes = {};
+        obj.securitySchemes = {};
         entries.forEach(([k, v]) => {
-          obj.security_schemes[k] = SecurityScheme.toJSON(v);
+          obj.securitySchemes[k] = SecurityScheme.toJSON(v);
         });
       }
     }
@@ -1440,16 +1436,16 @@ export const AgentCard: MessageFns<AgentCard> = {
       obj.security = message.security.map((e) => Security.toJSON(e));
     }
     if (message.defaultInputModes?.length) {
-      obj.default_input_modes = message.defaultInputModes;
+      obj.defaultInputModes = message.defaultInputModes;
     }
     if (message.defaultOutputModes?.length) {
-      obj.default_output_modes = message.defaultOutputModes;
+      obj.defaultOutputModes = message.defaultOutputModes;
     }
     if (message.skills?.length) {
       obj.skills = message.skills.map((e) => AgentSkill.toJSON(e));
     }
     if (message.supportsAuthenticatedExtendedCard !== false) {
-      obj.supports_authenticated_extended_card = message.supportsAuthenticatedExtendedCard;
+      obj.supportsAuthenticatedExtendedCard = message.supportsAuthenticatedExtendedCard;
     }
     if (message.signatures?.length) {
       obj.signatures = message.signatures.map((e) => AgentCardSignature.toJSON(e));
@@ -1519,7 +1515,7 @@ export const AgentCapabilities: MessageFns<AgentCapabilities> = {
       obj.streaming = message.streaming;
     }
     if (message.pushNotifications !== false) {
-      obj.push_notifications = message.pushNotifications;
+      obj.pushNotifications = message.pushNotifications;
     }
     if (message.extensions?.length) {
       obj.extensions = message.extensions.map((e) => AgentExtension.toJSON(e));
@@ -1596,10 +1592,10 @@ export const AgentSkill: MessageFns<AgentSkill> = {
       obj.examples = message.examples;
     }
     if (message.inputModes?.length) {
-      obj.input_modes = message.inputModes;
+      obj.inputModes = message.inputModes;
     }
     if (message.outputModes?.length) {
-      obj.output_modes = message.outputModes;
+      obj.outputModes = message.outputModes;
     }
     if (message.security?.length) {
       obj.security = message.security.map((e) => Security.toJSON(e));
@@ -1650,7 +1646,7 @@ export const TaskPushNotificationConfig: MessageFns<TaskPushNotificationConfig> 
       obj.name = message.name;
     }
     if (message.pushNotificationConfig !== undefined) {
-      obj.push_notification_config = PushNotificationConfig.toJSON(message.pushNotificationConfig);
+      obj.pushNotificationConfig = PushNotificationConfig.toJSON(message.pushNotificationConfig);
     }
     return obj;
   },
@@ -1723,32 +1719,32 @@ export const Security_SchemesEntry: MessageFns<Security_SchemesEntry> = {
 export const SecurityScheme: MessageFns<SecurityScheme> = {
   fromJSON(object: any): SecurityScheme {
     return {
-      scheme: isSet(object.api_key_security_scheme)
-        ? { $case: "apiKeySecurityScheme", value: APIKeySecurityScheme.fromJSON(object.api_key_security_scheme) }
-        : isSet(object.apiKeySecurityScheme)
+      scheme: isSet(object.apiKeySecurityScheme)
         ? { $case: "apiKeySecurityScheme", value: APIKeySecurityScheme.fromJSON(object.apiKeySecurityScheme) }
-        : isSet(object.http_auth_security_scheme)
-        ? { $case: "httpAuthSecurityScheme", value: HTTPAuthSecurityScheme.fromJSON(object.http_auth_security_scheme) }
+        : isSet(object.api_key_security_scheme)
+        ? { $case: "apiKeySecurityScheme", value: APIKeySecurityScheme.fromJSON(object.api_key_security_scheme) }
         : isSet(object.httpAuthSecurityScheme)
         ? { $case: "httpAuthSecurityScheme", value: HTTPAuthSecurityScheme.fromJSON(object.httpAuthSecurityScheme) }
-        : isSet(object.oauth2_security_scheme)
-        ? { $case: "oauth2SecurityScheme", value: OAuth2SecurityScheme.fromJSON(object.oauth2_security_scheme) }
+        : isSet(object.http_auth_security_scheme)
+        ? { $case: "httpAuthSecurityScheme", value: HTTPAuthSecurityScheme.fromJSON(object.http_auth_security_scheme) }
         : isSet(object.oauth2SecurityScheme)
         ? { $case: "oauth2SecurityScheme", value: OAuth2SecurityScheme.fromJSON(object.oauth2SecurityScheme) }
-        : isSet(object.open_id_connect_security_scheme)
-        ? {
-          $case: "openIdConnectSecurityScheme",
-          value: OpenIdConnectSecurityScheme.fromJSON(object.open_id_connect_security_scheme),
-        }
+        : isSet(object.oauth2_security_scheme)
+        ? { $case: "oauth2SecurityScheme", value: OAuth2SecurityScheme.fromJSON(object.oauth2_security_scheme) }
         : isSet(object.openIdConnectSecurityScheme)
         ? {
           $case: "openIdConnectSecurityScheme",
           value: OpenIdConnectSecurityScheme.fromJSON(object.openIdConnectSecurityScheme),
         }
-        : isSet(object.mtls_security_scheme)
-        ? { $case: "mtlsSecurityScheme", value: MutualTlsSecurityScheme.fromJSON(object.mtls_security_scheme) }
+        : isSet(object.open_id_connect_security_scheme)
+        ? {
+          $case: "openIdConnectSecurityScheme",
+          value: OpenIdConnectSecurityScheme.fromJSON(object.open_id_connect_security_scheme),
+        }
         : isSet(object.mtlsSecurityScheme)
         ? { $case: "mtlsSecurityScheme", value: MutualTlsSecurityScheme.fromJSON(object.mtlsSecurityScheme) }
+        : isSet(object.mtls_security_scheme)
+        ? { $case: "mtlsSecurityScheme", value: MutualTlsSecurityScheme.fromJSON(object.mtls_security_scheme) }
         : undefined,
     };
   },
@@ -1756,15 +1752,15 @@ export const SecurityScheme: MessageFns<SecurityScheme> = {
   toJSON(message: SecurityScheme): unknown {
     const obj: any = {};
     if (message.scheme?.$case === "apiKeySecurityScheme") {
-      obj.api_key_security_scheme = APIKeySecurityScheme.toJSON(message.scheme.value);
+      obj.apiKeySecurityScheme = APIKeySecurityScheme.toJSON(message.scheme.value);
     } else if (message.scheme?.$case === "httpAuthSecurityScheme") {
-      obj.http_auth_security_scheme = HTTPAuthSecurityScheme.toJSON(message.scheme.value);
+      obj.httpAuthSecurityScheme = HTTPAuthSecurityScheme.toJSON(message.scheme.value);
     } else if (message.scheme?.$case === "oauth2SecurityScheme") {
-      obj.oauth2_security_scheme = OAuth2SecurityScheme.toJSON(message.scheme.value);
+      obj.oauth2SecurityScheme = OAuth2SecurityScheme.toJSON(message.scheme.value);
     } else if (message.scheme?.$case === "openIdConnectSecurityScheme") {
-      obj.open_id_connect_security_scheme = OpenIdConnectSecurityScheme.toJSON(message.scheme.value);
+      obj.openIdConnectSecurityScheme = OpenIdConnectSecurityScheme.toJSON(message.scheme.value);
     } else if (message.scheme?.$case === "mtlsSecurityScheme") {
-      obj.mtls_security_scheme = MutualTlsSecurityScheme.toJSON(message.scheme.value);
+      obj.mtlsSecurityScheme = MutualTlsSecurityScheme.toJSON(message.scheme.value);
     }
     return obj;
   },
@@ -1816,7 +1812,7 @@ export const HTTPAuthSecurityScheme: MessageFns<HTTPAuthSecurityScheme> = {
       obj.scheme = message.scheme;
     }
     if (message.bearerFormat !== "") {
-      obj.bearer_format = message.bearerFormat;
+      obj.bearerFormat = message.bearerFormat;
     }
     return obj;
   },
@@ -1844,7 +1840,7 @@ export const OAuth2SecurityScheme: MessageFns<OAuth2SecurityScheme> = {
       obj.flows = OAuthFlows.toJSON(message.flows);
     }
     if (message.oauth2MetadataUrl !== "") {
-      obj.oauth2_metadata_url = message.oauth2MetadataUrl;
+      obj.oauth2MetadataUrl = message.oauth2MetadataUrl;
     }
     return obj;
   },
@@ -1868,7 +1864,7 @@ export const OpenIdConnectSecurityScheme: MessageFns<OpenIdConnectSecurityScheme
       obj.description = message.description;
     }
     if (message.openIdConnectUrl !== "") {
-      obj.open_id_connect_url = message.openIdConnectUrl;
+      obj.openIdConnectUrl = message.openIdConnectUrl;
     }
     return obj;
   },
@@ -1891,14 +1887,14 @@ export const MutualTlsSecurityScheme: MessageFns<MutualTlsSecurityScheme> = {
 export const OAuthFlows: MessageFns<OAuthFlows> = {
   fromJSON(object: any): OAuthFlows {
     return {
-      flow: isSet(object.authorization_code)
-        ? { $case: "authorizationCode", value: AuthorizationCodeOAuthFlow.fromJSON(object.authorization_code) }
-        : isSet(object.authorizationCode)
+      flow: isSet(object.authorizationCode)
         ? { $case: "authorizationCode", value: AuthorizationCodeOAuthFlow.fromJSON(object.authorizationCode) }
-        : isSet(object.client_credentials)
-        ? { $case: "clientCredentials", value: ClientCredentialsOAuthFlow.fromJSON(object.client_credentials) }
+        : isSet(object.authorization_code)
+        ? { $case: "authorizationCode", value: AuthorizationCodeOAuthFlow.fromJSON(object.authorization_code) }
         : isSet(object.clientCredentials)
         ? { $case: "clientCredentials", value: ClientCredentialsOAuthFlow.fromJSON(object.clientCredentials) }
+        : isSet(object.client_credentials)
+        ? { $case: "clientCredentials", value: ClientCredentialsOAuthFlow.fromJSON(object.client_credentials) }
         : isSet(object.implicit)
         ? { $case: "implicit", value: ImplicitOAuthFlow.fromJSON(object.implicit) }
         : isSet(object.password)
@@ -1910,9 +1906,9 @@ export const OAuthFlows: MessageFns<OAuthFlows> = {
   toJSON(message: OAuthFlows): unknown {
     const obj: any = {};
     if (message.flow?.$case === "authorizationCode") {
-      obj.authorization_code = AuthorizationCodeOAuthFlow.toJSON(message.flow.value);
+      obj.authorizationCode = AuthorizationCodeOAuthFlow.toJSON(message.flow.value);
     } else if (message.flow?.$case === "clientCredentials") {
-      obj.client_credentials = ClientCredentialsOAuthFlow.toJSON(message.flow.value);
+      obj.clientCredentials = ClientCredentialsOAuthFlow.toJSON(message.flow.value);
     } else if (message.flow?.$case === "implicit") {
       obj.implicit = ImplicitOAuthFlow.toJSON(message.flow.value);
     } else if (message.flow?.$case === "password") {
@@ -1955,13 +1951,13 @@ export const AuthorizationCodeOAuthFlow: MessageFns<AuthorizationCodeOAuthFlow> 
   toJSON(message: AuthorizationCodeOAuthFlow): unknown {
     const obj: any = {};
     if (message.authorizationUrl !== "") {
-      obj.authorization_url = message.authorizationUrl;
+      obj.authorizationUrl = message.authorizationUrl;
     }
     if (message.tokenUrl !== "") {
-      obj.token_url = message.tokenUrl;
+      obj.tokenUrl = message.tokenUrl;
     }
     if (message.refreshUrl !== "") {
-      obj.refresh_url = message.refreshUrl;
+      obj.refreshUrl = message.refreshUrl;
     }
     if (message.scopes) {
       const entries = globalThis.Object.entries(message.scopes) as [string, string][];
@@ -2024,10 +2020,10 @@ export const ClientCredentialsOAuthFlow: MessageFns<ClientCredentialsOAuthFlow> 
   toJSON(message: ClientCredentialsOAuthFlow): unknown {
     const obj: any = {};
     if (message.tokenUrl !== "") {
-      obj.token_url = message.tokenUrl;
+      obj.tokenUrl = message.tokenUrl;
     }
     if (message.refreshUrl !== "") {
-      obj.refresh_url = message.refreshUrl;
+      obj.refreshUrl = message.refreshUrl;
     }
     if (message.scopes) {
       const entries = globalThis.Object.entries(message.scopes) as [string, string][];
@@ -2090,10 +2086,10 @@ export const ImplicitOAuthFlow: MessageFns<ImplicitOAuthFlow> = {
   toJSON(message: ImplicitOAuthFlow): unknown {
     const obj: any = {};
     if (message.authorizationUrl !== "") {
-      obj.authorization_url = message.authorizationUrl;
+      obj.authorizationUrl = message.authorizationUrl;
     }
     if (message.refreshUrl !== "") {
-      obj.refresh_url = message.refreshUrl;
+      obj.refreshUrl = message.refreshUrl;
     }
     if (message.scopes) {
       const entries = globalThis.Object.entries(message.scopes) as [string, string][];
@@ -2156,10 +2152,10 @@ export const PasswordOAuthFlow: MessageFns<PasswordOAuthFlow> = {
   toJSON(message: PasswordOAuthFlow): unknown {
     const obj: any = {};
     if (message.tokenUrl !== "") {
-      obj.token_url = message.tokenUrl;
+      obj.tokenUrl = message.tokenUrl;
     }
     if (message.refreshUrl !== "") {
-      obj.refresh_url = message.refreshUrl;
+      obj.refreshUrl = message.refreshUrl;
     }
     if (message.scopes) {
       const entries = globalThis.Object.entries(message.scopes) as [string, string][];
@@ -2197,11 +2193,7 @@ export const PasswordOAuthFlow_ScopesEntry: MessageFns<PasswordOAuthFlow_ScopesE
 export const SendMessageRequest: MessageFns<SendMessageRequest> = {
   fromJSON(object: any): SendMessageRequest {
     return {
-      request: isSet(object.message)
-        ? Message.fromJSON(object.message)
-        : isSet(object.request)
-        ? Message.fromJSON(object.request)
-        : undefined,
+      request: isSet(object.message) ? Message.fromJSON(object.message) : undefined,
       configuration: isSet(object.configuration) ? SendMessageConfiguration.fromJSON(object.configuration) : undefined,
       metadata: isObject(object.metadata) ? object.metadata : undefined,
     };
@@ -2240,7 +2232,7 @@ export const GetTaskRequest: MessageFns<GetTaskRequest> = {
       obj.name = message.name;
     }
     if (message.historyLength !== 0) {
-      obj.history_length = Math.round(message.historyLength);
+      obj.historyLength = Math.round(message.historyLength);
     }
     return obj;
   },
@@ -2307,7 +2299,7 @@ export const CreateTaskPushNotificationConfigRequest: MessageFns<CreateTaskPushN
       obj.parent = message.parent;
     }
     if (message.configId !== "") {
-      obj.config_id = message.configId;
+      obj.configId = message.configId;
     }
     if (message.config !== undefined) {
       obj.config = TaskPushNotificationConfig.toJSON(message.config);
@@ -2353,10 +2345,10 @@ export const ListTaskPushNotificationConfigRequest: MessageFns<ListTaskPushNotif
       obj.parent = message.parent;
     }
     if (message.pageSize !== 0) {
-      obj.page_size = Math.round(message.pageSize);
+      obj.pageSize = Math.round(message.pageSize);
     }
     if (message.pageToken !== "") {
-      obj.page_token = message.pageToken;
+      obj.pageToken = message.pageToken;
     }
     return obj;
   },
@@ -2380,8 +2372,6 @@ export const SendMessageResponse: MessageFns<SendMessageResponse> = {
         ? { $case: "task", value: Task.fromJSON(object.task) }
         : isSet(object.message)
         ? { $case: "msg", value: Message.fromJSON(object.message) }
-        : isSet(object.msg)
-        ? { $case: "msg", value: Message.fromJSON(object.msg) }
         : undefined,
     };
   },
@@ -2404,16 +2394,14 @@ export const StreamResponse: MessageFns<StreamResponse> = {
         ? { $case: "task", value: Task.fromJSON(object.task) }
         : isSet(object.message)
         ? { $case: "msg", value: Message.fromJSON(object.message) }
-        : isSet(object.msg)
-        ? { $case: "msg", value: Message.fromJSON(object.msg) }
-        : isSet(object.status_update)
-        ? { $case: "statusUpdate", value: TaskStatusUpdateEvent.fromJSON(object.status_update) }
         : isSet(object.statusUpdate)
         ? { $case: "statusUpdate", value: TaskStatusUpdateEvent.fromJSON(object.statusUpdate) }
-        : isSet(object.artifact_update)
-        ? { $case: "artifactUpdate", value: TaskArtifactUpdateEvent.fromJSON(object.artifact_update) }
+        : isSet(object.status_update)
+        ? { $case: "statusUpdate", value: TaskStatusUpdateEvent.fromJSON(object.status_update) }
         : isSet(object.artifactUpdate)
         ? { $case: "artifactUpdate", value: TaskArtifactUpdateEvent.fromJSON(object.artifactUpdate) }
+        : isSet(object.artifact_update)
+        ? { $case: "artifactUpdate", value: TaskArtifactUpdateEvent.fromJSON(object.artifact_update) }
         : undefined,
     };
   },
@@ -2425,9 +2413,9 @@ export const StreamResponse: MessageFns<StreamResponse> = {
     } else if (message.payload?.$case === "msg") {
       obj.message = Message.toJSON(message.payload.value);
     } else if (message.payload?.$case === "statusUpdate") {
-      obj.status_update = TaskStatusUpdateEvent.toJSON(message.payload.value);
+      obj.statusUpdate = TaskStatusUpdateEvent.toJSON(message.payload.value);
     } else if (message.payload?.$case === "artifactUpdate") {
-      obj.artifact_update = TaskArtifactUpdateEvent.toJSON(message.payload.value);
+      obj.artifactUpdate = TaskArtifactUpdateEvent.toJSON(message.payload.value);
     }
     return obj;
   },
@@ -2453,7 +2441,7 @@ export const ListTaskPushNotificationConfigResponse: MessageFns<ListTaskPushNoti
       obj.configs = message.configs.map((e) => TaskPushNotificationConfig.toJSON(e));
     }
     if (message.nextPageToken !== "") {
-      obj.next_page_token = message.nextPageToken;
+      obj.nextPageToken = message.nextPageToken;
     }
     return obj;
   },

@@ -2261,8 +2261,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     const fieldName = getFieldName(field, options);
     const fieldKey = safeAccessor(fieldName);
     const jsonName = getFieldJsonName(field, options);
-    const jsonProperty = getPropertyAccessor("object", jsonName);
-    const jsonPropertyOptional = getPropertyAccessor("object", jsonName, true);
+    let jsonProperty = getPropertyAccessor("object", jsonName);
+    let jsonPropertyOptional = getPropertyAccessor("object", jsonName, true);
 
     // get code that extracts value from incoming object
     const readSnippet = (from: string): Code => {
@@ -2394,8 +2394,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
           let comparison = code``;
           if (options.fromJsonSnakeAndCamel) {
-            if (jsonName !== snakeToCamel(field.name)) {
-              const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
+            if (field.name.includes("_")) {
+              jsonProperty = getPropertyAccessor("object", field.name);
+              const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
               comparison = code`
                 : ${ctx.utils.isObject}(${jsonCamelProperty})
                 ? (${ctx.utils.globalThis}.Object.entries(${jsonCamelProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
@@ -2419,8 +2420,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
           let comparison = code``;
           if (options.fromJsonSnakeAndCamel) {
-            if (jsonName !== snakeToCamel(field.name)) {
-              const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
+            if (field.name.includes("_")) {
+              jsonProperty = getPropertyAccessor("object", field.name);
+              const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
               comparison = code`
                  : ${ctx.utils.isObject}(${jsonCamelProperty})
                  ? (${ctx.utils.globalThis}.Object.entries(${jsonCamelProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
@@ -2447,9 +2449,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         if (!needMap) {
           let comparison = code``;
           if (options.fromJsonSnakeAndCamel) {
-            if (jsonName !== snakeToCamel(field.name)) {
-              const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
-              const jsonCamelPropertyOptional = getPropertyAccessor('object', snakeToCamel(field.name), true);
+            if (field.name.includes("_")) {
+              jsonProperty = getPropertyAccessor("object", field.name);
+              jsonPropertyOptional = getPropertyAccessor("object", field.name, true);
+              const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
+              const jsonCamelPropertyOptional = getPropertyAccessor("object", field.jsonName, true);
               comparison = code` : ${ctx.utils.globalThis}.Array.isArray(${jsonCamelPropertyOptional}) ? [...${jsonCamelProperty}]`;
             }
           }
@@ -2460,9 +2464,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           let comparison = code``;
           if (options.fromJsonSnakeAndCamel) {
-            if (jsonName !== snakeToCamel(field.name)) {
-              const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
-              const jsonCamelPropertyOptional = getPropertyAccessor('object', snakeToCamel(field.name), true);
+            if (field.name.includes("_")) {
+              jsonProperty = getPropertyAccessor("object", field.name);
+              jsonPropertyOptional = getPropertyAccessor("object", field.name, true);
+              const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
+              const jsonCamelPropertyOptional = getPropertyAccessor("object", field.jsonName, true);
               comparison = code` : ${ctx.utils.globalThis}.Array.isArray(${jsonCamelPropertyOptional}) ? ${jsonCamelProperty}.map((e: any) => ${readSnippet("e")})`;
             }
           }
@@ -2489,11 +2495,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (options.fromJsonSnakeAndCamel) {
-        if (jsonName !== snakeToCamel(field.name)) {
-          const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
-          const ternaryCamelIf = code`${ctx.utils.isSet}(${jsonCamelProperty})`;
-          const ternaryCamelThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonCamelProperty}`)}`;
-          chunks.push(code`${ternaryCamelIf} ? ${ternaryCamelThen}} : `);
+        if (field.name.includes("_")) {
+          const jsonSnakeProperty = getPropertyAccessor('object', field.name);
+          const ternarySnakeIf = code`${ctx.utils.isSet}(${jsonSnakeProperty})`;
+          const ternarySnakeThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonSnakeProperty}`)}`;
+          chunks.push(code`${ternarySnakeIf} ? ${ternarySnakeThen}} : `);
         }
       }
 
@@ -2503,9 +2509,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     } else if (isAnyValueType(field)) {
       let comparison = code``;
       if (options.fromJsonSnakeAndCamel) {
-        if (jsonName !== snakeToCamel(field.name)) {
-          const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
-          const jsonCamelPropertyOptional = getPropertyAccessor('object', snakeToCamel(field.name), true);
+        if (field.name.includes("_")) {
+          jsonProperty = getPropertyAccessor("object", field.name);
+          jsonPropertyOptional = getPropertyAccessor("object", field.name, true);
+          const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
+          const jsonCamelPropertyOptional = getPropertyAccessor("object", field.jsonName, true);
           comparison = code` : ${ctx.utils.isSet}(${jsonCamelPropertyOptional}) ? ${readSnippet(`${jsonCamelProperty}`)}`;
         }
       }
@@ -2517,8 +2525,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     } else if (isStructType(field)) {
       let comparison = code``;
       if (options.fromJsonSnakeAndCamel) {
-        if (jsonName !== snakeToCamel(field.name)) {
-          const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
+        if (field.name.includes("_")) {
+          jsonProperty = getPropertyAccessor("object", field.name);
+          const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
           comparison = code` : ${ctx.utils.isObject}(${jsonCamelProperty}) ? ${readSnippet(`${jsonCamelProperty}`)}`;
         }
       }
@@ -2531,8 +2540,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     } else if (isListValueType(field)) {
       let comparison = code``;
       if (options.fromJsonSnakeAndCamel) {
-        if (jsonName !== snakeToCamel(field.name)) {
-          const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
+        if (field.name.includes("_")) {
+          jsonProperty = getPropertyAccessor("object", field.name);
+          const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
           comparison = code` : ${ctx.utils.globalThis}.Array.isArray(${jsonCamelProperty}) ? ${readSnippet(`${jsonCamelProperty}`)}`;
         }
       }
@@ -2546,8 +2556,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       const fallback = isWithinOneOf(field) || noDefaultValue ? nullOrUndefined(options) : defaultValue(ctx, field);
       let comparison = code``;
       if (options.fromJsonSnakeAndCamel) {
-        if (jsonName !== snakeToCamel(field.name)) {
-          const jsonCamelProperty = getPropertyAccessor('object', snakeToCamel(field.name));
+        if (field.name.includes("_")) {
+          jsonProperty = getPropertyAccessor("object", field.name);
+          const jsonCamelProperty = getPropertyAccessor("object", field.jsonName);
           comparison = code` : ${ctx.utils.isSet}(${jsonCamelProperty}) ? ${readSnippet(`${jsonCamelProperty}`)}`;
         }
       }

@@ -570,13 +570,13 @@ export const CommonLanguageSettings: MessageFns<CommonLanguageSettings> = {
   toJSON(message: CommonLanguageSettings): unknown {
     const obj: any = {};
     if (message.referenceDocsUri !== "") {
-      obj.reference_docs_uri = message.referenceDocsUri;
+      obj.referenceDocsUri = message.referenceDocsUri;
     }
     if (message.destinations?.length) {
       obj.destinations = message.destinations.map((e) => clientLibraryDestinationToJSON(e));
     }
     if (message.selectiveGapicGeneration !== undefined) {
-      obj.selective_gapic_generation = SelectiveGapicGeneration.toJSON(message.selectiveGapicGeneration);
+      obj.selectiveGapicGeneration = SelectiveGapicGeneration.toJSON(message.selectiveGapicGeneration);
     }
     return obj;
   },
@@ -645,34 +645,34 @@ export const ClientLibrarySettings: MessageFns<ClientLibrarySettings> = {
       obj.version = message.version;
     }
     if (message.launchStage !== 0) {
-      obj.launch_stage = launchStageToJSON(message.launchStage);
+      obj.launchStage = launchStageToJSON(message.launchStage);
     }
     if (message.restNumericEnums !== false) {
-      obj.rest_numeric_enums = message.restNumericEnums;
+      obj.restNumericEnums = message.restNumericEnums;
     }
     if (message.javaSettings !== undefined) {
-      obj.java_settings = JavaSettings.toJSON(message.javaSettings);
+      obj.javaSettings = JavaSettings.toJSON(message.javaSettings);
     }
     if (message.cppSettings !== undefined) {
-      obj.cpp_settings = CppSettings.toJSON(message.cppSettings);
+      obj.cppSettings = CppSettings.toJSON(message.cppSettings);
     }
     if (message.phpSettings !== undefined) {
-      obj.php_settings = PhpSettings.toJSON(message.phpSettings);
+      obj.phpSettings = PhpSettings.toJSON(message.phpSettings);
     }
     if (message.pythonSettings !== undefined) {
-      obj.python_settings = PythonSettings.toJSON(message.pythonSettings);
+      obj.pythonSettings = PythonSettings.toJSON(message.pythonSettings);
     }
     if (message.nodeSettings !== undefined) {
-      obj.node_settings = NodeSettings.toJSON(message.nodeSettings);
+      obj.nodeSettings = NodeSettings.toJSON(message.nodeSettings);
     }
     if (message.dotnetSettings !== undefined) {
-      obj.dotnet_settings = DotnetSettings.toJSON(message.dotnetSettings);
+      obj.dotnetSettings = DotnetSettings.toJSON(message.dotnetSettings);
     }
     if (message.rubySettings !== undefined) {
-      obj.ruby_settings = RubySettings.toJSON(message.rubySettings);
+      obj.rubySettings = RubySettings.toJSON(message.rubySettings);
     }
     if (message.goSettings !== undefined) {
-      obj.go_settings = GoSettings.toJSON(message.goSettings);
+      obj.goSettings = GoSettings.toJSON(message.goSettings);
     }
     return obj;
   },
@@ -738,37 +738,37 @@ export const Publishing: MessageFns<Publishing> = {
   toJSON(message: Publishing): unknown {
     const obj: any = {};
     if (message.methodSettings?.length) {
-      obj.method_settings = message.methodSettings.map((e) => MethodSettings.toJSON(e));
+      obj.methodSettings = message.methodSettings.map((e) => MethodSettings.toJSON(e));
     }
     if (message.newIssueUri !== "") {
-      obj.new_issue_uri = message.newIssueUri;
+      obj.newIssueUri = message.newIssueUri;
     }
     if (message.documentationUri !== "") {
-      obj.documentation_uri = message.documentationUri;
+      obj.documentationUri = message.documentationUri;
     }
     if (message.apiShortName !== "") {
-      obj.api_short_name = message.apiShortName;
+      obj.apiShortName = message.apiShortName;
     }
     if (message.githubLabel !== "") {
-      obj.github_label = message.githubLabel;
+      obj.githubLabel = message.githubLabel;
     }
     if (message.codeownerGithubTeams?.length) {
-      obj.codeowner_github_teams = message.codeownerGithubTeams;
+      obj.codeownerGithubTeams = message.codeownerGithubTeams;
     }
     if (message.docTagPrefix !== "") {
-      obj.doc_tag_prefix = message.docTagPrefix;
+      obj.docTagPrefix = message.docTagPrefix;
     }
     if (message.organization !== 0) {
       obj.organization = clientLibraryOrganizationToJSON(message.organization);
     }
     if (message.librarySettings?.length) {
-      obj.library_settings = message.librarySettings.map((e) => ClientLibrarySettings.toJSON(e));
+      obj.librarySettings = message.librarySettings.map((e) => ClientLibrarySettings.toJSON(e));
     }
     if (message.protoReferenceDocumentationUri !== "") {
-      obj.proto_reference_documentation_uri = message.protoReferenceDocumentationUri;
+      obj.protoReferenceDocumentationUri = message.protoReferenceDocumentationUri;
     }
     if (message.restReferenceDocumentationUri !== "") {
-      obj.rest_reference_documentation_uri = message.restReferenceDocumentationUri;
+      obj.restReferenceDocumentationUri = message.restReferenceDocumentationUri;
     }
     return obj;
   },
@@ -806,14 +806,14 @@ export const JavaSettings: MessageFns<JavaSettings> = {
   toJSON(message: JavaSettings): unknown {
     const obj: any = {};
     if (message.libraryPackage !== "") {
-      obj.library_package = message.libraryPackage;
+      obj.libraryPackage = message.libraryPackage;
     }
     if (message.serviceClassNames) {
       const entries = globalThis.Object.entries(message.serviceClassNames) as [string, string][];
       if (entries.length > 0) {
-        obj.service_class_names = {};
+        obj.serviceClassNames = {};
         entries.forEach(([k, v]) => {
-          obj.service_class_names[k] = v;
+          obj.serviceClassNames[k] = v;
         });
       }
     }
@@ -890,7 +890,7 @@ export const PythonSettings: MessageFns<PythonSettings> = {
       obj.common = CommonLanguageSettings.toJSON(message.common);
     }
     if (message.experimentalFeatures !== undefined) {
-      obj.experimental_features = PythonSettings_ExperimentalFeatures.toJSON(message.experimentalFeatures);
+      obj.experimentalFeatures = PythonSettings_ExperimentalFeatures.toJSON(message.experimentalFeatures);
     }
     return obj;
   },
@@ -920,13 +920,13 @@ export const PythonSettings_ExperimentalFeatures: MessageFns<PythonSettings_Expe
   toJSON(message: PythonSettings_ExperimentalFeatures): unknown {
     const obj: any = {};
     if (message.restAsyncIoEnabled !== false) {
-      obj.rest_async_io_enabled = message.restAsyncIoEnabled;
+      obj.restAsyncIoEnabled = message.restAsyncIoEnabled;
     }
     if (message.protobufPythonicTypesEnabled !== false) {
-      obj.protobuf_pythonic_types_enabled = message.protobufPythonicTypesEnabled;
+      obj.protobufPythonicTypesEnabled = message.protobufPythonicTypesEnabled;
     }
     if (message.unversionedPackageDisabled !== false) {
-      obj.unversioned_package_disabled = message.unversionedPackageDisabled;
+      obj.unversionedPackageDisabled = message.unversionedPackageDisabled;
     }
     return obj;
   },
@@ -1010,29 +1010,29 @@ export const DotnetSettings: MessageFns<DotnetSettings> = {
     if (message.renamedServices) {
       const entries = globalThis.Object.entries(message.renamedServices) as [string, string][];
       if (entries.length > 0) {
-        obj.renamed_services = {};
+        obj.renamedServices = {};
         entries.forEach(([k, v]) => {
-          obj.renamed_services[k] = v;
+          obj.renamedServices[k] = v;
         });
       }
     }
     if (message.renamedResources) {
       const entries = globalThis.Object.entries(message.renamedResources) as [string, string][];
       if (entries.length > 0) {
-        obj.renamed_resources = {};
+        obj.renamedResources = {};
         entries.forEach(([k, v]) => {
-          obj.renamed_resources[k] = v;
+          obj.renamedResources[k] = v;
         });
       }
     }
     if (message.ignoredResources?.length) {
-      obj.ignored_resources = message.ignoredResources;
+      obj.ignoredResources = message.ignoredResources;
     }
     if (message.forcedNamespaceAliases?.length) {
-      obj.forced_namespace_aliases = message.forcedNamespaceAliases;
+      obj.forcedNamespaceAliases = message.forcedNamespaceAliases;
     }
     if (message.handwrittenSignatures?.length) {
-      obj.handwritten_signatures = message.handwrittenSignatures;
+      obj.handwrittenSignatures = message.handwrittenSignatures;
     }
     return obj;
   },
@@ -1124,9 +1124,9 @@ export const GoSettings: MessageFns<GoSettings> = {
     if (message.renamedServices) {
       const entries = globalThis.Object.entries(message.renamedServices) as [string, string][];
       if (entries.length > 0) {
-        obj.renamed_services = {};
+        obj.renamedServices = {};
         entries.forEach(([k, v]) => {
-          obj.renamed_services[k] = v;
+          obj.renamedServices[k] = v;
         });
       }
     }
@@ -1177,10 +1177,10 @@ export const MethodSettings: MessageFns<MethodSettings> = {
       obj.selector = message.selector;
     }
     if (message.longRunning !== undefined) {
-      obj.long_running = MethodSettings_LongRunning.toJSON(message.longRunning);
+      obj.longRunning = MethodSettings_LongRunning.toJSON(message.longRunning);
     }
     if (message.autoPopulatedFields?.length) {
-      obj.auto_populated_fields = message.autoPopulatedFields;
+      obj.autoPopulatedFields = message.autoPopulatedFields;
     }
     return obj;
   },
@@ -1215,16 +1215,16 @@ export const MethodSettings_LongRunning: MessageFns<MethodSettings_LongRunning> 
   toJSON(message: MethodSettings_LongRunning): unknown {
     const obj: any = {};
     if (message.initialPollDelay !== undefined) {
-      obj.initial_poll_delay = Duration.toJSON(message.initialPollDelay);
+      obj.initialPollDelay = Duration.toJSON(message.initialPollDelay);
     }
     if (message.pollDelayMultiplier !== 0) {
-      obj.poll_delay_multiplier = message.pollDelayMultiplier;
+      obj.pollDelayMultiplier = message.pollDelayMultiplier;
     }
     if (message.maxPollDelay !== undefined) {
-      obj.max_poll_delay = Duration.toJSON(message.maxPollDelay);
+      obj.maxPollDelay = Duration.toJSON(message.maxPollDelay);
     }
     if (message.totalPollTimeout !== undefined) {
-      obj.total_poll_timeout = Duration.toJSON(message.totalPollTimeout);
+      obj.totalPollTimeout = Duration.toJSON(message.totalPollTimeout);
     }
     return obj;
   },
@@ -1250,7 +1250,7 @@ export const SelectiveGapicGeneration: MessageFns<SelectiveGapicGeneration> = {
       obj.methods = message.methods;
     }
     if (message.generateOmittedAsInternal !== false) {
-      obj.generate_omitted_as_internal = message.generateOmittedAsInternal;
+      obj.generateOmittedAsInternal = message.generateOmittedAsInternal;
     }
     return obj;
   },
