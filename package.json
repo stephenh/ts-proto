@@ -72,7 +72,6 @@
   "dependencies": {
     "@bufbuild/protobuf": "^2.10.2",
     "case-anything": "^2.1.13",
-    "google-proto-files": "^5.0.1",
     "ts-poet": "^6.12.0",
     "ts-proto-descriptors": "2.1.0"
   },
