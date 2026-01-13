@@ -43,6 +43,7 @@ describe("options", () => {
         "outputServices": [],
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
+        "protoJsonFormat": false,
         "removeEnumPrefix": false,
         "returnObservable": false,
         "rpcAfterResponse": false,
