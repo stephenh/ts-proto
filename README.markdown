@@ -414,7 +414,8 @@ Generated code will be placed in the Gradle build directory.
 
   The default behavior is `keys_json`, i.e. both will be camel cased, and `json_name` will be used if set.
 
-- With `--ts_proto_opt=protoJsonFormat=true`, the `fromJSON` method will accept both the `json_name` (or camelCased name) and the original proto field name (often snake_cased), without duplication of the field if the two names are identical. This option also implies `snakeToCamel=json` to ensure that standard JSON keys are generated in lowerCamelCase (or use `json_name`), as mandated by the spec.
+- With `--ts_proto_opt=protoJsonFormat=true` (default), the `toJSON` and `fromJSON`  methods follow the [protoJSON format](https://protobuf.dev/programming-guides/json). This means `toJSON` will output standard lowerCamelCase keys (or custom `json_name` if set). `fromJSON` will accept both the lowerCamelCase key (or `json_name`) AND the original proto field name.
+With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disabled. The JSON keys will simply follow the `snakeToCamel` option, and `fromJSON` will only accept that specific format.
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 

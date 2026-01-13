@@ -128,7 +128,7 @@ export function defaultOptions(): Options {
   return {
     context: false,
     snakeToCamel: ["json", "keys"],
-    protoJsonFormat: false,
+    protoJsonFormat: true,
     emitDefaultValues: [],
     globalThisPolyfill: false,
     forceLong: LongOption.NUMBER,
