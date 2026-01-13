@@ -1,1 +1,1 @@
-protoJSONFormat=true
+protoJsonFormat=true
