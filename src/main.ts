@@ -2380,6 +2380,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       !options.initializeFieldsAsUndefined &&
       isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
 
+    // if the protoJsonFormat option is enabled and the field name is different from the json name, we need to
+    // accept both formats in the fromJSON method.
+    let protoJsonComparison = code``;
     // and then use the snippet to handle repeated fields if necessary
     if (canonicalFromJson[fullTypeName]?.[fieldName]) {
       chunks.push(code`${fieldName}: ${canonicalFromJson[fullTypeName][fieldName]("object")},`);
@@ -2392,12 +2395,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
           const fallback = noDefaultValue ? nullOrUndefined(options) : "new Map()";
 
-          let comparison = code``;
-          if (options.protoJSONFormat && field.name !== field.jsonName) {
-            const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-              comparison = code`
-                : ${ctx.utils.isObject}(${jsonOriginalProperty})
-                ? (${ctx.utils.globalThis}.Object.entries(${jsonOriginalProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
+          if (options.protoJsonFormat && field.name !== field.jsonName) {
+            const protoJsonProperty = getPropertyAccessor("object", field.name);
+            protoJsonComparison = code`
+                : ${ctx.utils.isObject}(${protoJsonProperty})
+                ? (${ctx.utils.globalThis}.Object.entries(${protoJsonProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
                     acc.set(${i}, ${readSnippet("value")});
                     return acc;
                   }, new Map())
@@ -2409,18 +2411,17 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
                   acc.set(${i}, ${readSnippet("value")});
                   return acc;
                 }, new Map())
-              ${comparison}
+              ${protoJsonComparison}
               : ${fallback},
           `);
         } else {
           const fallback = noDefaultValue ? nullOrUndefined(options) : "{}";
 
-          let comparison = code``;
-          if (options.protoJSONFormat && field.name !== field.jsonName) {
-            const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-            comparison = code`
-                 : ${ctx.utils.isObject}(${jsonOriginalProperty})
-                 ? (${ctx.utils.globalThis}.Object.entries(${jsonOriginalProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
+          if (options.protoJsonFormat && field.name !== field.jsonName) {
+            const protoJsonProperty = getPropertyAccessor("object", field.name);
+            protoJsonComparison = code`
+                 : ${ctx.utils.isObject}(${protoJsonProperty})
+                 ? (${ctx.utils.globalThis}.Object.entries(${protoJsonProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
                      acc[${i}] = ${readSnippet("value")};
                      return acc;
                    }, {})
@@ -2432,7 +2433,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
                   acc[${i}] = ${readSnippet("value")};
                   return acc;
                 }, {})
-              ${comparison}
+              ${protoJsonComparison}
               : ${fallback},
           `);
         }
@@ -2441,27 +2442,25 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
         const needMap = readSnippet("e").toString() !== code`e`.toString();
         if (!needMap) {
-          let comparison = code``;
-          if (options.protoJSONFormat && field.name !== field.jsonName) {
-            const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-            const jsonOriginalPropertyOptional = getPropertyAccessor("object", field.name, true);
-            comparison = code` : ${ctx.utils.globalThis}.Array.isArray(${jsonOriginalPropertyOptional}) ? [...${jsonOriginalProperty}]`;
+          if (options.protoJsonFormat && field.name !== field.jsonName) {
+            const protoJsonProperty = getPropertyAccessor("object", field.name);
+            const protoJsonPropertyOptional = getPropertyAccessor("object", field.name, true);
+            protoJsonComparison = code` : ${ctx.utils.globalThis}.Array.isArray(${protoJsonPropertyOptional}) ? [...${protoJsonProperty}]`;
           }
           chunks.push(
-            code`${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] ${comparison} : [],`,
+            code`${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] ${protoJsonComparison} : [],`,
           );
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
-          let comparison = code``;
-          if (options.protoJSONFormat && field.name !== field.jsonName) {
-            const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-            const jsonOriginalPropertyOptional = getPropertyAccessor("object", field.name, true);
-            comparison = code` : ${ctx.utils.globalThis}.Array.isArray(${jsonOriginalPropertyOptional}) ? ${jsonOriginalProperty}.map((e: any) => ${readSnippet("e")})`;
+          if (options.protoJsonFormat && field.name !== field.jsonName) {
+            const protoJsonProperty = getPropertyAccessor("object", field.name);
+            const protoJsonPropertyOptional = getPropertyAccessor("object", field.name, true);
+            protoJsonComparison = code` : ${ctx.utils.globalThis}.Array.isArray(${protoJsonPropertyOptional}) ? ${protoJsonProperty}.map((e: any) => ${readSnippet("e")})`;
           }
           chunks.push(code`
             ${fieldKey}: ${
               ctx.utils.globalThis
-            }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}) ${comparison} : ${fallback},
+            }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}) ${protoJsonComparison} : ${fallback},
           `);
         }
       }
@@ -2480,10 +2479,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       const ternaryThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonProperty}`)}`;
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
-      if (options.protoJSONFormat && field.name !== field.jsonName) {
-        const jsonOriginalProperty = getPropertyAccessor('object', field.name);
-        const ternaryOriginalIf = code`${ctx.utils.isSet}(${jsonOriginalProperty})`;
-        const ternaryOriginalThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonOriginalProperty}`)}`;
+      if (options.protoJsonFormat && field.name !== field.jsonName) {
+        const protoJsonProperty = getPropertyAccessor('object', field.name);
+        const ternaryOriginalIf = code`${ctx.utils.isSet}(${protoJsonProperty})`;
+        const ternaryOriginalThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${protoJsonProperty}`)}`;
         chunks.push(code`${ternaryOriginalIf} ? ${ternaryOriginalThen}} : `);
       }
 
@@ -2491,51 +2490,47 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         chunks.push(code`${nullOrUndefined(options)},`);
       }
     } else if (isAnyValueType(field)) {
-      let comparison = code``;
-      if (options.protoJSONFormat && field.name !== field.jsonName) {
-        const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-        const jsonOriginalPropertyOptional = getPropertyAccessor("object", field.name, true);
-        comparison = code` : ${ctx.utils.isSet}(${jsonOriginalPropertyOptional}) ? ${readSnippet(`${jsonOriginalProperty}`)}`;
+      if (options.protoJsonFormat && field.name !== field.jsonName) {
+        const protoJsonProperty = getPropertyAccessor("object", field.name);
+        const protoJsonPropertyOptional = getPropertyAccessor("object", field.name, true);
+        protoJsonComparison = code` : ${ctx.utils.isSet}(${protoJsonPropertyOptional}) ? ${readSnippet(`${protoJsonProperty}`)}`;
       }
       chunks.push(code`${fieldKey}: ${ctx.utils.isSet}(${jsonPropertyOptional})
         ? ${readSnippet(`${jsonProperty}`)}
-        ${comparison}
+        ${protoJsonComparison}
         : ${nullOrUndefined(options)},
       `);
     } else if (isStructType(field)) {
-      let comparison = code``;
-      if (options.protoJSONFormat && field.name !== field.jsonName) {
-        const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-        comparison = code` : ${ctx.utils.isObject}(${jsonOriginalProperty}) ? ${readSnippet(`${jsonOriginalProperty}`)}`;
+      if (options.protoJsonFormat && field.name !== field.jsonName) {
+        const protoJsonProperty = getPropertyAccessor("object", field.name);
+        protoJsonComparison = code` : ${ctx.utils.isObject}(${protoJsonProperty}) ? ${readSnippet(`${protoJsonProperty}`)}`;
       }
       chunks.push(
         code`${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
-          ${comparison}
+          ${protoJsonComparison}
           : ${nullOrUndefined(options)},`,
       );
     } else if (isListValueType(field)) {
-      let comparison = code``;
-      if (options.protoJSONFormat && field.name !== field.jsonName) {
-        const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-        comparison = code` : ${ctx.utils.globalThis}.Array.isArray(${jsonOriginalProperty}) ? ${readSnippet(`${jsonOriginalProperty}`)}`;
+      if (options.protoJsonFormat && field.name !== field.jsonName) {
+        const protoJsonProperty = getPropertyAccessor("object", field.name);
+        protoJsonComparison = code` : ${ctx.utils.globalThis}.Array.isArray(${protoJsonProperty}) ? ${readSnippet(`${protoJsonProperty}`)}`;
       }
       chunks.push(code`
         ${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
-          ${comparison}
+          ${protoJsonComparison}
           : ${nullOrUndefined(options)},
       `);
     } else {
       const fallback = isWithinOneOf(field) || noDefaultValue ? nullOrUndefined(options) : defaultValue(ctx, field);
-      let comparison = code``;
-      if (options.protoJSONFormat && field.name !== field.jsonName) {
-        const jsonOriginalProperty = getPropertyAccessor("object", field.name);
-        comparison = code` : ${ctx.utils.isSet}(${jsonOriginalProperty}) ? ${readSnippet(`${jsonOriginalProperty}`)}`;
+      if (options.protoJsonFormat && field.name !== field.jsonName) {
+        const protoJsonProperty = getPropertyAccessor("object", field.name);
+        protoJsonComparison = code` : ${ctx.utils.isSet}(${protoJsonProperty}) ? ${readSnippet(`${protoJsonProperty}`)}`;
       }
       chunks.push(code`
         ${fieldKey}: ${ctx.utils.isSet}(${jsonProperty}) ? ${readSnippet(`${jsonProperty}`)}
-        ${comparison}
+        ${protoJsonComparison}
           : ${fallback},
       `);
     }
