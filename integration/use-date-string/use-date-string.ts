@@ -109,10 +109,24 @@ export const Todo: MessageFns<Todo> = {
       timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : undefined,
       repeatedTimestamp: globalThis.Array.isArray(object?.repeatedTimestamp)
         ? object.repeatedTimestamp.map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.repeated_timestamp)
+        ? object.repeated_timestamp.map((e: any) => globalThis.String(e))
         : [],
-      optionalTimestamp: isSet(object.optionalTimestamp) ? globalThis.String(object.optionalTimestamp) : undefined,
+      optionalTimestamp: isSet(object.optionalTimestamp)
+        ? globalThis.String(object.optionalTimestamp)
+        : isSet(object.optional_timestamp)
+        ? globalThis.String(object.optional_timestamp)
+        : undefined,
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.map_of_timestamps)
+        ? (globalThis.Object.entries(object.map_of_timestamps) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
             acc[key] = globalThis.String(value);
             return acc;

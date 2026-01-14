@@ -110,10 +110,24 @@ export const Todo: MessageFns<Todo> = {
       oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
       repeatedOid: globalThis.Array.isArray(object?.repeatedOid)
         ? object.repeatedOid.map((e: any) => fromJsonObjectId(e))
+        : globalThis.Array.isArray(object?.repeated_oid)
+        ? object.repeated_oid.map((e: any) => fromJsonObjectId(e))
         : [],
-      optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
+      optionalOid: isSet(object.optionalOid)
+        ? fromJsonObjectId(object.optionalOid)
+        : isSet(object.optional_oid)
+        ? fromJsonObjectId(object.optional_oid)
+        : undefined,
       mapOfOids: isObject(object.mapOfOids)
         ? (globalThis.Object.entries(object.mapOfOids) as [string, any][]).reduce(
+          (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonObjectId(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.map_of_oids)
+        ? (globalThis.Object.entries(object.map_of_oids) as [string, any][]).reduce(
           (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
             acc[key] = fromJsonObjectId(value);
             return acc;

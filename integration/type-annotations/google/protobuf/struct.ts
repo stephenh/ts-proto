@@ -404,12 +404,36 @@ export const Value: MessageFns<Value, "google.protobuf.Value"> & AnyValueWrapper
   fromJSON(object: any): Value {
     return {
       $type: Value.$type,
-      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : undefined,
-      numberValue: isSet(object.numberValue) ? globalThis.Number(object.numberValue) : undefined,
-      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : undefined,
-      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : undefined,
-      structValue: isObject(object.structValue) ? object.structValue : undefined,
-      listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      nullValue: isSet(object.nullValue)
+        ? nullValueFromJSON(object.nullValue)
+        : isSet(object.null_value)
+        ? nullValueFromJSON(object.null_value)
+        : undefined,
+      numberValue: isSet(object.numberValue)
+        ? globalThis.Number(object.numberValue)
+        : isSet(object.number_value)
+        ? globalThis.Number(object.number_value)
+        : undefined,
+      stringValue: isSet(object.stringValue)
+        ? globalThis.String(object.stringValue)
+        : isSet(object.string_value)
+        ? globalThis.String(object.string_value)
+        : undefined,
+      boolValue: isSet(object.boolValue)
+        ? globalThis.Boolean(object.boolValue)
+        : isSet(object.bool_value)
+        ? globalThis.Boolean(object.bool_value)
+        : undefined,
+      structValue: isObject(object.structValue)
+        ? object.structValue
+        : isObject(object.struct_value)
+        ? object.struct_value
+        : undefined,
+      listValue: globalThis.Array.isArray(object.listValue)
+        ? [...object.listValue]
+        : globalThis.Array.isArray(object.list_value)
+        ? [...object.list_value]
+        : undefined,
     };
   },
 

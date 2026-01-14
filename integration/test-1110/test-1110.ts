@@ -76,7 +76,13 @@ export const UserRule: MessageFns<UserRule> = {
   },
 
   fromJSON(object: any): UserRule {
-    return { UUID: isSet(object.uuid) ? globalThis.String(object.uuid) : "" };
+    return {
+      UUID: isSet(object.uuid)
+        ? globalThis.String(object.uuid)
+        : isSet(object.UUID)
+        ? globalThis.String(object.UUID)
+        : "",
+    };
   },
 
   toJSON(message: UserRule): unknown {

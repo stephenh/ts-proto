@@ -57,7 +57,13 @@ export const NestedList: MessageFns<NestedList> = {
   },
 
   fromJSON(object: any): NestedList {
-    return { aString: globalThis.Array.isArray(object?.aString) ? object.aString.map((e: any) => String(e)) : [] };
+    return {
+      aString: globalThis.Array.isArray(object?.aString)
+        ? object.aString.map((e: any) => String(e))
+        : globalThis.Array.isArray(object?.a_string)
+        ? object.a_string.map((e: any) => String(e))
+        : [],
+    };
   },
 
   toJSON(message: NestedList): unknown {

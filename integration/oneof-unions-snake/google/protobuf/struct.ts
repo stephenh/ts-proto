@@ -384,16 +384,28 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
 
   fromJSON(object: any): Value {
     return {
-      kind: isSet(object.null_value)
+      kind: isSet(object.nullValue)
+        ? { $case: "null_value", null_value: nullValueFromJSON(object.nullValue) }
+        : isSet(object.null_value)
         ? { $case: "null_value", null_value: nullValueFromJSON(object.null_value) }
+        : isSet(object.numberValue)
+        ? { $case: "number_value", number_value: globalThis.Number(object.numberValue) }
         : isSet(object.number_value)
         ? { $case: "number_value", number_value: globalThis.Number(object.number_value) }
+        : isSet(object.stringValue)
+        ? { $case: "string_value", string_value: globalThis.String(object.stringValue) }
         : isSet(object.string_value)
         ? { $case: "string_value", string_value: globalThis.String(object.string_value) }
+        : isSet(object.boolValue)
+        ? { $case: "bool_value", bool_value: globalThis.Boolean(object.boolValue) }
         : isSet(object.bool_value)
         ? { $case: "bool_value", bool_value: globalThis.Boolean(object.bool_value) }
+        : isSet(object.structValue)
+        ? { $case: "struct_value", struct_value: object.structValue }
         : isSet(object.struct_value)
         ? { $case: "struct_value", struct_value: object.struct_value }
+        : isSet(object.listValue)
+        ? { $case: "list_value", list_value: [...object.listValue] }
         : isSet(object.list_value)
         ? { $case: "list_value", list_value: [...object.list_value] }
         : undefined,
@@ -403,17 +415,17 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.kind?.$case === "null_value") {
-      obj.null_value = nullValueToJSON(message.kind.null_value);
+      obj.nullValue = nullValueToJSON(message.kind.null_value);
     } else if (message.kind?.$case === "number_value") {
-      obj.number_value = message.kind.number_value;
+      obj.numberValue = message.kind.number_value;
     } else if (message.kind?.$case === "string_value") {
-      obj.string_value = message.kind.string_value;
+      obj.stringValue = message.kind.string_value;
     } else if (message.kind?.$case === "bool_value") {
-      obj.bool_value = message.kind.bool_value;
+      obj.boolValue = message.kind.bool_value;
     } else if (message.kind?.$case === "struct_value") {
-      obj.struct_value = message.kind.struct_value;
+      obj.structValue = message.kind.struct_value;
     } else if (message.kind?.$case === "list_value") {
-      obj.list_value = message.kind.list_value;
+      obj.listValue = message.kind.list_value;
     }
     return obj;
   },

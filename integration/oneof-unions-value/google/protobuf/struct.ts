@@ -383,16 +383,28 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
     return {
       kind: isSet(object.nullValue)
         ? { $case: "nullValue", value: nullValueFromJSON(object.nullValue) }
+        : isSet(object.null_value)
+        ? { $case: "nullValue", value: nullValueFromJSON(object.null_value) }
         : isSet(object.numberValue)
         ? { $case: "numberValue", value: globalThis.Number(object.numberValue) }
+        : isSet(object.number_value)
+        ? { $case: "numberValue", value: globalThis.Number(object.number_value) }
         : isSet(object.stringValue)
         ? { $case: "stringValue", value: globalThis.String(object.stringValue) }
+        : isSet(object.string_value)
+        ? { $case: "stringValue", value: globalThis.String(object.string_value) }
         : isSet(object.boolValue)
         ? { $case: "boolValue", value: globalThis.Boolean(object.boolValue) }
+        : isSet(object.bool_value)
+        ? { $case: "boolValue", value: globalThis.Boolean(object.bool_value) }
         : isSet(object.structValue)
         ? { $case: "structValue", value: object.structValue }
+        : isSet(object.struct_value)
+        ? { $case: "structValue", value: object.struct_value }
         : isSet(object.listValue)
         ? { $case: "listValue", value: [...object.listValue] }
+        : isSet(object.list_value)
+        ? { $case: "listValue", value: [...object.list_value] }
         : undefined,
     };
   },

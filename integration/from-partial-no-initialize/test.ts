@@ -241,12 +241,18 @@ export const TPartial: MessageFns<TPartial> = {
       message: isSet(object.message) ? TPartialMessage.fromJSON(object.message) : undefined,
       repeatedMessage: globalThis.Array.isArray(object?.repeatedMessage)
         ? object.repeatedMessage.map((e: any) => TPartialMessage.fromJSON(e))
+        : globalThis.Array.isArray(object?.repeated_message)
+        ? object.repeated_message.map((e: any) => TPartialMessage.fromJSON(e))
         : undefined,
       repeatedString: globalThis.Array.isArray(object?.repeatedString)
         ? object.repeatedString.map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.repeated_string)
+        ? object.repeated_string.map((e: any) => globalThis.String(e))
         : undefined,
       repeatedNumber: globalThis.Array.isArray(object?.repeatedNumber)
         ? object.repeatedNumber.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.repeated_number)
+        ? object.repeated_number.map((e: any) => globalThis.Number(e))
         : undefined,
     };
   },

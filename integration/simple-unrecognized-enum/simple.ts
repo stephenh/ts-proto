@@ -402,16 +402,24 @@ export const Simple: MessageFns<Simple> = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       grandChildren: globalThis.Array.isArray(object?.grandChildren)
         ? object.grandChildren.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.grand_children)
+        ? object.grand_children.map((e: any) => Child.fromJSON(e))
         : [],
       coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => globalThis.Number(e)) : [],
       snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => globalThis.String(e)) : [],
       oldStates: globalThis.Array.isArray(object?.oldStates)
         ? object.oldStates.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.old_states)
+        ? object.old_states.map((e: any) => stateEnumFromJSON(e))
         : [],
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
     };
@@ -1483,6 +1491,14 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
     return {
       entitiesById: isObject(object.entitiesById)
         ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.entities_by_id)
+        ? (globalThis.Object.entries(object.entities_by_id) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
             acc[globalThis.Number(key)] = Entity.fromJSON(value);
             return acc;

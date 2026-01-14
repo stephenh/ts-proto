@@ -48,7 +48,13 @@ export const FieldMaskMessage: MessageFns<FieldMaskMessage> = {
   },
 
   fromJSON(object: any): FieldMaskMessage {
-    return { fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined };
+    return {
+      fieldMask: isSet(object.fieldMask)
+        ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask))
+        : isSet(object.field_mask)
+        ? FieldMask.unwrap(FieldMask.fromJSON(object.field_mask))
+        : undefined,
+    };
   },
 
   toJSON(message: FieldMaskMessage): unknown {

@@ -315,8 +315,16 @@ export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> 
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? globalThis.String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? globalThis.String(object.connectGithub) : "",
+      connectGoogle: isSet(object.connectGoogle)
+        ? globalThis.String(object.connectGoogle)
+        : isSet(object.connect_google)
+        ? globalThis.String(object.connect_google)
+        : "",
+      connectGithub: isSet(object.connectGithub)
+        ? globalThis.String(object.connectGithub)
+        : isSet(object.connect_github)
+        ? globalThis.String(object.connect_github)
+        : "",
     };
   },
 
@@ -597,7 +605,11 @@ export const DashAPICredsUpdateReq: MessageFns<DashAPICredsUpdateReq> = {
 
   fromJSON(object: any): DashAPICredsUpdateReq {
     return {
-      credSid: isSet(object.credSid) ? globalThis.String(object.credSid) : "",
+      credSid: isSet(object.credSid)
+        ? globalThis.String(object.credSid)
+        : isSet(object.cred_sid)
+        ? globalThis.String(object.cred_sid)
+        : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
@@ -683,7 +695,11 @@ export const DashAPICredsDeleteReq: MessageFns<DashAPICredsDeleteReq> = {
 
   fromJSON(object: any): DashAPICredsDeleteReq {
     return {
-      credSid: isSet(object.credSid) ? globalThis.String(object.credSid) : "",
+      credSid: isSet(object.credSid)
+        ? globalThis.String(object.credSid)
+        : isSet(object.cred_sid)
+        ? globalThis.String(object.cred_sid)
+        : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },

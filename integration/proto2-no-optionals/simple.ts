@@ -644,52 +644,196 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
 
   fromJSON(object: any): OptionalsTest {
     return {
-      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => globalThis.Number(e)) : [],
-      repChild: globalThis.Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
-      repState: globalThis.Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
-      repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => globalThis.Number(e)) : [],
+      repId: globalThis.Array.isArray(object?.repId)
+        ? object.repId.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_id)
+        ? object.rep_id.map((e: any) => globalThis.Number(e))
+        : [],
+      repChild: globalThis.Array.isArray(object?.repChild)
+        ? object.repChild.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.rep_child)
+        ? object.rep_child.map((e: any) => Child.fromJSON(e))
+        : [],
+      repState: globalThis.Array.isArray(object?.repState)
+        ? object.repState.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.rep_state)
+        ? object.rep_state.map((e: any) => stateEnumFromJSON(e))
+        : [],
+      repLong: globalThis.Array.isArray(object?.repLong)
+        ? object.repLong.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_long)
+        ? object.rep_long.map((e: any) => globalThis.Number(e))
+        : [],
       repTruth: globalThis.Array.isArray(object?.repTruth)
         ? object.repTruth.map((e: any) => globalThis.Boolean(e))
+        : globalThis.Array.isArray(object?.rep_truth)
+        ? object.rep_truth.map((e: any) => globalThis.Boolean(e))
         : [],
       repDescription: globalThis.Array.isArray(object?.repDescription)
         ? object.repDescription.map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.rep_description)
+        ? object.rep_description.map((e: any) => globalThis.String(e))
         : [],
-      repData: globalThis.Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
-      repFloat: globalThis.Array.isArray(object?.repFloat) ? object.repFloat.map((e: any) => globalThis.Number(e)) : [],
-      optId: isSet(object.optId) ? globalThis.Number(object.optId) : 0,
-      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
-      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : 0,
-      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : 0,
-      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : false,
-      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : "",
-      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : new Uint8Array(0),
-      optFloat: isSet(object.optFloat) ? globalThis.Number(object.optFloat) : 0,
-      reqId: isSet(object.reqId) ? globalThis.Number(object.reqId) : 0,
-      reqChild: isSet(object.reqChild) ? Child.fromJSON(object.reqChild) : undefined,
-      reqState: isSet(object.reqState) ? stateEnumFromJSON(object.reqState) : 0,
-      reqLong: isSet(object.reqLong) ? globalThis.Number(object.reqLong) : 0,
-      reqTruth: isSet(object.reqTruth) ? globalThis.Boolean(object.reqTruth) : false,
-      reqDescription: isSet(object.reqDescription) ? globalThis.String(object.reqDescription) : "",
-      reqData: isSet(object.reqData) ? bytesFromBase64(object.reqData) : new Uint8Array(0),
-      reqFloat: isSet(object.reqFloat) ? globalThis.Number(object.reqFloat) : 0,
-      reqDefvalId: isSet(object.reqDefvalId) ? globalThis.Number(object.reqDefvalId) : 100,
-      reqDefvalState: isSet(object.reqDefvalState) ? stateEnumFromJSON(object.reqDefvalState) : 2,
-      reqDefvalLong: isSet(object.reqDefvalLong) ? globalThis.Number(object.reqDefvalLong) : 7812378193,
-      reqDefvalTruth: isSet(object.reqDefvalTruth) ? globalThis.Boolean(object.reqDefvalTruth) : true,
+      repData: globalThis.Array.isArray(object?.repData)
+        ? object.repData.map((e: any) => bytesFromBase64(e))
+        : globalThis.Array.isArray(object?.rep_data)
+        ? object.rep_data.map((e: any) => bytesFromBase64(e))
+        : [],
+      repFloat: globalThis.Array.isArray(object?.repFloat)
+        ? object.repFloat.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_float)
+        ? object.rep_float.map((e: any) => globalThis.Number(e))
+        : [],
+      optId: isSet(object.optId)
+        ? globalThis.Number(object.optId)
+        : isSet(object.opt_id)
+        ? globalThis.Number(object.opt_id)
+        : 0,
+      optChild: isSet(object.optChild)
+        ? Child.fromJSON(object.optChild)
+        : isSet(object.opt_child)
+        ? Child.fromJSON(object.opt_child)
+        : undefined,
+      optState: isSet(object.optState)
+        ? stateEnumFromJSON(object.optState)
+        : isSet(object.opt_state)
+        ? stateEnumFromJSON(object.opt_state)
+        : 0,
+      optLong: isSet(object.optLong)
+        ? globalThis.Number(object.optLong)
+        : isSet(object.opt_long)
+        ? globalThis.Number(object.opt_long)
+        : 0,
+      optTruth: isSet(object.optTruth)
+        ? globalThis.Boolean(object.optTruth)
+        : isSet(object.opt_truth)
+        ? globalThis.Boolean(object.opt_truth)
+        : false,
+      optDescription: isSet(object.optDescription)
+        ? globalThis.String(object.optDescription)
+        : isSet(object.opt_description)
+        ? globalThis.String(object.opt_description)
+        : "",
+      optData: isSet(object.optData)
+        ? bytesFromBase64(object.optData)
+        : isSet(object.opt_data)
+        ? bytesFromBase64(object.opt_data)
+        : new Uint8Array(0),
+      optFloat: isSet(object.optFloat)
+        ? globalThis.Number(object.optFloat)
+        : isSet(object.opt_float)
+        ? globalThis.Number(object.opt_float)
+        : 0,
+      reqId: isSet(object.reqId)
+        ? globalThis.Number(object.reqId)
+        : isSet(object.req_id)
+        ? globalThis.Number(object.req_id)
+        : 0,
+      reqChild: isSet(object.reqChild)
+        ? Child.fromJSON(object.reqChild)
+        : isSet(object.req_child)
+        ? Child.fromJSON(object.req_child)
+        : undefined,
+      reqState: isSet(object.reqState)
+        ? stateEnumFromJSON(object.reqState)
+        : isSet(object.req_state)
+        ? stateEnumFromJSON(object.req_state)
+        : 0,
+      reqLong: isSet(object.reqLong)
+        ? globalThis.Number(object.reqLong)
+        : isSet(object.req_long)
+        ? globalThis.Number(object.req_long)
+        : 0,
+      reqTruth: isSet(object.reqTruth)
+        ? globalThis.Boolean(object.reqTruth)
+        : isSet(object.req_truth)
+        ? globalThis.Boolean(object.req_truth)
+        : false,
+      reqDescription: isSet(object.reqDescription)
+        ? globalThis.String(object.reqDescription)
+        : isSet(object.req_description)
+        ? globalThis.String(object.req_description)
+        : "",
+      reqData: isSet(object.reqData)
+        ? bytesFromBase64(object.reqData)
+        : isSet(object.req_data)
+        ? bytesFromBase64(object.req_data)
+        : new Uint8Array(0),
+      reqFloat: isSet(object.reqFloat)
+        ? globalThis.Number(object.reqFloat)
+        : isSet(object.req_float)
+        ? globalThis.Number(object.req_float)
+        : 0,
+      reqDefvalId: isSet(object.reqDefvalId)
+        ? globalThis.Number(object.reqDefvalId)
+        : isSet(object.req_defval_id)
+        ? globalThis.Number(object.req_defval_id)
+        : 100,
+      reqDefvalState: isSet(object.reqDefvalState)
+        ? stateEnumFromJSON(object.reqDefvalState)
+        : isSet(object.req_defval_state)
+        ? stateEnumFromJSON(object.req_defval_state)
+        : 2,
+      reqDefvalLong: isSet(object.reqDefvalLong)
+        ? globalThis.Number(object.reqDefvalLong)
+        : isSet(object.req_defval_long)
+        ? globalThis.Number(object.req_defval_long)
+        : 7812378193,
+      reqDefvalTruth: isSet(object.reqDefvalTruth)
+        ? globalThis.Boolean(object.reqDefvalTruth)
+        : isSet(object.req_defval_truth)
+        ? globalThis.Boolean(object.req_defval_truth)
+        : true,
       reqDefvalDescription: isSet(object.reqDefvalDescription)
         ? globalThis.String(object.reqDefvalDescription)
+        : isSet(object.req_defval_description)
+        ? globalThis.String(object.req_defval_description)
         : "Some description",
-      reqDefvalData: isSet(object.reqDefvalData) ? bytesFromBase64(object.reqDefvalData) : new Uint8Array(0),
-      reqDefvalFloat: isSet(object.reqDefvalFloat) ? globalThis.Number(object.reqDefvalFloat) : 0.12354,
-      optDefvalId: isSet(object.optDefvalId) ? globalThis.Number(object.optDefvalId) : 100,
-      optDefvalState: isSet(object.optDefvalState) ? stateEnumFromJSON(object.optDefvalState) : 2,
-      optDefvalLong: isSet(object.optDefvalLong) ? globalThis.Number(object.optDefvalLong) : 7812378193,
-      optDefvalTruth: isSet(object.optDefvalTruth) ? globalThis.Boolean(object.optDefvalTruth) : true,
+      reqDefvalData: isSet(object.reqDefvalData)
+        ? bytesFromBase64(object.reqDefvalData)
+        : isSet(object.req_defval_data)
+        ? bytesFromBase64(object.req_defval_data)
+        : new Uint8Array(0),
+      reqDefvalFloat: isSet(object.reqDefvalFloat)
+        ? globalThis.Number(object.reqDefvalFloat)
+        : isSet(object.req_defval_float)
+        ? globalThis.Number(object.req_defval_float)
+        : 0.12354,
+      optDefvalId: isSet(object.optDefvalId)
+        ? globalThis.Number(object.optDefvalId)
+        : isSet(object.opt_defval_id)
+        ? globalThis.Number(object.opt_defval_id)
+        : 100,
+      optDefvalState: isSet(object.optDefvalState)
+        ? stateEnumFromJSON(object.optDefvalState)
+        : isSet(object.opt_defval_state)
+        ? stateEnumFromJSON(object.opt_defval_state)
+        : 2,
+      optDefvalLong: isSet(object.optDefvalLong)
+        ? globalThis.Number(object.optDefvalLong)
+        : isSet(object.opt_defval_long)
+        ? globalThis.Number(object.opt_defval_long)
+        : 7812378193,
+      optDefvalTruth: isSet(object.optDefvalTruth)
+        ? globalThis.Boolean(object.optDefvalTruth)
+        : isSet(object.opt_defval_truth)
+        ? globalThis.Boolean(object.opt_defval_truth)
+        : true,
       optDefvalDescription: isSet(object.optDefvalDescription)
         ? globalThis.String(object.optDefvalDescription)
+        : isSet(object.opt_defval_description)
+        ? globalThis.String(object.opt_defval_description)
         : "Some description",
-      optDefvalData: isSet(object.optDefvalData) ? bytesFromBase64(object.optDefvalData) : new Uint8Array(0),
-      optDefvalFloat: isSet(object.optDefvalFloat) ? globalThis.Number(object.optDefvalFloat) : 0.12354,
+      optDefvalData: isSet(object.optDefvalData)
+        ? bytesFromBase64(object.optDefvalData)
+        : isSet(object.opt_defval_data)
+        ? bytesFromBase64(object.opt_defval_data)
+        : new Uint8Array(0),
+      optDefvalFloat: isSet(object.optDefvalFloat)
+        ? globalThis.Number(object.optDefvalFloat)
+        : isSet(object.opt_defval_float)
+        ? globalThis.Number(object.opt_defval_float)
+        : 0.12354,
       translations: isObject(object.translations)
         ? (globalThis.Object.entries(object.translations) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
