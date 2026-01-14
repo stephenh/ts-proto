@@ -419,15 +419,23 @@ export const Simple: MessageFns<Simple> = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
-      created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
+      created_at: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
-      grand_children: globalThis.Array.isArray(object?.grand_children)
+      grand_children: globalThis.Array.isArray(object?.grandChildren)
+        ? object.grandChildren.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.grand_children)
         ? object.grand_children.map((e: any) => Child.fromJSON(e))
         : [],
       coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => globalThis.Number(e)) : [],
       snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => globalThis.String(e)) : [],
-      old_states: globalThis.Array.isArray(object?.old_states)
+      old_states: globalThis.Array.isArray(object?.oldStates)
+        ? object.oldStates.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.old_states)
         ? object.old_states.map((e: any) => stateEnumFromJSON(e))
         : [],
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
@@ -443,7 +451,7 @@ export const Simple: MessageFns<Simple> = {
       obj.age = Math.round(message.age);
     }
     if (message.created_at !== undefined) {
-      obj.created_at = message.created_at.toISOString();
+      obj.createdAt = message.created_at.toISOString();
     }
     if (message.child !== undefined) {
       obj.child = Child.toJSON(message.child);
@@ -452,7 +460,7 @@ export const Simple: MessageFns<Simple> = {
       obj.state = stateEnumToJSON(message.state);
     }
     if (message.grand_children?.length) {
-      obj.grand_children = message.grand_children.map((e) => Child.toJSON(e));
+      obj.grandChildren = message.grand_children.map((e) => Child.toJSON(e));
     }
     if (message.coins?.length) {
       obj.coins = message.coins.map((e) => Math.round(e));
@@ -461,7 +469,7 @@ export const Simple: MessageFns<Simple> = {
       obj.snacks = message.snacks;
     }
     if (message.old_states?.length) {
-      obj.old_states = message.old_states.map((e) => stateEnumToJSON(e));
+      obj.oldStates = message.old_states.map((e) => stateEnumToJSON(e));
     }
     if (message.thing !== undefined) {
       obj.thing = ImportedThing.toJSON(message.thing);
@@ -1498,7 +1506,15 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
 
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     return {
-      entities_by_id: isObject(object.entities_by_id)
+      entities_by_id: isObject(object.entitiesById)
+        ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.entities_by_id)
         ? (globalThis.Object.entries(object.entities_by_id) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
             acc[globalThis.Number(key)] = Entity.fromJSON(value);
@@ -1515,9 +1531,9 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
     if (message.entities_by_id) {
       const entries = globalThis.Object.entries(message.entities_by_id) as [string, Entity][];
       if (entries.length > 0) {
-        obj.entities_by_id = {};
+        obj.entitiesById = {};
         entries.forEach(([k, v]) => {
-          obj.entities_by_id[k] = Entity.toJSON(v);
+          obj.entitiesById[k] = Entity.toJSON(v);
         });
       }
     }
@@ -2026,13 +2042,19 @@ export const SimpleStruct: MessageFns<SimpleStruct> = {
   },
 
   fromJSON(object: any): SimpleStruct {
-    return { simple_struct: isObject(object.simple_struct) ? object.simple_struct : undefined };
+    return {
+      simple_struct: isObject(object.simpleStruct)
+        ? object.simpleStruct
+        : isObject(object.simple_struct)
+        ? object.simple_struct
+        : undefined,
+    };
   },
 
   toJSON(message: SimpleStruct): unknown {
     const obj: any = {};
     if (message.simple_struct !== undefined) {
-      obj.simple_struct = message.simple_struct;
+      obj.simpleStruct = message.simple_struct;
     }
     return obj;
   },

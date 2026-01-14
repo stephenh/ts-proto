@@ -227,9 +227,25 @@ export const Maps: MessageFns<Maps> = {
           },
           new Map(),
         )
+        : isObject(object.str_to_entity)
+        ? (globalThis.Object.entries(object.str_to_entity) as [string, any][]).reduce(
+          (acc: Map<string, Entity>, [key, value]: [string, any]) => {
+            acc.set(key, Entity.fromJSON(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       int32ToInt32: isObject(object.int32ToInt32)
         ? (globalThis.Object.entries(object.int32ToInt32) as [string, any][]).reduce(
+          (acc: Map<number, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Number(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.int32_to_int32)
+        ? (globalThis.Object.entries(object.int32_to_int32) as [string, any][]).reduce(
           (acc: Map<number, number>, [key, value]: [string, any]) => {
             acc.set(globalThis.Number(key), globalThis.Number(value));
             return acc;
@@ -245,6 +261,14 @@ export const Maps: MessageFns<Maps> = {
           },
           new Map(),
         )
+        : isObject(object.string_to_bytes)
+        ? (globalThis.Object.entries(object.string_to_bytes) as [string, any][]).reduce(
+          (acc: Map<string, Uint8Array>, [key, value]: [string, any]) => {
+            acc.set(key, bytesFromBase64(value as string));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       int64ToInt64: isObject(object.int64ToInt64)
         ? (globalThis.Object.entries(object.int64ToInt64) as [string, any][]).reduce(
@@ -254,9 +278,25 @@ export const Maps: MessageFns<Maps> = {
           },
           new Map(),
         )
+        : isObject(object.int64_to_int64)
+        ? (globalThis.Object.entries(object.int64_to_int64) as [string, any][]).reduce(
+          (acc: Map<number, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Number(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
+          (acc: Map<string, Date>, [key, value]: [string, any]) => {
+            acc.set(key, fromJsonTimestamp(value));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.map_of_timestamps)
+        ? (globalThis.Object.entries(object.map_of_timestamps) as [string, any][]).reduce(
           (acc: Map<string, Date>, [key, value]: [string, any]) => {
             acc.set(key, fromJsonTimestamp(value));
             return acc;

@@ -479,24 +479,76 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       truth: isSet(object.truth) ? globalThis.Boolean(object.truth) : false,
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
-      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => globalThis.Number(e)) : [],
-      repChild: globalThis.Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
-      repState: globalThis.Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
-      repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => globalThis.Number(e)) : [],
+      repId: globalThis.Array.isArray(object?.repId)
+        ? object.repId.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_id)
+        ? object.rep_id.map((e: any) => globalThis.Number(e))
+        : [],
+      repChild: globalThis.Array.isArray(object?.repChild)
+        ? object.repChild.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.rep_child)
+        ? object.rep_child.map((e: any) => Child.fromJSON(e))
+        : [],
+      repState: globalThis.Array.isArray(object?.repState)
+        ? object.repState.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.rep_state)
+        ? object.rep_state.map((e: any) => stateEnumFromJSON(e))
+        : [],
+      repLong: globalThis.Array.isArray(object?.repLong)
+        ? object.repLong.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_long)
+        ? object.rep_long.map((e: any) => globalThis.Number(e))
+        : [],
       repTruth: globalThis.Array.isArray(object?.repTruth)
         ? object.repTruth.map((e: any) => globalThis.Boolean(e))
+        : globalThis.Array.isArray(object?.rep_truth)
+        ? object.rep_truth.map((e: any) => globalThis.Boolean(e))
         : [],
       repDescription: globalThis.Array.isArray(object?.repDescription)
         ? object.repDescription.map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.rep_description)
+        ? object.rep_description.map((e: any) => globalThis.String(e))
         : [],
-      repData: globalThis.Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
-      optId: isSet(object.optId) ? globalThis.Number(object.optId) : undefined,
-      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
-      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
-      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : undefined,
-      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : undefined,
-      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : undefined,
-      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
+      repData: globalThis.Array.isArray(object?.repData)
+        ? object.repData.map((e: any) => bytesFromBase64(e))
+        : globalThis.Array.isArray(object?.rep_data)
+        ? object.rep_data.map((e: any) => bytesFromBase64(e))
+        : [],
+      optId: isSet(object.optId)
+        ? globalThis.Number(object.optId)
+        : isSet(object.opt_id)
+        ? globalThis.Number(object.opt_id)
+        : undefined,
+      optChild: isSet(object.optChild)
+        ? Child.fromJSON(object.optChild)
+        : isSet(object.opt_child)
+        ? Child.fromJSON(object.opt_child)
+        : undefined,
+      optState: isSet(object.optState)
+        ? stateEnumFromJSON(object.optState)
+        : isSet(object.opt_state)
+        ? stateEnumFromJSON(object.opt_state)
+        : undefined,
+      optLong: isSet(object.optLong)
+        ? globalThis.Number(object.optLong)
+        : isSet(object.opt_long)
+        ? globalThis.Number(object.opt_long)
+        : undefined,
+      optTruth: isSet(object.optTruth)
+        ? globalThis.Boolean(object.optTruth)
+        : isSet(object.opt_truth)
+        ? globalThis.Boolean(object.opt_truth)
+        : undefined,
+      optDescription: isSet(object.optDescription)
+        ? globalThis.String(object.optDescription)
+        : isSet(object.opt_description)
+        ? globalThis.String(object.opt_description)
+        : undefined,
+      optData: isSet(object.optData)
+        ? bytesFromBase64(object.optData)
+        : isSet(object.opt_data)
+        ? bytesFromBase64(object.opt_data)
+        : undefined,
       translations: isObject(object.translations)
         ? (globalThis.Object.entries(object.translations) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {

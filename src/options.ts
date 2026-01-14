@@ -54,6 +54,7 @@ export enum OutputSchemaOption {
 export type Options = {
   context: boolean;
   snakeToCamel: Array<"json" | "keys">;
+  protoJsonFormat: boolean;
   forceLong: LongOption;
   useJsTypeOverride: boolean;
   globalThisPolyfill: boolean;
@@ -127,6 +128,7 @@ export function defaultOptions(): Options {
   return {
     context: false,
     snakeToCamel: ["json", "keys"],
+    protoJsonFormat: true,
     emitDefaultValues: [],
     globalThisPolyfill: false,
     forceLong: LongOption.NUMBER,
@@ -276,6 +278,12 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = ["keys", "json"];
   } else if (typeof options.snakeToCamel === "string") {
     options.snakeToCamel = (options.snakeToCamel as string).split("_") as any;
+  }
+
+  if (options.protoJsonFormat && !options.snakeToCamel.includes("json")) {
+    // protoJSONFormat implies snakeToCamel=json, Message field names must be mapped to lowerCamelCase and become JSON object keys.
+    // If the json_name field option is specified, the specified value will be used as the key instead.
+    options.snakeToCamel.push("json");
   }
 
   if ((options.emitDefaultValues as any) === "json-methods") {

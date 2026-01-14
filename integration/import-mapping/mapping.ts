@@ -291,7 +291,11 @@ export const WithAll: MessageFns<WithAll> = {
       strut: isObject(object.strut) ? object.strut : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       duration: isSet(object.duration) ? Duration.fromJSON(object.duration) : undefined,
-      veryVerySecret: isSet(object.veryVerySecret) ? VeryVerySecret.fromJSON(object.veryVerySecret) : undefined,
+      veryVerySecret: isSet(object.veryVerySecret)
+        ? VeryVerySecret.fromJSON(object.veryVerySecret)
+        : isSet(object.very_very_secret)
+        ? VeryVerySecret.fromJSON(object.very_very_secret)
+        : undefined,
     };
   },
 

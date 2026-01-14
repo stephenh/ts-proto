@@ -87,7 +87,11 @@ export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
 
   fromJSON(object: any): GRPCPSuffixTypeGRPCS {
     return {
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       mask: isSet(object.mask) ? GRPCPFieldMaskGRPCS.unwrap(GRPCPFieldMaskGRPCS.fromJSON(object.mask)) : undefined,
       struct: isObject(object.struct) ? object.struct : undefined,
       listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,

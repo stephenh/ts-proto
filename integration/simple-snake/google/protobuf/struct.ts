@@ -387,34 +387,58 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
 
   fromJSON(object: any): Value {
     return {
-      null_value: isSet(object.null_value) ? nullValueFromJSON(object.null_value) : undefined,
-      number_value: isSet(object.number_value) ? globalThis.Number(object.number_value) : undefined,
-      string_value: isSet(object.string_value) ? globalThis.String(object.string_value) : undefined,
-      bool_value: isSet(object.bool_value) ? globalThis.Boolean(object.bool_value) : undefined,
-      struct_value: isObject(object.struct_value) ? object.struct_value : undefined,
-      list_value: globalThis.Array.isArray(object.list_value) ? [...object.list_value] : undefined,
+      null_value: isSet(object.nullValue)
+        ? nullValueFromJSON(object.nullValue)
+        : isSet(object.null_value)
+        ? nullValueFromJSON(object.null_value)
+        : undefined,
+      number_value: isSet(object.numberValue)
+        ? globalThis.Number(object.numberValue)
+        : isSet(object.number_value)
+        ? globalThis.Number(object.number_value)
+        : undefined,
+      string_value: isSet(object.stringValue)
+        ? globalThis.String(object.stringValue)
+        : isSet(object.string_value)
+        ? globalThis.String(object.string_value)
+        : undefined,
+      bool_value: isSet(object.boolValue)
+        ? globalThis.Boolean(object.boolValue)
+        : isSet(object.bool_value)
+        ? globalThis.Boolean(object.bool_value)
+        : undefined,
+      struct_value: isObject(object.structValue)
+        ? object.structValue
+        : isObject(object.struct_value)
+        ? object.struct_value
+        : undefined,
+      list_value: globalThis.Array.isArray(object.listValue)
+        ? [...object.listValue]
+        : globalThis.Array.isArray(object.list_value)
+        ? [...object.list_value]
+        : undefined,
     };
   },
 
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.null_value !== undefined) {
-      obj.null_value = nullValueToJSON(message.null_value);
+      obj.nullValue = nullValueToJSON(message.null_value);
     }
     if (message.number_value !== undefined) {
-      obj.number_value = message.number_value;
+      obj.numberValue = message.number_value;
     }
     if (message.string_value !== undefined) {
-      obj.string_value = message.string_value;
+      obj.stringValue = message.string_value;
     }
     if (message.bool_value !== undefined) {
-      obj.bool_value = message.bool_value;
+      obj.boolValue = message.bool_value;
     }
     if (message.struct_value !== undefined) {
-      obj.struct_value = message.struct_value;
+      obj.structValue = message.struct_value;
     }
     if (message.list_value !== undefined) {
-      obj.list_value = message.list_value;
+      obj.listValue = message.list_value;
     }
     return obj;
   },

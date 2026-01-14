@@ -211,19 +211,49 @@ export const JsonName: MessageFns<JsonName> = {
 
   fromJSON(object: any): JsonName {
     return {
-      other_name: isSet(object.other_name) ? globalThis.String(object.other_name) : "",
-      other_age: isSet(object.other_age) ? globalThis.Number(object.other_age) : undefined,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
-      "hyphened-name": isSet(object["hyphened-name"]) ? globalThis.String(object["hyphened-name"]) : "",
-      "name with spaces": isSet(object["name with spaces"]) ? globalThis.String(object["name with spaces"]) : "",
-      $dollar: isSet(object.$dollar) ? globalThis.String(object.$dollar) : "",
-      dollar$: isSet(object.dollar$) ? globalThis.String(object.dollar$) : "",
+      other_name: isSet(object.other_name)
+        ? globalThis.String(object.other_name)
+        : isSet(object.name)
+        ? globalThis.String(object.name)
+        : "",
+      other_age: isSet(object.other_age)
+        ? globalThis.Number(object.other_age)
+        : isSet(object.age)
+        ? globalThis.Number(object.age)
+        : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
+      "hyphened-name": isSet(object["hyphened-name"])
+        ? globalThis.String(object["hyphened-name"])
+        : isSet(object.hyphen)
+        ? globalThis.String(object.hyphen)
+        : "",
+      "name with spaces": isSet(object["name with spaces"])
+        ? globalThis.String(object["name with spaces"])
+        : isSet(object.spaces)
+        ? globalThis.String(object.spaces)
+        : "",
+      $dollar: isSet(object.$dollar)
+        ? globalThis.String(object.$dollar)
+        : isSet(object.dollarStart)
+        ? globalThis.String(object.dollarStart)
+        : "",
+      dollar$: isSet(object.dollar$)
+        ? globalThis.String(object.dollar$)
+        : isSet(object.dollarEnd)
+        ? globalThis.String(object.dollarEnd)
+        : "",
       "hyphen-list": globalThis.Array.isArray(object?.["hyphen-list"])
         ? object["hyphen-list"].map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.hyphenList)
+        ? object.hyphenList.map((e: any) => globalThis.String(e))
         : [],
-      A: isSet(object.A) ? globalThis.String(object.A) : undefined,
-      b: isSet(object.b) ? globalThis.String(object.b) : undefined,
-      _C: isSet(object._C) ? globalThis.String(object._C) : undefined,
+      A: isSet(object.A) ? globalThis.String(object.A) : isSet(object.a) ? globalThis.String(object.a) : undefined,
+      b: isSet(object.b) ? globalThis.String(object.b) : isSet(object.B) ? globalThis.String(object.B) : undefined,
+      _C: isSet(object._C) ? globalThis.String(object._C) : isSet(object._c) ? globalThis.String(object._c) : undefined,
       d: isSet(object.d) ? NestedOneOf.fromJSON(object.d) : undefined,
       noJsonName: isSet(object.noJsonName) ? globalThis.String(object.noJsonName) : "",
     };
@@ -333,7 +363,11 @@ export const NestedOneOf: MessageFns<NestedOneOf> = {
 
   fromJSON(object: any): NestedOneOf {
     return {
-      nestedOneOfField: isSet(object.nestedOneOfField) ? globalThis.String(object.nestedOneOfField) : undefined,
+      nestedOneOfField: isSet(object.nestedOneOfField)
+        ? globalThis.String(object.nestedOneOfField)
+        : isSet(object.nestedOneOf_field)
+        ? globalThis.String(object.nestedOneOf_field)
+        : undefined,
     };
   },
 

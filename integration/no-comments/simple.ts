@@ -103,8 +103,16 @@ export const Simple: MessageFns<Simple> = {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      testField: isSet(object.testField) ? globalThis.String(object.testField) : "",
-      testNotDeprecated: isSet(object.testNotDeprecated) ? globalThis.String(object.testNotDeprecated) : "",
+      testField: isSet(object.testField)
+        ? globalThis.String(object.testField)
+        : isSet(object.test_field)
+        ? globalThis.String(object.test_field)
+        : "",
+      testNotDeprecated: isSet(object.testNotDeprecated)
+        ? globalThis.String(object.testNotDeprecated)
+        : isSet(object.test_not_deprecated)
+        ? globalThis.String(object.test_not_deprecated)
+        : "",
     };
   },
 

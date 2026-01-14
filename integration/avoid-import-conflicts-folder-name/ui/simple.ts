@@ -188,8 +188,16 @@ export const SimpleEnums: MessageFns<SimpleEnums> = {
 
   fromJSON(object: any): SimpleEnums {
     return {
-      localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
-      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON3(object.importEnum) : 0,
+      localEnum: isSet(object.localEnum)
+        ? simpleEnumFromJSON(object.localEnum)
+        : isSet(object.local_enum)
+        ? simpleEnumFromJSON(object.local_enum)
+        : 0,
+      importEnum: isSet(object.importEnum)
+        ? simpleEnumFromJSON3(object.importEnum)
+        : isSet(object.import_enum)
+        ? simpleEnumFromJSON3(object.import_enum)
+        : 0,
     };
   },
 

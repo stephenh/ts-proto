@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package proto_json_format;
+
+message Message {
+  string my_field = 1;
+  string second_field = 2 [json_name = "myCustomName"];
+}

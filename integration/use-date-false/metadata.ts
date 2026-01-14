@@ -48,7 +48,13 @@ export const Metadata: MessageFns<Metadata> = {
   },
 
   fromJSON(object: any): Metadata {
-    return { lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined };
+    return {
+      lastEdited: isSet(object.lastEdited)
+        ? fromJsonTimestamp(object.lastEdited)
+        : isSet(object.last_edited)
+        ? fromJsonTimestamp(object.last_edited)
+        : undefined,
+    };
   },
 
   toJSON(message: Metadata): unknown {

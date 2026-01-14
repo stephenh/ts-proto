@@ -43,6 +43,7 @@ describe("options", () => {
         "outputServices": [],
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
+        "protoJsonFormat": true,
         "removeEnumPrefix": false,
         "returnObservable": false,
         "rpcAfterResponse": false,
@@ -125,7 +126,7 @@ describe("options", () => {
   });
 
   it("can set snakeToCamel as string", () => {
-    const options = optionsFromParameter("snakeToCamel=keys");
+    const options = optionsFromParameter("snakeToCamel=keys,protoJsonFormat=false");
     expect(options).toMatchObject({ snakeToCamel: ["keys"] });
   });
 

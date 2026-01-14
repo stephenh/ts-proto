@@ -271,14 +271,24 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       choice: isSet(object.aNumber)
         ? { $case: "aNumber", value: globalThis.Number(object.aNumber) }
+        : isSet(object.a_number)
+        ? { $case: "aNumber", value: globalThis.Number(object.a_number) }
         : isSet(object.aString)
         ? { $case: "aString", value: globalThis.String(object.aString) }
+        : isSet(object.a_string)
+        ? { $case: "aString", value: globalThis.String(object.a_string) }
         : isSet(object.aMessage)
         ? { $case: "aMessage", value: PleaseChoose_Submessage.fromJSON(object.aMessage) }
+        : isSet(object.a_message)
+        ? { $case: "aMessage", value: PleaseChoose_Submessage.fromJSON(object.a_message) }
         : isSet(object.aBool)
         ? { $case: "aBool", value: globalThis.Boolean(object.aBool) }
+        : isSet(object.a_bool)
+        ? { $case: "aBool", value: globalThis.Boolean(object.a_bool) }
         : isSet(object.bunchaBytes)
         ? { $case: "bunchaBytes", value: bytesFromBase64(object.bunchaBytes) }
+        : isSet(object.buncha_bytes)
+        ? { $case: "bunchaBytes", value: bytesFromBase64(object.buncha_bytes) }
         : isSet(object.anEnum)
         ? { $case: "anEnum", value: pleaseChoose_StateEnumFromJSON(object.anEnum) }
         : undefined,
@@ -289,6 +299,8 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
         ? { $case: "or", value: globalThis.String(object.or) }
         : isSet(object.thirdOption)
         ? { $case: "thirdOption", value: globalThis.String(object.thirdOption) }
+        : isSet(object.third_option)
+        ? { $case: "thirdOption", value: globalThis.String(object.third_option) }
         : undefined,
       signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
       value: isSet(object?.value) ? object.value : undefined,

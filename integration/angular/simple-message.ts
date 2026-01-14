@@ -47,7 +47,13 @@ export const SimpleMessage: MessageFns<SimpleMessage> = {
   },
 
   fromJSON(object: any): SimpleMessage {
-    return { numberField: isSet(object.numberField) ? globalThis.Number(object.numberField) : 0 };
+    return {
+      numberField: isSet(object.numberField)
+        ? globalThis.Number(object.numberField)
+        : isSet(object.number_field)
+        ? globalThis.Number(object.number_field)
+        : 0,
+    };
   },
 
   toJSON(message: SimpleMessage): unknown {

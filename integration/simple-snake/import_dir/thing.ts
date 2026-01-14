@@ -48,13 +48,19 @@ export const ImportedThing: MessageFns<ImportedThing> = {
   },
 
   fromJSON(object: any): ImportedThing {
-    return { created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined };
+    return {
+      created_at: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
+    };
   },
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
     if (message.created_at !== undefined) {
-      obj.created_at = message.created_at.toISOString();
+      obj.createdAt = message.created_at.toISOString();
     }
     return obj;
   },

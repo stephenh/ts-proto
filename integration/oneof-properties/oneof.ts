@@ -240,16 +240,40 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
   fromJSON(object: any): PleaseChoose {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      aNumber: isSet(object.aNumber) ? globalThis.Number(object.aNumber) : undefined,
-      aString: isSet(object.aString) ? globalThis.String(object.aString) : undefined,
-      aMessage: isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined,
-      aBool: isSet(object.aBool) ? globalThis.Boolean(object.aBool) : undefined,
-      bunchaBytes: isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined,
+      aNumber: isSet(object.aNumber)
+        ? globalThis.Number(object.aNumber)
+        : isSet(object.a_number)
+        ? globalThis.Number(object.a_number)
+        : undefined,
+      aString: isSet(object.aString)
+        ? globalThis.String(object.aString)
+        : isSet(object.a_string)
+        ? globalThis.String(object.a_string)
+        : undefined,
+      aMessage: isSet(object.aMessage)
+        ? PleaseChoose_Submessage.fromJSON(object.aMessage)
+        : isSet(object.a_message)
+        ? PleaseChoose_Submessage.fromJSON(object.a_message)
+        : undefined,
+      aBool: isSet(object.aBool)
+        ? globalThis.Boolean(object.aBool)
+        : isSet(object.a_bool)
+        ? globalThis.Boolean(object.a_bool)
+        : undefined,
+      bunchaBytes: isSet(object.bunchaBytes)
+        ? bytesFromBase64(object.bunchaBytes)
+        : isSet(object.buncha_bytes)
+        ? bytesFromBase64(object.buncha_bytes)
+        : undefined,
       anEnum: isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined,
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       either: isSet(object.either) ? globalThis.String(object.either) : undefined,
       or: isSet(object.or) ? globalThis.String(object.or) : undefined,
-      thirdOption: isSet(object.thirdOption) ? globalThis.String(object.thirdOption) : undefined,
+      thirdOption: isSet(object.thirdOption)
+        ? globalThis.String(object.thirdOption)
+        : isSet(object.third_option)
+        ? globalThis.String(object.third_option)
+        : undefined,
     };
   },
 

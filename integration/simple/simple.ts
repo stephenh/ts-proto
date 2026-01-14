@@ -531,19 +531,29 @@ export const Simple: MessageFns<Simple> = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       grandChildren: globalThis.Array.isArray(object?.grandChildren)
         ? object.grandChildren.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.grand_children)
+        ? object.grand_children.map((e: any) => Child.fromJSON(e))
         : [],
       coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => globalThis.Number(e)) : [],
       snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => globalThis.String(e)) : [],
       oldStates: globalThis.Array.isArray(object?.oldStates)
         ? object.oldStates.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.old_states)
+        ? object.old_states.map((e: any) => stateEnumFromJSON(e))
         : [],
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
-      blobs: globalThis.Array.isArray(object?.blobs) ? object.blobs.map((e: any) => bytesFromBase64(e)) : [],
+      blobs: globalThis.Array.isArray(object?.blobs)
+        ? object.blobs.map((e: any) => bytesFromBase64(e))
+        : [],
       birthday: isSet(object.birthday) ? DateMessage.fromJSON(object.birthday) : undefined,
       blob: isSet(object.blob) ? bytesFromBase64(object.blob) : new Uint8Array(0),
       enabled: isSet(object.enabled) ? globalThis.Boolean(object.enabled) : false,
@@ -2264,6 +2274,14 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
           },
           {},
         )
+        : isObject(object.entities_by_id)
+        ? (globalThis.Object.entries(object.entities_by_id) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -2425,6 +2443,14 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
     return {
       enumsById: isObject(object.enumsById)
         ? (globalThis.Object.entries(object.enumsById) as [string, any][]).reduce(
+          (acc: { [key: number]: StateEnum }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = stateEnumFromJSON(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.enums_by_id)
+        ? (globalThis.Object.entries(object.enums_by_id) as [string, any][]).reduce(
           (acc: { [key: number]: StateEnum }, [key, value]: [string, any]) => {
             acc[globalThis.Number(key)] = stateEnumFromJSON(value);
             return acc;
@@ -3026,7 +3052,11 @@ export const SimpleButOptional: MessageFns<SimpleButOptional> = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : undefined,
       age: isSet(object.age) ? globalThis.Number(object.age) : undefined,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : undefined,
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
