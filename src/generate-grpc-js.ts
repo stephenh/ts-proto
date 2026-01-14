@@ -121,8 +121,8 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
         ? handleBidiStreamingCall
         : handleClientStreamingCall
       : methodDesc.serverStreaming
-        ? handleServerStreamingCall
-        : handleUnaryCall;
+      ? handleServerStreamingCall
+      : handleUnaryCall;
 
     chunks.push(code`
       ${methodDesc.formattedName}: ${callType}<${inputType}, ${outputType}>;

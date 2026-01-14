@@ -383,8 +383,8 @@ function generateCachingRpcMethod(
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-          methodDesc.name
-        }", data);
+    methodDesc.name
+  }", data);
         return ${outputType}.decode(new ${BinaryReader}(response));
       });
       return Promise.all(responses);
