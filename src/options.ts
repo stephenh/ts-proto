@@ -280,7 +280,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = (options.snakeToCamel as string).split("_") as any;
   }
 
-  if (options.protoJsonFormat) {
+  if (options.protoJsonFormat && !options.snakeToCamel.includes("json")) {
     // protoJSONFormat implies snakeToCamel=json, Message field names must be mapped to lowerCamelCase and become JSON object keys.
     // If the json_name field option is specified, the specified value will be used as the key instead.
     options.snakeToCamel.push("json");
