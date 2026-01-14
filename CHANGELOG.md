@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/stephenh/ts-proto/compare/v2.10.1...v2.11.0) (2026-01-14)
+
+
+### Features
+
+* add protoJsonFormat option to support standard Protobuf JSON message ([#1241](https://github.com/stephenh/ts-proto/issues/1241)) ([0634e21](https://github.com/stephenh/ts-proto/commit/0634e21b1f4660662be1b73af13054317fd5494d)), closes [#1012](https://github.com/stephenh/ts-proto/issues/1012)
+
 ## [2.10.1](https://github.com/stephenh/ts-proto/compare/v2.10.0...v2.10.1) (2025-12-25)
 
 
