@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package test;
+
+import "b.proto";
+
+message TestMsg {
+  EnumTest testE = 1;
+  MessageTest testM = 2;
+}

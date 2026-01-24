@@ -91,7 +91,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   const dependencies = fileDesc.dependency.map((dep) => {
-    return code`${impFile(options, `protoMetadata@./${dep.replace(".proto", "")}`)}`;
+    return code`${impFile(options, `protoMetadata@./${dep.replace(".proto", "")}${options.fileSuffix}`)}`;
   });
 
   // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
