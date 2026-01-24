@@ -1,3 +1,10 @@
+## [2.11.1](https://github.com/stephenh/ts-proto/compare/v2.11.0...v2.11.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* apply fileSuffix to protoMetadata imports when using outputSchema ([#1242](https://github.com/stephenh/ts-proto/issues/1242)) ([ec1c90a](https://github.com/stephenh/ts-proto/commit/ec1c90a17bc8c7bc1b23757ba1a2b3aa80463440)), closes [#1238](https://github.com/stephenh/ts-proto/issues/1238)
+
 # [2.11.0](https://github.com/stephenh/ts-proto/compare/v2.10.1...v2.11.0) (2026-01-14)
 
 
