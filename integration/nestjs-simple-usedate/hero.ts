@@ -54,7 +54,7 @@ export interface HeroServiceClient {
 }
 
 export interface HeroServiceController {
-  addOneHero(request: Hero): void;
+  addOneHero(request: Hero): void | Promise<void>;
 
   findOneHero(request: HeroById): Promise<Hero> | Observable<Hero> | Hero;
 
