@@ -20,7 +20,7 @@ export interface HeroServiceClient {
 }
 
 export interface HeroServiceController {
-  findCurrentUser(request: Empty, ...rest: any): Promise<User> | Observable<User> | User;
+  findCurrentUser(request: Empty, ...rest: any): Promise<User> | User;
 }
 
 export function HeroServiceControllerMethods() {

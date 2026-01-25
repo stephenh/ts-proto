@@ -55,13 +55,13 @@ export function generateNestjsServiceController(
     let returns: Code;
     if (isEmptyType(methodDesc.outputType)) {
       returns = code`void`;
-    } else if (options.returnObservable || methodDesc.serverStreaming) {
+    } else if (methodDesc.serverStreaming) {
       returns = code`${responseObservable(ctx, methodDesc)}`;
     } else {
       // generate nestjs union type
       returns = code`
         ${responsePromise(ctx, methodDesc)}
-        | ${responseObservable(ctx, methodDesc)}
+        ${options.returnObservable ? "\n| " + responseObservable(ctx, methodDesc) : ''}
         | ${responseType(ctx, methodDesc)}
       `;
     }
