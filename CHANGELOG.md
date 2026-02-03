@@ -1,3 +1,10 @@
+## [2.11.2](https://github.com/stephenh/ts-proto/compare/v2.11.1...v2.11.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* generate void | Promise<void> return type on empty response ([#1206](https://github.com/stephenh/ts-proto/issues/1206)) ([bf67f78](https://github.com/stephenh/ts-proto/commit/bf67f78389399739dac28371e32769654bca00ed))
+
 ## [2.11.1](https://github.com/stephenh/ts-proto/compare/v2.11.0...v2.11.1) (2026-01-24)
 
 
