@@ -49,7 +49,7 @@ export interface UserServiceClient {
 }
 
 export interface UserServiceController {
-  addOneUser(request: User): void;
+  addOneUser(request: User): void | Promise<void>;
 
   findOneUser(request: UserById): Promise<User> | Observable<User> | User;
 
