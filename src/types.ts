@@ -828,8 +828,13 @@ export function observableType(ctx: Context, asType: boolean = false): Code {
   }
 }
 
-export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
-  let typeName = rawRequestType(ctx, methodDesc, { keepValueType: true });
+export function requestType(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  partial: boolean = false,
+  keepValueType: boolean = true
+): Code {
+  let typeName = rawRequestType(ctx, methodDesc, { keepValueType: keepValueType});
 
   if (partial) {
     typeName = code`${ctx.utils.DeepPartial}<${typeName}>`;
