@@ -419,7 +419,7 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
-  This is useful if you want "only types".
+  This is useful if you want "only types". Use `=decode-only` or `=encode-only` to only output decode or encode methods.
 
 - With `--ts_proto_opt=outputEncodeIncludeTypes=regex`, the `Message.encode` method will only be output for types whose name matches the provided regular expression.
 
