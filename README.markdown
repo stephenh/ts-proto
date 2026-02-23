@@ -830,13 +830,11 @@ Instead, we recommend using the `oneof=unions-value` option, which will change t
 
 ```typescript
 interface YourMessage {
-  eitherField?: { $case: "field_a"; value: string } | { $case: "field_b"; value: string };
+  eitherField: { $case: "field_a"; value: string } | { $case: "field_b"; value: string } | undefined;
 }
 ```
 
 As this will automatically enforce only one of `field_a` or `field_b` "being set" at a time, because the values are stored in the `eitherField` field that can only have a single value at a time.
-
-(Note that `eitherField` is optional b/c `oneof` in Protobuf means "at most one field" is set, and does not mean one of the fields _must_ be set.)
 
 In ts-proto's currently-unscheduled 2.x release, `oneof=unions-value` will become the default behavior.
 
@@ -844,7 +842,7 @@ There is also a `oneof=unions` option, which generates a union where the field n
 
 ```typescript
 interface YourMessage {
-  eitherField?: { $case: "field_a"; field_a: string } | { $case: "field_b"; field_b: string };
+  eitherField: { $case: "field_a"; field_a: string } | { $case: "field_b"; field_b: string } | undefined;
 }
 ```
 

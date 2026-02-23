@@ -70,7 +70,7 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** The kind of value. */
-  kind?:
+  kind:
     | //
     /** Represents a null value. */
     { $case: "nullValue"; nullValue: NullValue }

@@ -70,7 +70,7 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** The kind of value. */
-  readonly kind?:
+  readonly kind:
     | //
     /** Represents a null value. */
     { readonly $case: "nullValue"; readonly nullValue: NullValue }

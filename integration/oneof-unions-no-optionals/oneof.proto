@@ -1,0 +1,9 @@
+syntax = "proto3";
+package oneof;
+
+message Example {
+    oneof some {
+        string option1 = 1;
+        string option2 = 2;
+    }
+}
