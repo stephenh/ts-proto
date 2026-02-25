@@ -1,3 +1,10 @@
+## [2.11.3](https://github.com/stephenh/ts-proto/compare/v2.11.2...v2.11.3) (2026-02-25)
+
+
+### Bug Fixes
+
+* Don't generate caching methods for streaming RPCs ([#1245](https://github.com/stephenh/ts-proto/issues/1245)) ([abc7bf6](https://github.com/stephenh/ts-proto/commit/abc7bf62c294ec9d9d72f9c5018452571d07f96c))
+
 ## [2.11.2](https://github.com/stephenh/ts-proto/compare/v2.11.1...v2.11.2) (2026-02-03)
 
 
