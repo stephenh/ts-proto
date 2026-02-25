@@ -293,7 +293,12 @@ export function generateServiceClientImpl(
       }
     }
 
-    if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
+    if (
+      options.context &&
+      methodDesc.name.match(/^Get[A-Z]/) &&
+      !methodDesc.serverStreaming &&
+      !methodDesc.clientStreaming
+    ) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
       chunks.push(generateRegularRpcMethod(ctx, methodDesc));
