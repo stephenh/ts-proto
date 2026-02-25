@@ -2,8 +2,7 @@ import { Example } from './oneof';
 
 describe('oneof=unions,useOptionals=none', () => {
   it('generated type require oneof field to some value', () => {
-    const alice: Example = {
-      some: undefined, // here typescript must throws error without field value
-    };
+    // @ts-expect-error Property 'some' is missing in type '{}' but required in type 'Example'.
+    const example: Example = {};
   });
 });

@@ -9,21 +9,25 @@ describe('oneof=unions', () => {
       name: 'Alice',
       age: 42,
       signature: new Uint8Array([0xab, 0xcd]),
-      value: 'Alice'
+      value: 'Alice',
+      choice: undefined,
+      eitherOr: undefined
     };
     const bob: PleaseChoose = {
       name: 'Bob',
       age: 42,
       choice: { $case: 'aNumber', aNumber: 132 },
       signature: new Uint8Array([0xab, 0xcd]),
-      value: 'Bob'
+      value: 'Bob',
+      eitherOr: undefined
     };
     const charlie: PleaseChoose = {
       name: 'Charlie',
       age: 42,
       choice: { $case: 'aMessage', aMessage: { name: 'charlie' } },
       signature: new Uint8Array([0xab, 0xcd]),
-      value: 'Charlie'
+      value: 'Charlie',
+      eitherOr: undefined
     };
   });
 
@@ -132,7 +136,8 @@ describe('oneof=unions', () => {
       age: 37,
       choice: { $case: 'aNumber', aNumber: 42 },
       signature: new Uint8Array([0xab, 0xcd]),
-      value: 'Debbie'
+      value: 'Debbie',
+      eitherOr: undefined
     };
     let encoded = PleaseChoose.encode(obj).finish();
     let decoded = PleaseChoose.decode(encoded);

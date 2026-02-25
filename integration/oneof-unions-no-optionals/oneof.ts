@@ -7,7 +7,13 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 export const protobufPackage = "oneof";
 
 export interface Example {
-  some: { $case: "option1"; option1: string } | { $case: "option2"; option2: string } | undefined;
+  some: { $case: "option1"; option1: ClassA } | { $case: "option2"; option2: ClassB } | undefined;
+}
+
+export interface ClassA {
+}
+
+export interface ClassB {
 }
 
 function createBaseExample(): Example {
@@ -18,10 +24,10 @@ export const Example: MessageFns<Example> = {
   encode(message: Example, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     switch (message.some?.$case) {
       case "option1":
-        writer.uint32(10).string(message.some.option1);
+        ClassA.encode(message.some.option1, writer.uint32(10).fork()).join();
         break;
       case "option2":
-        writer.uint32(18).string(message.some.option2);
+        ClassB.encode(message.some.option2, writer.uint32(18).fork()).join();
         break;
     }
     return writer;
@@ -39,7 +45,7 @@ export const Example: MessageFns<Example> = {
             break;
           }
 
-          message.some = { $case: "option1", option1: reader.string() };
+          message.some = { $case: "option1", option1: ClassA.decode(reader, reader.uint32()) };
           continue;
         }
         case 2: {
@@ -47,7 +53,7 @@ export const Example: MessageFns<Example> = {
             break;
           }
 
-          message.some = { $case: "option2", option2: reader.string() };
+          message.some = { $case: "option2", option2: ClassB.decode(reader, reader.uint32()) };
           continue;
         }
       }
@@ -62,9 +68,9 @@ export const Example: MessageFns<Example> = {
   fromJSON(object: any): Example {
     return {
       some: isSet(object.option1)
-        ? { $case: "option1", option1: globalThis.String(object.option1) }
+        ? { $case: "option1", option1: ClassA.fromJSON(object.option1) }
         : isSet(object.option2)
-        ? { $case: "option2", option2: globalThis.String(object.option2) }
+        ? { $case: "option2", option2: ClassB.fromJSON(object.option2) }
         : undefined,
     };
   },
@@ -72,9 +78,9 @@ export const Example: MessageFns<Example> = {
   toJSON(message: Example): unknown {
     const obj: any = {};
     if (message.some?.$case === "option1") {
-      obj.option1 = message.some.option1;
+      obj.option1 = ClassA.toJSON(message.some.option1);
     } else if (message.some?.$case === "option2") {
-      obj.option2 = message.some.option2;
+      obj.option2 = ClassB.toJSON(message.some.option2);
     }
     return obj;
   },
@@ -87,17 +93,103 @@ export const Example: MessageFns<Example> = {
     switch (object.some?.$case) {
       case "option1": {
         if (object.some?.option1 !== undefined && object.some?.option1 !== null) {
-          message.some = { $case: "option1", option1: object.some.option1 };
+          message.some = { $case: "option1", option1: ClassA.fromPartial(object.some.option1) };
         }
         break;
       }
       case "option2": {
         if (object.some?.option2 !== undefined && object.some?.option2 !== null) {
-          message.some = { $case: "option2", option2: object.some.option2 };
+          message.some = { $case: "option2", option2: ClassB.fromPartial(object.some.option2) };
         }
         break;
       }
     }
+    return message;
+  },
+};
+
+function createBaseClassA(): ClassA {
+  return {};
+}
+
+export const ClassA: MessageFns<ClassA> = {
+  encode(_: ClassA, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ClassA {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClassA();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): ClassA {
+    return {};
+  },
+
+  toJSON(_: ClassA): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClassA>, I>>(base?: I): ClassA {
+    return ClassA.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClassA>, I>>(_: I): ClassA {
+    const message = createBaseClassA();
+    return message;
+  },
+};
+
+function createBaseClassB(): ClassB {
+  return {};
+}
+
+export const ClassB: MessageFns<ClassB> = {
+  encode(_: ClassB, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ClassB {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClassB();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): ClassB {
+    return {};
+  },
+
+  toJSON(_: ClassB): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClassB>, I>>(base?: I): ClassB {
+    return ClassB.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClassB>, I>>(_: I): ClassB {
+    const message = createBaseClassB();
     return message;
   },
 };
