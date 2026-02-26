@@ -1,3 +1,10 @@
+## [2.11.4](https://github.com/stephenh/ts-proto/compare/v2.11.3...v2.11.4) (2026-02-26)
+
+
+### Bug Fixes
+
+* useOptionals=none when handle oneof as union ([#1244](https://github.com/stephenh/ts-proto/issues/1244)) ([97e0899](https://github.com/stephenh/ts-proto/commit/97e08995a8ef95cdd6a438f776d88983a93f37f5)), closes [#1243](https://github.com/stephenh/ts-proto/issues/1243)
+
 ## [2.11.3](https://github.com/stephenh/ts-proto/compare/v2.11.2...v2.11.3) (2026-02-25)
 
 
