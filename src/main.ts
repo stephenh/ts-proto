@@ -1265,9 +1265,13 @@ function generateOneofProperty(
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return joinCode([...outerComments, code`${mbReadonly}${name}?:`, unionType, code`| ${nullOrUndefined(options)},`], {
-    on: "\n",
-  });
+  const optionalFlag = options.useOptionals === "none" ? "" : "?";
+  return joinCode(
+    [...outerComments, code`${mbReadonly}${name}${optionalFlag}:`, unionType, code`| ${nullOrUndefined(options)},`],
+    {
+      on: "\n",
+    },
+  );
 }
 
 // Create a function that constructs 'base' instance with default values for decode to use as a prototype

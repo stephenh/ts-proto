@@ -19,7 +19,7 @@ export interface Entity {
   readonly fieldMask: readonly string[] | undefined;
   readonly listValue: ReadonlyArray<any> | undefined;
   readonly structValue: { readonly [key: string]: any } | undefined;
-  readonly oneOfValue?: { readonly $case: "theStringValue"; readonly theStringValue: string } | {
+  readonly oneOfValue: { readonly $case: "theStringValue"; readonly theStringValue: string } | {
     readonly $case: "theIntValue";
     readonly theIntValue: number;
   } | undefined;

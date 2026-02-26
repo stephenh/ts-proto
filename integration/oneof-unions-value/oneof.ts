@@ -13,7 +13,7 @@ export interface PleaseChoose {
    * Please to be choosing one of the fields within this oneof clause.
    * This text exists to ensure we transpose comments correctly.
    */
-  choice?:
+  choice:
     | //
     /**
      * Use this if you want a number. Numbers are great. Who doesn't
@@ -37,7 +37,7 @@ export interface PleaseChoose {
     | { $case: "anEnum"; value: PleaseChoose_StateEnum }
     | undefined;
   age: number;
-  eitherOr?: { $case: "either"; value: string } | { $case: "or"; value: string } | {
+  eitherOr: { $case: "either"; value: string } | { $case: "or"; value: string } | {
     $case: "thirdOption";
     value: string;
   } | undefined;
