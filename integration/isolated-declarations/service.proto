@@ -1,6 +1,13 @@
 syntax = "proto3";
 
+import "google/protobuf/descriptor.proto";
+
 package isolated.declarations;
+
+// Custom option that will be stored in _unknownFields
+extend google.protobuf.MethodOptions {
+  optional bool custom_option = 60000;
+}
 
 message TestRequest {
   string name = 1;
@@ -13,6 +20,8 @@ message TestResponse {
 }
 
 service TestService {
-  rpc TestMethod(TestRequest) returns (TestResponse);
+  rpc TestMethod(TestRequest) returns (TestResponse) {
+    option (custom_option) = true;
+  }
   rpc StreamingMethod(stream TestRequest) returns (stream TestResponse);
 }

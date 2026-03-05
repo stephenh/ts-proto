@@ -179,7 +179,7 @@ export const TestServiceDefinition = {
       requestStream: false,
       responseType: TestResponse as typeof TestResponse,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: { 480000: [new Uint8Array([1]) as Uint8Array] } },
     },
     streamingMethod: {
       name: "StreamingMethod",
