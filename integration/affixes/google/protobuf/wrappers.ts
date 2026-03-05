@@ -10,6 +10,9 @@ export const protobufPackage = "google.protobuf";
  * Wrapper message for `double`.
  *
  * The JSON representation for `DoubleValue` is JSON number.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixDoubleValueSuffix {
   /** The double value. */
@@ -20,6 +23,9 @@ export interface PrefixDoubleValueSuffix {
  * Wrapper message for `float`.
  *
  * The JSON representation for `FloatValue` is JSON number.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixFloatValueSuffix {
   /** The float value. */
@@ -30,6 +36,9 @@ export interface PrefixFloatValueSuffix {
  * Wrapper message for `int64`.
  *
  * The JSON representation for `Int64Value` is JSON string.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixInt64ValueSuffix {
   /** The int64 value. */
@@ -40,6 +49,9 @@ export interface PrefixInt64ValueSuffix {
  * Wrapper message for `uint64`.
  *
  * The JSON representation for `UInt64Value` is JSON string.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixUInt64ValueSuffix {
   /** The uint64 value. */
@@ -50,6 +62,9 @@ export interface PrefixUInt64ValueSuffix {
  * Wrapper message for `int32`.
  *
  * The JSON representation for `Int32Value` is JSON number.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixInt32ValueSuffix {
   /** The int32 value. */
@@ -60,6 +75,9 @@ export interface PrefixInt32ValueSuffix {
  * Wrapper message for `uint32`.
  *
  * The JSON representation for `UInt32Value` is JSON number.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixUInt32ValueSuffix {
   /** The uint32 value. */
@@ -70,6 +88,9 @@ export interface PrefixUInt32ValueSuffix {
  * Wrapper message for `bool`.
  *
  * The JSON representation for `BoolValue` is JSON `true` and `false`.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixBoolValueSuffix {
   /** The bool value. */
@@ -80,6 +101,9 @@ export interface PrefixBoolValueSuffix {
  * Wrapper message for `string`.
  *
  * The JSON representation for `StringValue` is JSON string.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixStringValueSuffix {
   /** The string value. */
@@ -90,6 +114,9 @@ export interface PrefixStringValueSuffix {
  * Wrapper message for `bytes`.
  *
  * The JSON representation for `BytesValue` is JSON string.
+ *
+ * Not recommended for use in new APIs, but still useful for legacy APIs and
+ * has no plan to be removed.
  */
 export interface PrefixBytesValueSuffix {
   /** The bytes value. */

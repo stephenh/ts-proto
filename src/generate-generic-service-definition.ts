@@ -67,9 +67,9 @@ function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProt
   return code`
     {
       name: '${methodDesc.name}',
-      requestType: ${inputType},
+      requestType: ${inputType} as typeof ${inputType},
       requestStream: ${methodDesc.clientStreaming},
-      responseType: ${outputType},
+      responseType: ${outputType} as typeof ${outputType},
       responseStream: ${methodDesc.serverStreaming},
       options: ${generateMethodOptions(ctx, methodDesc.options)}
     }

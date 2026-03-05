@@ -84,9 +84,9 @@ function generateServiceDefinition(
 
     chunks.push(code`
       ${methodDesc.formattedName}: {
-        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
-        requestStream: ${methodDesc.clientStreaming},
-        responseStream: ${methodDesc.serverStreaming},
+        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}' as const,
+        requestStream: ${methodDesc.clientStreaming} as const,
+        responseStream: ${methodDesc.serverStreaming} as const,
         requestSerialize: (value: ${inputType}): Buffer =>
           Buffer.from(${inputEncoder}),
         requestDeserialize: (value: Buffer): ${inputType} => ${inputDecoder},

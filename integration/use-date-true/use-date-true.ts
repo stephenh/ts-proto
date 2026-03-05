@@ -289,9 +289,9 @@ export const ClockDefinition = {
   methods: {
     now: {
       name: "Now",
-      requestType: Empty,
+      requestType: Empty as typeof Empty,
       requestStream: false,
-      responseType: Timestamp,
+      responseType: Timestamp as typeof Timestamp,
       responseStream: false,
       options: {},
     },

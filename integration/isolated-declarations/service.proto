@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package isolated.declarations;
+
+message TestRequest {
+  string name = 1;
+  int32 value = 2;
+}
+
+message TestResponse {
+  string result = 1;
+  bool success = 2;
+}
+
+service TestService {
+  rpc TestMethod(TestRequest) returns (TestResponse);
+  rpc StreamingMethod(stream TestRequest) returns (stream TestResponse);
+}
