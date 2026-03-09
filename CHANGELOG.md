@@ -1,3 +1,10 @@
+## [2.11.5](https://github.com/stephenh/ts-proto/compare/v2.11.4...v2.11.5) (2026-03-09)
+
+
+### Bug Fixes
+
+* add explicit type annotations for isolatedDeclarations compatibility ([#1246](https://github.com/stephenh/ts-proto/issues/1246)) ([15c8dcc](https://github.com/stephenh/ts-proto/commit/15c8dccd0401610fbc87a0247ed7f1ee7fd29796)), closes [#1193](https://github.com/stephenh/ts-proto/issues/1193) [#1192](https://github.com/stephenh/ts-proto/issues/1192)
+
 ## [2.11.4](https://github.com/stephenh/ts-proto/compare/v2.11.3...v2.11.4) (2026-02-26)
 
 
