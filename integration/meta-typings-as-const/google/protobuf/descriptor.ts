@@ -7,64 +7,6 @@ import type { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descr
 
 export const protobufPackage = "google.protobuf";
 
-/** The full set of known editions. */
-export enum Edition {
-  /** EDITION_UNKNOWN - A placeholder for an unknown edition value. */
-  EDITION_UNKNOWN = 0,
-  /**
-   * EDITION_LEGACY - A placeholder edition for specifying default behaviors *before* a feature
-   * was first introduced.  This is effectively an "infinite past".
-   */
-  EDITION_LEGACY = 900,
-  /**
-   * EDITION_PROTO2 - Legacy syntax "editions".  These pre-date editions, but behave much like
-   * distinct editions.  These can't be used to specify the edition of proto
-   * files, but feature definitions must supply proto2/proto3 defaults for
-   * backwards compatibility.
-   */
-  EDITION_PROTO2 = 998,
-  EDITION_PROTO3 = 999,
-  /**
-   * EDITION_2023 - Editions that have been released.  The specific values are arbitrary and
-   * should not be depended on, but they will always be time-ordered for easy
-   * comparison.
-   */
-  EDITION_2023 = 1000,
-  EDITION_2024 = 1001,
-  /** EDITION_UNSTABLE - A placeholder edition for developing and testing unscheduled features. */
-  EDITION_UNSTABLE = 9999,
-  /**
-   * EDITION_1_TEST_ONLY - Placeholder editions for testing feature resolution.  These should not be
-   * used or relied on outside of tests.
-   */
-  EDITION_1_TEST_ONLY = 1,
-  EDITION_2_TEST_ONLY = 2,
-  EDITION_99997_TEST_ONLY = 99997,
-  EDITION_99998_TEST_ONLY = 99998,
-  EDITION_99999_TEST_ONLY = 99999,
-  /**
-   * EDITION_MAX - Placeholder for specifying unbounded edition support.  This should only
-   * ever be used by plugins that can expect to never require any changes to
-   * support a new edition.
-   */
-  EDITION_MAX = 2147483647,
-  UNRECOGNIZED = -1,
-}
-
-/**
- * Describes the 'visibility' of a symbol with respect to the proto import
- * system. Symbols can only be imported when the visibility rules do not prevent
- * it (ex: local symbols cannot be imported).  Visibility modifiers can only set
- * on `message` and `enum` as they are the only types available to be referenced
- * from other files.
- */
-export enum SymbolVisibility {
-  VISIBILITY_UNSET = 0,
-  VISIBILITY_LOCAL = 1,
-  VISIBILITY_EXPORT = 2,
-  UNRECOGNIZED = -1,
-}
-
 /**
  * The protocol compiler can output a FileDescriptorSet containing the .proto
  * files it parses.
@@ -92,11 +34,6 @@ export interface FileDescriptorProto {
    * For Google-internal migration only. Do not use.
    */
   weakDependency: number[];
-  /**
-   * Names of files imported by this file purely for the purpose of providing
-   * option extensions. These are excluded from the dependency list above.
-   */
-  optionDependency: string[];
   /** All top-level definitions in this file. */
   messageType: DescriptorProto[];
   enumType: EnumDescriptorProto[];
@@ -116,23 +53,9 @@ export interface FileDescriptorProto {
     | undefined;
   /**
    * The syntax of the proto file.
-   * The supported values are "proto2", "proto3", and "editions".
-   *
-   * If `edition` is present, this value must be "editions".
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
+   * The supported values are "proto2" and "proto3".
    */
-  syntax?:
-    | string
-    | undefined;
-  /**
-   * The edition of the proto file.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  edition?: Edition | undefined;
+  syntax?: string | undefined;
 }
 
 /** Describes a message type. */
@@ -151,8 +74,6 @@ export interface DescriptorProto {
    * A given name may only be reserved once.
    */
   reservedName: string[];
-  /** Support for `export` and `local` keywords on enums. */
-  visibility?: SymbolVisibility | undefined;
 }
 
 export interface DescriptorProto_ExtensionRange {
@@ -182,65 +103,6 @@ export interface DescriptorProto_ReservedRange {
 export interface ExtensionRangeOptions {
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
-  /**
-   * For external users: DO NOT USE. We are in the process of open sourcing
-   * extension declaration and executing internal cleanups before it can be
-   * used externally.
-   */
-  declaration: ExtensionRangeOptions_Declaration[];
-  /** Any features defined in the specific edition. */
-  features?:
-    | FeatureSet
-    | undefined;
-  /**
-   * The verification state of the range.
-   * TODO: flip the default to DECLARATION once all empty ranges
-   * are marked as UNVERIFIED.
-   */
-  verification?: ExtensionRangeOptions_VerificationState | undefined;
-}
-
-/** The verification state of the extension range. */
-export enum ExtensionRangeOptions_VerificationState {
-  /** DECLARATION - All the extensions of the range must be declared. */
-  DECLARATION = 0,
-  UNVERIFIED = 1,
-  UNRECOGNIZED = -1,
-}
-
-export interface ExtensionRangeOptions_Declaration {
-  /** The extension number declared within the extension range. */
-  number?:
-    | number
-    | undefined;
-  /**
-   * The fully-qualified name of the extension field. There must be a leading
-   * dot in front of the full name.
-   */
-  fullName?:
-    | string
-    | undefined;
-  /**
-   * The fully-qualified type name of the extension field. Unlike
-   * Metadata.type, Declaration.type must have a leading dot for messages
-   * and enums.
-   */
-  type?:
-    | string
-    | undefined;
-  /**
-   * If true, indicates that the number is reserved in the extension range,
-   * and any extension field with the number will fail to compile. Set this
-   * when a declared extension field is deleted.
-   */
-  reserved?:
-    | boolean
-    | undefined;
-  /**
-   * If true, indicates that the extension must be defined as repeated.
-   * Otherwise the extension must be defined as optional.
-   */
-  repeated?: boolean | undefined;
 }
 
 /** Describes a field within a message. */
@@ -279,6 +141,7 @@ export interface FieldDescriptorProto {
    * For booleans, "true" or "false".
    * For strings, contains the default text contents (not escaped in any way).
    * For bytes, contains the C escaped value.  All bytes >= 128 are escaped.
+   * TODO(kenton):  Base-64 encode?
    */
   defaultValue?:
     | string
@@ -304,12 +167,12 @@ export interface FieldDescriptorProto {
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
    * tracks presence regardless of field type.
    *
-   * When proto3_optional is true, this field must belong to a oneof to signal
-   * to old proto3 clients that presence is tracked for this field. This oneof
-   * is known as a "synthetic" oneof, and this field must be its sole member
-   * (each proto3 optional field gets its own synthetic oneof). Synthetic oneofs
-   * exist in the descriptor only, and do not generate any API. Synthetic oneofs
-   * must be ordered after all "real" oneofs.
+   * When proto3_optional is true, this field must be belong to a oneof to
+   * signal to old proto3 clients that presence is tracked for this field. This
+   * oneof is known as a "synthetic" oneof, and this field must be its sole
+   * member (each proto3 optional field gets its own synthetic oneof). Synthetic
+   * oneofs exist in the descriptor only, and do not generate any API. Synthetic
+   * oneofs must be ordered after all "real" oneofs.
    *
    * For message fields, proto3_optional doesn't create any semantic change,
    * since non-repeated message fields always track presence. However it still
@@ -350,10 +213,9 @@ export enum FieldDescriptorProto_Type {
   TYPE_STRING = 9,
   /**
    * TYPE_GROUP - Tag-delimited aggregate.
-   * Group type is deprecated and not supported after google.protobuf. However, Proto3
+   * Group type is deprecated and not supported in proto3. However, Proto3
    * implementations should still be able to parse the group wire format and
-   * treat group fields as unknown fields.  In Editions, the group wire format
-   * can be enabled via the `message_encoding` feature.
+   * treat group fields as unknown fields.
    */
   TYPE_GROUP = 10,
   /** TYPE_MESSAGE - Length-delimited aggregate. */
@@ -374,13 +236,8 @@ export enum FieldDescriptorProto_Type {
 export enum FieldDescriptorProto_Label {
   /** LABEL_OPTIONAL - 0 is reserved for errors */
   LABEL_OPTIONAL = 1,
-  LABEL_REPEATED = 3,
-  /**
-   * LABEL_REQUIRED - The required label is only allowed in google.protobuf.  In proto3 and Editions
-   * it's explicitly prohibited.  In Editions, the `field_presence` feature
-   * can be used to get this behavior.
-   */
   LABEL_REQUIRED = 2,
+  LABEL_REPEATED = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -408,8 +265,6 @@ export interface EnumDescriptorProto {
    * be reserved once.
    */
   reservedName: string[];
-  /** Support for `export` and `local` keywords on enums. */
-  visibility?: SymbolVisibility | undefined;
 }
 
 /**
@@ -505,16 +360,12 @@ export interface FileOptions {
     | boolean
     | undefined;
   /**
-   * A proto2 file can set this to true to opt in to UTF-8 checking for Java,
-   * which will throw an exception if invalid UTF-8 is parsed from the wire or
-   * assigned to a string field.
-   *
-   * TODO: clarify exactly what kinds of field types this option
-   * applies to, and update these docs accordingly.
-   *
-   * Proto3 files already perform these checks. Setting the option explicitly to
-   * false has no effect: it cannot be used to opt proto3 files out of UTF-8
-   * checks.
+   * If set true, then the Java2 code generator will generate code that
+   * throws an exception whenever an attempt is made to assign a non-UTF-8
+   * byte sequence to a string field.
+   * Message reflection will do the same.
+   * However, an extension field still accepts non-UTF-8 byte sequences.
+   * This option has no effect on when used with the lite runtime.
    */
   javaStringCheckUtf8?: boolean | undefined;
   optimizeFor?:
@@ -544,7 +395,8 @@ export interface FileOptions {
    */
   ccGenericServices?: boolean | undefined;
   javaGenericServices?: boolean | undefined;
-  pyGenericServices?:
+  pyGenericServices?: boolean | undefined;
+  phpGenericServices?:
     | boolean
     | undefined;
   /**
@@ -613,15 +465,6 @@ export interface FileOptions {
    */
   rubyPackage?:
     | string
-    | undefined;
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
     | undefined;
   /**
    * The parser stores options it doesn't recognize here.
@@ -708,45 +551,16 @@ export interface MessageOptions {
   mapEntry?:
     | boolean
     | undefined;
-  /**
-   * Enable the legacy handling of JSON field name conflicts.  This lowercases
-   * and strips underscored from the fields before comparison in proto3 only.
-   * The new behavior takes `json_name` into account and applies to proto2 as
-   * well.
-   *
-   * This should only be used as a temporary measure against broken builds due
-   * to the change in behavior for JSON field name conflicts.
-   *
-   * TODO This is legacy behavior we plan to remove once downstream
-   * teams have had time to migrate.
-   *
-   * @deprecated
-   */
-  deprecatedLegacyJsonFieldConflicts?:
-    | boolean
-    | undefined;
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
-    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
 
 export interface FieldOptions {
   /**
-   * NOTE: ctype is deprecated. Use `features.(pb.cpp).string_type` instead.
    * The ctype option instructs the C++ code generator to use a different
    * representation of the field than it normally would.  See the specific
-   * options below.  This option is only implemented to support use of
-   * [ctype=CORD] and [ctype=STRING] (the default) on non-repeated fields of
-   * type "bytes" in the open source release.
-   * TODO: make ctype actually deprecated.
+   * options below.  This option is not yet implemented in the open source
+   * release -- sorry, we'll try to include it in a future version!
    */
   ctype?:
     | FieldOptions_CType
@@ -756,9 +570,7 @@ export interface FieldOptions {
    * a more efficient representation on the wire. Rather than repeatedly
    * writing the tag and type for each element, the entire array is encoded as
    * a single length-delimited blob. In proto3, only explicit setting it to
-   * false will avoid using packed encoding.  This option is prohibited in
-   * Editions, but the `repeated_field_encoding` feature can be used to control
-   * the behavior.
+   * false will avoid using packed encoding.
    */
   packed?:
     | boolean
@@ -797,21 +609,18 @@ export interface FieldOptions {
    * call from multiple threads concurrently, while non-const methods continue
    * to require exclusive access.
    *
-   * Note that lazy message fields are still eagerly verified to check
-   * ill-formed wireformat or missing required fields. Calling IsInitialized()
-   * on the outer message would fail if the inner message has missing required
-   * fields. Failed verification would result in parsing failure (except when
-   * uninitialized messages are acceptable).
+   * Note that implementations may choose not to check required fields within
+   * a lazy sub-message.  That is, calling IsInitialized() on the outer message
+   * may return true even if the inner message has missing required fields.
+   * This is necessary because otherwise the inner message would have to be
+   * parsed in order to perform the check, defeating the purpose of lazy
+   * parsing.  An implementation which chooses not to check required fields
+   * must be consistent about it.  That is, for any particular sub-message, the
+   * implementation must either *always* check its required fields, or *never*
+   * check its required fields, regardless of whether or not the message has
+   * been parsed.
    */
   lazy?:
-    | boolean
-    | undefined;
-  /**
-   * unverified_lazy does no correctness checks on the byte stream. This should
-   * only be used where lazy with verification is prohibitive for performance
-   * reasons.
-   */
-  unverifiedLazy?:
     | boolean
     | undefined;
   /**
@@ -823,32 +632,9 @@ export interface FieldOptions {
   deprecated?:
     | boolean
     | undefined;
-  /**
-   * DEPRECATED. DO NOT USE!
-   * For Google-internal migration only. Do not use.
-   *
-   * @deprecated
-   */
+  /** For Google-internal migration only. Do not use. */
   weak?:
     | boolean
-    | undefined;
-  /**
-   * Indicate that the field value should not be printed out when using debug
-   * formats, e.g. when the field contains sensitive credentials.
-   */
-  debugRedact?: boolean | undefined;
-  retention?: FieldOptions_OptionRetention | undefined;
-  targets: FieldOptions_OptionTargetType[];
-  editionDefaults: FieldOptions_EditionDefault[];
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?: FeatureSet | undefined;
-  featureSupport?:
-    | FieldOptions_FeatureSupport
     | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
@@ -857,14 +643,6 @@ export interface FieldOptions {
 export enum FieldOptions_CType {
   /** STRING - Default mode. */
   STRING = 0,
-  /**
-   * CORD - The option [ctype=CORD] may be applied to a non-repeated field of type
-   * "bytes". It indicates that in C++, the data should be stored in a Cord
-   * instead of a string.  For very large strings, this may reduce memory
-   * fragmentation. It may also allow better performance when parsing from a
-   * Cord, or when parsing with aliasing enabled, as the parsed Cord may then
-   * alias the original buffer.
-   */
   CORD = 1,
   STRING_PIECE = 2,
   UNRECOGNIZED = -1,
@@ -880,90 +658,7 @@ export enum FieldOptions_JSType {
   UNRECOGNIZED = -1,
 }
 
-/** If set to RETENTION_SOURCE, the option will be omitted from the binary. */
-export enum FieldOptions_OptionRetention {
-  RETENTION_UNKNOWN = 0,
-  RETENTION_RUNTIME = 1,
-  RETENTION_SOURCE = 2,
-  UNRECOGNIZED = -1,
-}
-
-/**
- * This indicates the types of entities that the field may apply to when used
- * as an option. If it is unset, then the field may be freely used as an
- * option on any kind of entity.
- */
-export enum FieldOptions_OptionTargetType {
-  TARGET_TYPE_UNKNOWN = 0,
-  TARGET_TYPE_FILE = 1,
-  TARGET_TYPE_EXTENSION_RANGE = 2,
-  TARGET_TYPE_MESSAGE = 3,
-  TARGET_TYPE_FIELD = 4,
-  TARGET_TYPE_ONEOF = 5,
-  TARGET_TYPE_ENUM = 6,
-  TARGET_TYPE_ENUM_ENTRY = 7,
-  TARGET_TYPE_SERVICE = 8,
-  TARGET_TYPE_METHOD = 9,
-  UNRECOGNIZED = -1,
-}
-
-export interface FieldOptions_EditionDefault {
-  edition?:
-    | Edition
-    | undefined;
-  /** Textproto value. */
-  value?: string | undefined;
-}
-
-/** Information about the support window of a feature. */
-export interface FieldOptions_FeatureSupport {
-  /**
-   * The edition that this feature was first available in.  In editions
-   * earlier than this one, the default assigned to EDITION_LEGACY will be
-   * used, and proto files will not be able to override it.
-   */
-  editionIntroduced?:
-    | Edition
-    | undefined;
-  /**
-   * The edition this feature becomes deprecated in.  Using this after this
-   * edition may trigger warnings.
-   */
-  editionDeprecated?:
-    | Edition
-    | undefined;
-  /**
-   * The deprecation warning text if this feature is used after the edition it
-   * was marked deprecated in.
-   */
-  deprecationWarning?:
-    | string
-    | undefined;
-  /**
-   * The edition this feature is no longer available in.  In editions after
-   * this one, the last default assigned will be used, and proto files will
-   * not be able to override it.
-   */
-  editionRemoved?:
-    | Edition
-    | undefined;
-  /**
-   * The removal error text if this feature is used after the edition it was
-   * removed in.
-   */
-  removalError?: string | undefined;
-}
-
 export interface OneofOptions {
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
-    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -985,28 +680,6 @@ export interface EnumOptions {
   deprecated?:
     | boolean
     | undefined;
-  /**
-   * Enable the legacy handling of JSON field name conflicts.  This lowercases
-   * and strips underscored from the fields before comparison in proto3 only.
-   * The new behavior takes `json_name` into account and applies to proto2 as
-   * well.
-   * TODO Remove this legacy behavior once downstream teams have
-   * had time to migrate.
-   *
-   * @deprecated
-   */
-  deprecatedLegacyJsonFieldConflicts?:
-    | boolean
-    | undefined;
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
-    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -1021,41 +694,11 @@ export interface EnumValueOptions {
   deprecated?:
     | boolean
     | undefined;
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
-    | undefined;
-  /**
-   * Indicate that fields annotated with this enum value should not be printed
-   * out when using debug formats, e.g. when the field contains sensitive
-   * credentials.
-   */
-  debugRedact?:
-    | boolean
-    | undefined;
-  /** Information about the support window of a feature value. */
-  featureSupport?:
-    | FieldOptions_FeatureSupport
-    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
 
 export interface ServiceOptions {
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
-    | undefined;
   /**
    * Is this service deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
@@ -1079,15 +722,6 @@ export interface MethodOptions {
   deprecated?: boolean | undefined;
   idempotencyLevel?:
     | MethodOptions_IdempotencyLevel
-    | undefined;
-  /**
-   * Any features defined in the specific edition.
-   * WARNING: This field should only be used by protobuf plugins or special
-   * cases like the proto compiler. Other uses are discouraged and
-   * developers should rely on the protoreflect APIs for their client language.
-   */
-  features?:
-    | FeatureSet
     | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
@@ -1133,141 +767,12 @@ export interface UninterpretedOption {
  * The name of the uninterpreted option.  Each string represents a segment in
  * a dot-separated name.  is_extension is true iff a segment represents an
  * extension (denoted with parentheses in options specs in .proto files).
- * E.g.,{ ["foo", false], ["bar.baz", true], ["moo", false] } represents
- * "foo.(bar.baz).moo".
+ * E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents
+ * "foo.(bar.baz).qux".
  */
 export interface UninterpretedOption_NamePart {
   namePart: string;
   isExtension: boolean;
-}
-
-/**
- * TODO Enums in C++ gencode (and potentially other languages) are
- * not well scoped.  This means that each of the feature enums below can clash
- * with each other.  The short names we've chosen maximize call-site
- * readability, but leave us very open to this scenario.  A future feature will
- * be designed and implemented to handle this, hopefully before we ever hit a
- * conflict here.
- */
-export interface FeatureSet {
-  fieldPresence?: FeatureSet_FieldPresence | undefined;
-  enumType?: FeatureSet_EnumType | undefined;
-  repeatedFieldEncoding?: FeatureSet_RepeatedFieldEncoding | undefined;
-  utf8Validation?: FeatureSet_Utf8Validation | undefined;
-  messageEncoding?: FeatureSet_MessageEncoding | undefined;
-  jsonFormat?: FeatureSet_JsonFormat | undefined;
-  enforceNamingStyle?: FeatureSet_EnforceNamingStyle | undefined;
-  defaultSymbolVisibility?: FeatureSet_VisibilityFeature_DefaultSymbolVisibility | undefined;
-}
-
-export enum FeatureSet_FieldPresence {
-  FIELD_PRESENCE_UNKNOWN = 0,
-  EXPLICIT = 1,
-  IMPLICIT = 2,
-  LEGACY_REQUIRED = 3,
-  UNRECOGNIZED = -1,
-}
-
-export enum FeatureSet_EnumType {
-  ENUM_TYPE_UNKNOWN = 0,
-  OPEN = 1,
-  CLOSED = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum FeatureSet_RepeatedFieldEncoding {
-  REPEATED_FIELD_ENCODING_UNKNOWN = 0,
-  PACKED = 1,
-  EXPANDED = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum FeatureSet_Utf8Validation {
-  UTF8_VALIDATION_UNKNOWN = 0,
-  VERIFY = 2,
-  NONE = 3,
-  UNRECOGNIZED = -1,
-}
-
-export enum FeatureSet_MessageEncoding {
-  MESSAGE_ENCODING_UNKNOWN = 0,
-  LENGTH_PREFIXED = 1,
-  DELIMITED = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum FeatureSet_JsonFormat {
-  JSON_FORMAT_UNKNOWN = 0,
-  ALLOW = 1,
-  LEGACY_BEST_EFFORT = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum FeatureSet_EnforceNamingStyle {
-  ENFORCE_NAMING_STYLE_UNKNOWN = 0,
-  STYLE2024 = 1,
-  STYLE_LEGACY = 2,
-  UNRECOGNIZED = -1,
-}
-
-export interface FeatureSet_VisibilityFeature {
-}
-
-export enum FeatureSet_VisibilityFeature_DefaultSymbolVisibility {
-  DEFAULT_SYMBOL_VISIBILITY_UNKNOWN = 0,
-  /** EXPORT_ALL - Default pre-EDITION_2024, all UNSET visibility are export. */
-  EXPORT_ALL = 1,
-  /** EXPORT_TOP_LEVEL - All top-level symbols default to export, nested default to local. */
-  EXPORT_TOP_LEVEL = 2,
-  /** LOCAL_ALL - All symbols default to local. */
-  LOCAL_ALL = 3,
-  /**
-   * STRICT - All symbols local by default. Nested types cannot be exported.
-   * With special case caveat for message { enum {} reserved 1 to max; }
-   * This is the recommended setting for new protos.
-   */
-  STRICT = 4,
-  UNRECOGNIZED = -1,
-}
-
-/**
- * A compiled specification for the defaults of a set of features.  These
- * messages are generated from FeatureSet extensions and can be used to seed
- * feature resolution. The resolution with this object becomes a simple search
- * for the closest matching edition, followed by proto merges.
- */
-export interface FeatureSetDefaults {
-  defaults: FeatureSetDefaults_FeatureSetEditionDefault[];
-  /**
-   * The minimum supported edition (inclusive) when this was constructed.
-   * Editions before this will not have defaults.
-   */
-  minimumEdition?:
-    | Edition
-    | undefined;
-  /**
-   * The maximum known edition (inclusive) when this was constructed. Editions
-   * after this will not have reliable defaults.
-   */
-  maximumEdition?: Edition | undefined;
-}
-
-/**
- * A map from every known edition with a unique set of defaults to its
- * defaults. Not all editions may be contained here.  For a given edition,
- * the defaults at the closest matching edition ordered at or before it should
- * be used.  This field must be in strict ascending order by edition.
- */
-export interface FeatureSetDefaults_FeatureSetEditionDefault {
-  edition?:
-    | Edition
-    | undefined;
-  /** Defaults of features that can be overridden in this edition. */
-  overridableFeatures?:
-    | FeatureSet
-    | undefined;
-  /** Defaults of features that can't be overridden in this edition. */
-  fixedFeatures?: FeatureSet | undefined;
 }
 
 /**
@@ -1329,8 +834,8 @@ export interface SourceCodeInfo_Location {
    * location.
    *
    * Each element is a field number or an index.  They form a path from
-   * the root FileDescriptorProto to the place where the definition appears.
-   * For example, this path:
+   * the root FileDescriptorProto to the place where the definition.  For
+   * example, this path:
    *   [ 4, 3, 2, 7, 1 ]
    * refers to:
    *   file.message_type(3)  // 4, 3
@@ -1386,13 +891,13 @@ export interface SourceCodeInfo_Location {
    *   // Comment attached to baz.
    *   // Another line attached to baz.
    *
-   *   // Comment attached to moo.
+   *   // Comment attached to qux.
    *   //
-   *   // Another line attached to moo.
-   *   optional double moo = 4;
+   *   // Another line attached to qux.
+   *   optional double qux = 4;
    *
    *   // Detached comment for corge. This is not leading or trailing comments
-   *   // to moo or corge because there are blank lines separating it from
+   *   // to qux or corge because there are blank lines separating it from
    *   // both.
    *
    *   // Detached comment for corge paragraph 2.
@@ -1444,25 +949,10 @@ export interface GeneratedCodeInfo_Annotation {
     | undefined;
   /**
    * Identifies the ending offset in bytes in the generated code that
-   * relates to the identified object. The end offset should be one past
+   * relates to the identified offset. The end offset should be one past
    * the last relevant byte (so the length of the text = end - begin).
    */
   end?: number | undefined;
-  semantic?: GeneratedCodeInfo_Annotation_Semantic | undefined;
-}
-
-/**
- * Represents the identified object's effect on the element in the original
- * .proto file.
- */
-export enum GeneratedCodeInfo_Annotation_Semantic {
-  /** NONE - There is no effect or the effect is indescribable. */
-  NONE = 0,
-  /** SET - The element is set or otherwise mutated. */
-  SET = 1,
-  /** ALIAS - An alias to the element is returned. */
-  ALIAS = 2,
-  UNRECOGNIZED = -1,
 }
 
 function createBaseFileDescriptorSet(): FileDescriptorSet {
@@ -1509,7 +999,6 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
     dependency: [],
     publicDependency: [],
     weakDependency: [],
-    optionDependency: [],
     messageType: [],
     enumType: [],
     service: [],
@@ -1517,7 +1006,6 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
     options: undefined,
     sourceCodeInfo: undefined,
     syntax: "",
-    edition: 0,
   };
 }
 
@@ -1537,9 +1025,6 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
     }
     for (const v of message.weakDependency) {
       writer.uint32(88).int32(v!);
-    }
-    for (const v of message.optionDependency) {
-      writer.uint32(122).string(v!);
     }
     for (const v of message.messageType) {
       DescriptorProto.encode(v!, writer.uint32(34).fork()).join();
@@ -1561,9 +1046,6 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
     }
     if (message.syntax !== undefined && message.syntax !== "") {
       writer.uint32(98).string(message.syntax);
-    }
-    if (message.edition !== undefined && message.edition !== 0) {
-      writer.uint32(112).int32(message.edition);
     }
     return writer;
   },
@@ -1635,14 +1117,6 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
 
           break;
         }
-        case 15: {
-          if (tag !== 122) {
-            break;
-          }
-
-          message.optionDependency.push(reader.string());
-          continue;
-        }
         case 4: {
           if (tag !== 34) {
             break;
@@ -1699,14 +1173,6 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
           message.syntax = reader.string();
           continue;
         }
-        case 14: {
-          if (tag !== 112) {
-            break;
-          }
-
-          message.edition = reader.int32() as any;
-          continue;
-        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1729,7 +1195,6 @@ function createBaseDescriptorProto(): DescriptorProto {
     options: undefined,
     reservedRange: [],
     reservedName: [],
-    visibility: 0,
   };
 }
 
@@ -1764,9 +1229,6 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
     }
     for (const v of message.reservedName) {
       writer.uint32(82).string(v!);
-    }
-    if (message.visibility !== undefined && message.visibility !== 0) {
-      writer.uint32(88).int32(message.visibility);
     }
     return writer;
   },
@@ -1856,14 +1318,6 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
           }
 
           message.reservedName.push(reader.string());
-          continue;
-        }
-        case 11: {
-          if (tag !== 88) {
-            break;
-          }
-
-          message.visibility = reader.int32() as any;
           continue;
         }
       }
@@ -1984,22 +1438,13 @@ export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedR
 };
 
 function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
-  return { uninterpretedOption: [], declaration: [], features: undefined, verification: 1 };
+  return { uninterpretedOption: [] };
 }
 
 export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
   encode(message: ExtensionRangeOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
-    }
-    for (const v of message.declaration) {
-      ExtensionRangeOptions_Declaration.encode(v!, writer.uint32(18).fork()).join();
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(402).fork()).join();
-    }
-    if (message.verification !== undefined && message.verification !== 1) {
-      writer.uint32(24).int32(message.verification);
     }
     return writer;
   },
@@ -2017,111 +1462,6 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.declaration.push(ExtensionRangeOptions_Declaration.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 50: {
-          if (tag !== 402) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.verification = reader.int32() as any;
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
-function createBaseExtensionRangeOptions_Declaration(): ExtensionRangeOptions_Declaration {
-  return { number: 0, fullName: "", type: "", reserved: false, repeated: false };
-}
-
-export const ExtensionRangeOptions_Declaration: MessageFns<ExtensionRangeOptions_Declaration> = {
-  encode(message: ExtensionRangeOptions_Declaration, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.number !== undefined && message.number !== 0) {
-      writer.uint32(8).int32(message.number);
-    }
-    if (message.fullName !== undefined && message.fullName !== "") {
-      writer.uint32(18).string(message.fullName);
-    }
-    if (message.type !== undefined && message.type !== "") {
-      writer.uint32(26).string(message.type);
-    }
-    if (message.reserved !== undefined && message.reserved !== false) {
-      writer.uint32(40).bool(message.reserved);
-    }
-    if (message.repeated !== undefined && message.repeated !== false) {
-      writer.uint32(48).bool(message.repeated);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ExtensionRangeOptions_Declaration {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseExtensionRangeOptions_Declaration();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.number = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.fullName = reader.string();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.type = reader.string();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.reserved = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.repeated = reader.bool();
           continue;
         }
       }
@@ -2342,7 +1682,7 @@ export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
 };
 
 function createBaseEnumDescriptorProto(): EnumDescriptorProto {
-  return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [], visibility: 0 };
+  return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [] };
 }
 
 export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
@@ -2361,9 +1701,6 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
     }
     for (const v of message.reservedName) {
       writer.uint32(42).string(v!);
-    }
-    if (message.visibility !== undefined && message.visibility !== 0) {
-      writer.uint32(48).int32(message.visibility);
     }
     return writer;
   },
@@ -2413,14 +1750,6 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
           }
 
           message.reservedName.push(reader.string());
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.visibility = reader.int32() as any;
           continue;
         }
       }
@@ -2710,6 +2039,7 @@ function createBaseFileOptions(): FileOptions {
     ccGenericServices: false,
     javaGenericServices: false,
     pyGenericServices: false,
+    phpGenericServices: false,
     deprecated: false,
     ccEnableArenas: true,
     objcClassPrefix: "",
@@ -2719,7 +2049,6 @@ function createBaseFileOptions(): FileOptions {
     phpNamespace: "",
     phpMetadataNamespace: "",
     rubyPackage: "",
-    features: undefined,
     uninterpretedOption: [],
   };
 }
@@ -2756,6 +2085,9 @@ export const FileOptions: MessageFns<FileOptions> = {
     if (message.pyGenericServices !== undefined && message.pyGenericServices !== false) {
       writer.uint32(144).bool(message.pyGenericServices);
     }
+    if (message.phpGenericServices !== undefined && message.phpGenericServices !== false) {
+      writer.uint32(336).bool(message.phpGenericServices);
+    }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(184).bool(message.deprecated);
     }
@@ -2782,9 +2114,6 @@ export const FileOptions: MessageFns<FileOptions> = {
     }
     if (message.rubyPackage !== undefined && message.rubyPackage !== "") {
       writer.uint32(362).string(message.rubyPackage);
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(402).fork()).join();
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -2879,6 +2208,14 @@ export const FileOptions: MessageFns<FileOptions> = {
           message.pyGenericServices = reader.bool();
           continue;
         }
+        case 42: {
+          if (tag !== 336) {
+            break;
+          }
+
+          message.phpGenericServices = reader.bool();
+          continue;
+        }
         case 23: {
           if (tag !== 184) {
             break;
@@ -2951,14 +2288,6 @@ export const FileOptions: MessageFns<FileOptions> = {
           message.rubyPackage = reader.string();
           continue;
         }
-        case 50: {
-          if (tag !== 402) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
         case 999: {
           if (tag !== 7994) {
             break;
@@ -2983,8 +2312,6 @@ function createBaseMessageOptions(): MessageOptions {
     noStandardDescriptorAccessor: false,
     deprecated: false,
     mapEntry: false,
-    deprecatedLegacyJsonFieldConflicts: false,
-    features: undefined,
     uninterpretedOption: [],
   };
 }
@@ -3002,14 +2329,6 @@ export const MessageOptions: MessageFns<MessageOptions> = {
     }
     if (message.mapEntry !== undefined && message.mapEntry !== false) {
       writer.uint32(56).bool(message.mapEntry);
-    }
-    if (
-      message.deprecatedLegacyJsonFieldConflicts !== undefined && message.deprecatedLegacyJsonFieldConflicts !== false
-    ) {
-      writer.uint32(88).bool(message.deprecatedLegacyJsonFieldConflicts);
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(98).fork()).join();
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -3056,22 +2375,6 @@ export const MessageOptions: MessageFns<MessageOptions> = {
           message.mapEntry = reader.bool();
           continue;
         }
-        case 11: {
-          if (tag !== 88) {
-            break;
-          }
-
-          message.deprecatedLegacyJsonFieldConflicts = reader.bool();
-          continue;
-        }
-        case 12: {
-          if (tag !== 98) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
         case 999: {
           if (tag !== 7994) {
             break;
@@ -3091,22 +2394,7 @@ export const MessageOptions: MessageFns<MessageOptions> = {
 };
 
 function createBaseFieldOptions(): FieldOptions {
-  return {
-    ctype: 0,
-    packed: false,
-    jstype: 0,
-    lazy: false,
-    unverifiedLazy: false,
-    deprecated: false,
-    weak: false,
-    debugRedact: false,
-    retention: 0,
-    targets: [],
-    editionDefaults: [],
-    features: undefined,
-    featureSupport: undefined,
-    uninterpretedOption: [],
-  };
+  return { ctype: 0, packed: false, jstype: 0, lazy: false, deprecated: false, weak: false, uninterpretedOption: [] };
 }
 
 export const FieldOptions: MessageFns<FieldOptions> = {
@@ -3123,32 +2411,11 @@ export const FieldOptions: MessageFns<FieldOptions> = {
     if (message.lazy !== undefined && message.lazy !== false) {
       writer.uint32(40).bool(message.lazy);
     }
-    if (message.unverifiedLazy !== undefined && message.unverifiedLazy !== false) {
-      writer.uint32(120).bool(message.unverifiedLazy);
-    }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
     if (message.weak !== undefined && message.weak !== false) {
       writer.uint32(80).bool(message.weak);
-    }
-    if (message.debugRedact !== undefined && message.debugRedact !== false) {
-      writer.uint32(128).bool(message.debugRedact);
-    }
-    if (message.retention !== undefined && message.retention !== 0) {
-      writer.uint32(136).int32(message.retention);
-    }
-    for (const v of message.targets) {
-      writer.uint32(152).int32(v!);
-    }
-    for (const v of message.editionDefaults) {
-      FieldOptions_EditionDefault.encode(v!, writer.uint32(162).fork()).join();
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(170).fork()).join();
-    }
-    if (message.featureSupport !== undefined) {
-      FieldOptions_FeatureSupport.encode(message.featureSupport, writer.uint32(178).fork()).join();
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -3195,14 +2462,6 @@ export const FieldOptions: MessageFns<FieldOptions> = {
           message.lazy = reader.bool();
           continue;
         }
-        case 15: {
-          if (tag !== 120) {
-            break;
-          }
-
-          message.unverifiedLazy = reader.bool();
-          continue;
-        }
         case 3: {
           if (tag !== 24) {
             break;
@@ -3217,64 +2476,6 @@ export const FieldOptions: MessageFns<FieldOptions> = {
           }
 
           message.weak = reader.bool();
-          continue;
-        }
-        case 16: {
-          if (tag !== 128) {
-            break;
-          }
-
-          message.debugRedact = reader.bool();
-          continue;
-        }
-        case 17: {
-          if (tag !== 136) {
-            break;
-          }
-
-          message.retention = reader.int32() as any;
-          continue;
-        }
-        case 19: {
-          if (tag === 152) {
-            message.targets.push(reader.int32() as any);
-
-            continue;
-          }
-
-          if (tag === 154) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.targets.push(reader.int32() as any);
-            }
-
-            continue;
-          }
-
-          break;
-        }
-        case 20: {
-          if (tag !== 162) {
-            break;
-          }
-
-          message.editionDefaults.push(FieldOptions_EditionDefault.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 21: {
-          if (tag !== 170) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
-        case 22: {
-          if (tag !== 178) {
-            break;
-          }
-
-          message.featureSupport = FieldOptions_FeatureSupport.decode(reader, reader.uint32());
           continue;
         }
         case 999: {
@@ -3295,144 +2496,12 @@ export const FieldOptions: MessageFns<FieldOptions> = {
   },
 };
 
-function createBaseFieldOptions_EditionDefault(): FieldOptions_EditionDefault {
-  return { edition: 0, value: "" };
-}
-
-export const FieldOptions_EditionDefault: MessageFns<FieldOptions_EditionDefault> = {
-  encode(message: FieldOptions_EditionDefault, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.edition !== undefined && message.edition !== 0) {
-      writer.uint32(24).int32(message.edition);
-    }
-    if (message.value !== undefined && message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): FieldOptions_EditionDefault {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFieldOptions_EditionDefault();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.edition = reader.int32() as any;
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
-function createBaseFieldOptions_FeatureSupport(): FieldOptions_FeatureSupport {
-  return { editionIntroduced: 0, editionDeprecated: 0, deprecationWarning: "", editionRemoved: 0, removalError: "" };
-}
-
-export const FieldOptions_FeatureSupport: MessageFns<FieldOptions_FeatureSupport> = {
-  encode(message: FieldOptions_FeatureSupport, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.editionIntroduced !== undefined && message.editionIntroduced !== 0) {
-      writer.uint32(8).int32(message.editionIntroduced);
-    }
-    if (message.editionDeprecated !== undefined && message.editionDeprecated !== 0) {
-      writer.uint32(16).int32(message.editionDeprecated);
-    }
-    if (message.deprecationWarning !== undefined && message.deprecationWarning !== "") {
-      writer.uint32(26).string(message.deprecationWarning);
-    }
-    if (message.editionRemoved !== undefined && message.editionRemoved !== 0) {
-      writer.uint32(32).int32(message.editionRemoved);
-    }
-    if (message.removalError !== undefined && message.removalError !== "") {
-      writer.uint32(42).string(message.removalError);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): FieldOptions_FeatureSupport {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFieldOptions_FeatureSupport();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.editionIntroduced = reader.int32() as any;
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.editionDeprecated = reader.int32() as any;
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.deprecationWarning = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.editionRemoved = reader.int32() as any;
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          message.removalError = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
 function createBaseOneofOptions(): OneofOptions {
-  return { features: undefined, uninterpretedOption: [] };
+  return { uninterpretedOption: [] };
 }
 
 export const OneofOptions: MessageFns<OneofOptions> = {
   encode(message: OneofOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(10).fork()).join();
-    }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
@@ -3446,14 +2515,6 @@ export const OneofOptions: MessageFns<OneofOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
         case 999: {
           if (tag !== 7994) {
             break;
@@ -3473,13 +2534,7 @@ export const OneofOptions: MessageFns<OneofOptions> = {
 };
 
 function createBaseEnumOptions(): EnumOptions {
-  return {
-    allowAlias: false,
-    deprecated: false,
-    deprecatedLegacyJsonFieldConflicts: false,
-    features: undefined,
-    uninterpretedOption: [],
-  };
+  return { allowAlias: false, deprecated: false, uninterpretedOption: [] };
 }
 
 export const EnumOptions: MessageFns<EnumOptions> = {
@@ -3489,14 +2544,6 @@ export const EnumOptions: MessageFns<EnumOptions> = {
     }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
-    }
-    if (
-      message.deprecatedLegacyJsonFieldConflicts !== undefined && message.deprecatedLegacyJsonFieldConflicts !== false
-    ) {
-      writer.uint32(48).bool(message.deprecatedLegacyJsonFieldConflicts);
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(58).fork()).join();
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -3527,22 +2574,6 @@ export const EnumOptions: MessageFns<EnumOptions> = {
           message.deprecated = reader.bool();
           continue;
         }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.deprecatedLegacyJsonFieldConflicts = reader.bool();
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
         case 999: {
           if (tag !== 7994) {
             break;
@@ -3562,28 +2593,13 @@ export const EnumOptions: MessageFns<EnumOptions> = {
 };
 
 function createBaseEnumValueOptions(): EnumValueOptions {
-  return {
-    deprecated: false,
-    features: undefined,
-    debugRedact: false,
-    featureSupport: undefined,
-    uninterpretedOption: [],
-  };
+  return { deprecated: false, uninterpretedOption: [] };
 }
 
 export const EnumValueOptions: MessageFns<EnumValueOptions> = {
   encode(message: EnumValueOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(8).bool(message.deprecated);
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(18).fork()).join();
-    }
-    if (message.debugRedact !== undefined && message.debugRedact !== false) {
-      writer.uint32(24).bool(message.debugRedact);
-    }
-    if (message.featureSupport !== undefined) {
-      FieldOptions_FeatureSupport.encode(message.featureSupport, writer.uint32(34).fork()).join();
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -3606,30 +2622,6 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
           message.deprecated = reader.bool();
           continue;
         }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.debugRedact = reader.bool();
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.featureSupport = FieldOptions_FeatureSupport.decode(reader, reader.uint32());
-          continue;
-        }
         case 999: {
           if (tag !== 7994) {
             break;
@@ -3649,14 +2641,11 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
 };
 
 function createBaseServiceOptions(): ServiceOptions {
-  return { features: undefined, deprecated: false, uninterpretedOption: [] };
+  return { deprecated: false, uninterpretedOption: [] };
 }
 
 export const ServiceOptions: MessageFns<ServiceOptions> = {
   encode(message: ServiceOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(274).fork()).join();
-    }
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
@@ -3673,14 +2662,6 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 34: {
-          if (tag !== 274) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
         case 33: {
           if (tag !== 264) {
             break;
@@ -3708,7 +2689,7 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
 };
 
 function createBaseMethodOptions(): MethodOptions {
-  return { deprecated: false, idempotencyLevel: 0, features: undefined, uninterpretedOption: [] };
+  return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [] };
 }
 
 export const MethodOptions: MessageFns<MethodOptions> = {
@@ -3718,9 +2699,6 @@ export const MethodOptions: MessageFns<MethodOptions> = {
     }
     if (message.idempotencyLevel !== undefined && message.idempotencyLevel !== 0) {
       writer.uint32(272).int32(message.idempotencyLevel);
-    }
-    if (message.features !== undefined) {
-      FeatureSet.encode(message.features, writer.uint32(282).fork()).join();
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -3749,14 +2727,6 @@ export const MethodOptions: MessageFns<MethodOptions> = {
           }
 
           message.idempotencyLevel = reader.int32() as any;
-          continue;
-        }
-        case 35: {
-          if (tag !== 282) {
-            break;
-          }
-
-          message.features = FeatureSet.decode(reader, reader.uint32());
           continue;
         }
         case 999: {
@@ -3924,276 +2894,6 @@ export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePa
           }
 
           message.isExtension = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
-function createBaseFeatureSet(): FeatureSet {
-  return {
-    fieldPresence: 0,
-    enumType: 0,
-    repeatedFieldEncoding: 0,
-    utf8Validation: 0,
-    messageEncoding: 0,
-    jsonFormat: 0,
-    enforceNamingStyle: 0,
-    defaultSymbolVisibility: 0,
-  };
-}
-
-export const FeatureSet: MessageFns<FeatureSet> = {
-  encode(message: FeatureSet, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.fieldPresence !== undefined && message.fieldPresence !== 0) {
-      writer.uint32(8).int32(message.fieldPresence);
-    }
-    if (message.enumType !== undefined && message.enumType !== 0) {
-      writer.uint32(16).int32(message.enumType);
-    }
-    if (message.repeatedFieldEncoding !== undefined && message.repeatedFieldEncoding !== 0) {
-      writer.uint32(24).int32(message.repeatedFieldEncoding);
-    }
-    if (message.utf8Validation !== undefined && message.utf8Validation !== 0) {
-      writer.uint32(32).int32(message.utf8Validation);
-    }
-    if (message.messageEncoding !== undefined && message.messageEncoding !== 0) {
-      writer.uint32(40).int32(message.messageEncoding);
-    }
-    if (message.jsonFormat !== undefined && message.jsonFormat !== 0) {
-      writer.uint32(48).int32(message.jsonFormat);
-    }
-    if (message.enforceNamingStyle !== undefined && message.enforceNamingStyle !== 0) {
-      writer.uint32(56).int32(message.enforceNamingStyle);
-    }
-    if (message.defaultSymbolVisibility !== undefined && message.defaultSymbolVisibility !== 0) {
-      writer.uint32(64).int32(message.defaultSymbolVisibility);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): FeatureSet {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFeatureSet();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.fieldPresence = reader.int32() as any;
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.enumType = reader.int32() as any;
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.repeatedFieldEncoding = reader.int32() as any;
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.utf8Validation = reader.int32() as any;
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.messageEncoding = reader.int32() as any;
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.jsonFormat = reader.int32() as any;
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.enforceNamingStyle = reader.int32() as any;
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.defaultSymbolVisibility = reader.int32() as any;
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
-function createBaseFeatureSet_VisibilityFeature(): FeatureSet_VisibilityFeature {
-  return {};
-}
-
-export const FeatureSet_VisibilityFeature: MessageFns<FeatureSet_VisibilityFeature> = {
-  encode(_: FeatureSet_VisibilityFeature, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): FeatureSet_VisibilityFeature {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFeatureSet_VisibilityFeature();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
-function createBaseFeatureSetDefaults(): FeatureSetDefaults {
-  return { defaults: [], minimumEdition: 0, maximumEdition: 0 };
-}
-
-export const FeatureSetDefaults: MessageFns<FeatureSetDefaults> = {
-  encode(message: FeatureSetDefaults, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    for (const v of message.defaults) {
-      FeatureSetDefaults_FeatureSetEditionDefault.encode(v!, writer.uint32(10).fork()).join();
-    }
-    if (message.minimumEdition !== undefined && message.minimumEdition !== 0) {
-      writer.uint32(32).int32(message.minimumEdition);
-    }
-    if (message.maximumEdition !== undefined && message.maximumEdition !== 0) {
-      writer.uint32(40).int32(message.maximumEdition);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): FeatureSetDefaults {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFeatureSetDefaults();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.defaults.push(FeatureSetDefaults_FeatureSetEditionDefault.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.minimumEdition = reader.int32() as any;
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.maximumEdition = reader.int32() as any;
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-};
-
-function createBaseFeatureSetDefaults_FeatureSetEditionDefault(): FeatureSetDefaults_FeatureSetEditionDefault {
-  return { edition: 0, overridableFeatures: undefined, fixedFeatures: undefined };
-}
-
-export const FeatureSetDefaults_FeatureSetEditionDefault: MessageFns<FeatureSetDefaults_FeatureSetEditionDefault> = {
-  encode(
-    message: FeatureSetDefaults_FeatureSetEditionDefault,
-    writer: BinaryWriter = new BinaryWriter(),
-  ): BinaryWriter {
-    if (message.edition !== undefined && message.edition !== 0) {
-      writer.uint32(24).int32(message.edition);
-    }
-    if (message.overridableFeatures !== undefined) {
-      FeatureSet.encode(message.overridableFeatures, writer.uint32(34).fork()).join();
-    }
-    if (message.fixedFeatures !== undefined) {
-      FeatureSet.encode(message.fixedFeatures, writer.uint32(42).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): FeatureSetDefaults_FeatureSetEditionDefault {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFeatureSetDefaults_FeatureSetEditionDefault();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.edition = reader.int32() as any;
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.overridableFeatures = FeatureSet.decode(reader, reader.uint32());
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          message.fixedFeatures = FeatureSet.decode(reader, reader.uint32());
           continue;
         }
       }
@@ -4386,7 +3086,7 @@ export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
 };
 
 function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
-  return { path: [], sourceFile: "", begin: 0, end: 0, semantic: 0 };
+  return { path: [], sourceFile: "", begin: 0, end: 0 };
 }
 
 export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotation> = {
@@ -4404,9 +3104,6 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
     }
     if (message.end !== undefined && message.end !== 0) {
       writer.uint32(32).int32(message.end);
-    }
-    if (message.semantic !== undefined && message.semantic !== 0) {
-      writer.uint32(40).int32(message.semantic);
     }
     return writer;
   },
@@ -4458,14 +3155,6 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
           }
 
           message.end = reader.int32();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.semantic = reader.int32() as any;
           continue;
         }
       }
@@ -4525,22 +3214,7 @@ export const protoMetadata = {
       "extension": [],
       "nestedType": [],
       "enumType": [],
-      "extensionRange": [{
-        "start": 536000000,
-        "end": 536000001,
-        "options": {
-          "uninterpretedOption": [],
-          "declaration": [{
-            "number": 536000000,
-            "fullName": ".buf.descriptor.v1.buf_file_descriptor_set_extension",
-            "type": ".buf.descriptor.v1.FileDescriptorSetExtension",
-            "reserved": false,
-            "repeated": false,
-          }],
-          "features": undefined,
-          "verification": 1,
-        },
-      }],
+      "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
@@ -4606,18 +3280,6 @@ export const protoMetadata = {
         "defaultValue": "",
         "oneofIndex": 0,
         "jsonName": "weakDependency",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "option_dependency",
-        "number": 15,
-        "label": 3,
-        "type": 9,
-        "typeName": "",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "optionDependency",
         "options": undefined,
         "proto3Optional": false,
       }, {
@@ -4702,18 +3364,6 @@ export const protoMetadata = {
         "defaultValue": "",
         "oneofIndex": 0,
         "jsonName": "syntax",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "edition",
-        "number": 14,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.Edition",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "edition",
         "options": undefined,
         "proto3Optional": false,
       }],
@@ -4848,18 +3498,6 @@ export const protoMetadata = {
         "jsonName": "reservedName",
         "options": undefined,
         "proto3Optional": false,
-      }, {
-        "name": "visibility",
-        "number": 11,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.SymbolVisibility",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "visibility",
-        "options": undefined,
-        "proto3Optional": false,
       }],
       "extension": [],
       "nestedType": [{
@@ -4968,159 +3606,10 @@ export const protoMetadata = {
         "jsonName": "uninterpretedOption",
         "options": undefined,
         "proto3Optional": false,
-      }, {
-        "name": "declaration",
-        "number": 2,
-        "label": 3,
-        "type": 11,
-        "typeName": ".google.protobuf.ExtensionRangeOptions.Declaration",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "declaration",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 2,
-          "targets": [],
-          "editionDefaults": [],
-          "features": undefined,
-          "featureSupport": undefined,
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "features",
-        "number": 50,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "verification",
-        "number": 3,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.ExtensionRangeOptions.VerificationState",
-        "extendee": "",
-        "defaultValue": "UNVERIFIED",
-        "oneofIndex": 0,
-        "jsonName": "verification",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 2,
-          "targets": [],
-          "editionDefaults": [],
-          "features": undefined,
-          "featureSupport": undefined,
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
       }],
       "extension": [],
-      "nestedType": [{
-        "name": "Declaration",
-        "field": [{
-          "name": "number",
-          "number": 1,
-          "label": 1,
-          "type": 5,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "number",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "full_name",
-          "number": 2,
-          "label": 1,
-          "type": 9,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "fullName",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "type",
-          "number": 3,
-          "label": 1,
-          "type": 9,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "type",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "reserved",
-          "number": 5,
-          "label": 1,
-          "type": 8,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "reserved",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "repeated",
-          "number": 6,
-          "label": 1,
-          "type": 8,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "repeated",
-          "options": undefined,
-          "proto3Optional": false,
-        }],
-        "extension": [],
-        "nestedType": [],
-        "enumType": [],
-        "extensionRange": [],
-        "oneofDecl": [],
-        "options": undefined,
-        "reservedRange": [{ "start": 4, "end": 5 }],
-        "reservedName": [],
-        "visibility": 0,
-      }],
-      "enumType": [{
-        "name": "VerificationState",
-        "value": [{ "name": "DECLARATION", "number": 0, "options": undefined }, {
-          "name": "UNVERIFIED",
-          "number": 1,
-          "options": undefined,
-        }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }],
+      "nestedType": [],
+      "enumType": [],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
@@ -5293,10 +3782,10 @@ export const protoMetadata = {
       }, {
         "name": "Label",
         "value": [{ "name": "LABEL_OPTIONAL", "number": 1, "options": undefined }, {
-          "name": "LABEL_REPEATED",
-          "number": 3,
+          "name": "LABEL_REQUIRED",
+          "number": 2,
           "options": undefined,
-        }, { "name": "LABEL_REQUIRED", "number": 2, "options": undefined }],
+        }, { "name": "LABEL_REPEATED", "number": 3, "options": undefined }],
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
@@ -5404,18 +3893,6 @@ export const protoMetadata = {
         "defaultValue": "",
         "oneofIndex": 0,
         "jsonName": "reservedName",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "visibility",
-        "number": 6,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.SymbolVisibility",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "visibility",
         "options": undefined,
         "proto3Optional": false,
       }],
@@ -5557,8 +4034,8 @@ export const protoMetadata = {
       "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
-      "reservedRange": [{ "start": 4, "end": 5 }],
-      "reservedName": ["stream"],
+      "reservedRange": [],
+      "reservedName": [],
       "visibility": 0,
     }, {
       "name": "MethodDescriptorProto",
@@ -5680,27 +4157,7 @@ export const protoMetadata = {
         "defaultValue": "false",
         "oneofIndex": 0,
         "jsonName": "javaMultipleFiles",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 0,
-          "targets": [],
-          "editionDefaults": [],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 998,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 1001,
-          },
-          "uninterpretedOption": [],
-        },
+        "options": undefined,
         "proto3Optional": false,
       }, {
         "name": "java_generate_equals_and_hash",
@@ -5799,6 +4256,18 @@ export const protoMetadata = {
         "defaultValue": "false",
         "oneofIndex": 0,
         "jsonName": "pyGenericServices",
+        "options": undefined,
+        "proto3Optional": false,
+      }, {
+        "name": "php_generic_services",
+        "number": 42,
+        "label": 1,
+        "type": 8,
+        "typeName": "",
+        "extendee": "",
+        "defaultValue": "false",
+        "oneofIndex": 0,
+        "jsonName": "phpGenericServices",
         "options": undefined,
         "proto3Optional": false,
       }, {
@@ -5910,18 +4379,6 @@ export const protoMetadata = {
         "options": undefined,
         "proto3Optional": false,
       }, {
-        "name": "features",
-        "number": 50,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
         "name": "uninterpreted_option",
         "number": 999,
         "label": 3,
@@ -5951,8 +4408,8 @@ export const protoMetadata = {
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
-      "reservedRange": [{ "start": 42, "end": 43 }, { "start": 38, "end": 39 }],
-      "reservedName": ["php_generic_services"],
+      "reservedRange": [{ "start": 38, "end": 39 }],
+      "reservedName": [],
       "visibility": 0,
     }, {
       "name": "MessageOptions",
@@ -6002,45 +4459,6 @@ export const protoMetadata = {
         "defaultValue": "",
         "oneofIndex": 0,
         "jsonName": "mapEntry",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "deprecated_legacy_json_field_conflicts",
-        "number": 11,
-        "label": 1,
-        "type": 8,
-        "typeName": "",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "deprecatedLegacyJsonFieldConflicts",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": true,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 0,
-          "targets": [],
-          "editionDefaults": [],
-          "features": undefined,
-          "featureSupport": undefined,
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "features",
-        "number": 12,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
         "options": undefined,
         "proto3Optional": false,
       }, {
@@ -6119,18 +4537,6 @@ export const protoMetadata = {
         "options": undefined,
         "proto3Optional": false,
       }, {
-        "name": "unverified_lazy",
-        "number": 15,
-        "label": 1,
-        "type": 8,
-        "typeName": "",
-        "extendee": "",
-        "defaultValue": "false",
-        "oneofIndex": 0,
-        "jsonName": "unverifiedLazy",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
         "name": "deprecated",
         "number": 3,
         "label": 1,
@@ -6152,93 +4558,6 @@ export const protoMetadata = {
         "defaultValue": "false",
         "oneofIndex": 0,
         "jsonName": "weak",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": true,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 0,
-          "targets": [],
-          "editionDefaults": [],
-          "features": undefined,
-          "featureSupport": undefined,
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "debug_redact",
-        "number": 16,
-        "label": 1,
-        "type": 8,
-        "typeName": "",
-        "extendee": "",
-        "defaultValue": "false",
-        "oneofIndex": 0,
-        "jsonName": "debugRedact",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "retention",
-        "number": 17,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FieldOptions.OptionRetention",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "retention",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "targets",
-        "number": 19,
-        "label": 3,
-        "type": 14,
-        "typeName": ".google.protobuf.FieldOptions.OptionTargetType",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "targets",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "edition_defaults",
-        "number": 20,
-        "label": 3,
-        "type": 11,
-        "typeName": ".google.protobuf.FieldOptions.EditionDefault",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "editionDefaults",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "features",
-        "number": 21,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "feature_support",
-        "number": 22,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FieldOptions.FeatureSupport",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "featureSupport",
         "options": undefined,
         "proto3Optional": false,
       }, {
@@ -6255,115 +4574,7 @@ export const protoMetadata = {
         "proto3Optional": false,
       }],
       "extension": [],
-      "nestedType": [{
-        "name": "EditionDefault",
-        "field": [{
-          "name": "edition",
-          "number": 3,
-          "label": 1,
-          "type": 14,
-          "typeName": ".google.protobuf.Edition",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "edition",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "value",
-          "number": 2,
-          "label": 1,
-          "type": 9,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "value",
-          "options": undefined,
-          "proto3Optional": false,
-        }],
-        "extension": [],
-        "nestedType": [],
-        "enumType": [],
-        "extensionRange": [],
-        "oneofDecl": [],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "FeatureSupport",
-        "field": [{
-          "name": "edition_introduced",
-          "number": 1,
-          "label": 1,
-          "type": 14,
-          "typeName": ".google.protobuf.Edition",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "editionIntroduced",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "edition_deprecated",
-          "number": 2,
-          "label": 1,
-          "type": 14,
-          "typeName": ".google.protobuf.Edition",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "editionDeprecated",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "deprecation_warning",
-          "number": 3,
-          "label": 1,
-          "type": 9,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "deprecationWarning",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "edition_removed",
-          "number": 4,
-          "label": 1,
-          "type": 14,
-          "typeName": ".google.protobuf.Edition",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "editionRemoved",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "removal_error",
-          "number": 5,
-          "label": 1,
-          "type": 9,
-          "typeName": "",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "removalError",
-          "options": undefined,
-          "proto3Optional": false,
-        }],
-        "extension": [],
-        "nestedType": [],
-        "enumType": [],
-        "extensionRange": [],
-        "oneofDecl": [],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }],
+      "nestedType": [],
       "enumType": [{
         "name": "CType",
         "value": [{ "name": "STRING", "number": 0, "options": undefined }, {
@@ -6386,57 +4597,16 @@ export const protoMetadata = {
         "reservedRange": [],
         "reservedName": [],
         "visibility": 0,
-      }, {
-        "name": "OptionRetention",
-        "value": [{ "name": "RETENTION_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "RETENTION_RUNTIME",
-          "number": 1,
-          "options": undefined,
-        }, { "name": "RETENTION_SOURCE", "number": 2, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "OptionTargetType",
-        "value": [
-          { "name": "TARGET_TYPE_UNKNOWN", "number": 0, "options": undefined },
-          { "name": "TARGET_TYPE_FILE", "number": 1, "options": undefined },
-          { "name": "TARGET_TYPE_EXTENSION_RANGE", "number": 2, "options": undefined },
-          { "name": "TARGET_TYPE_MESSAGE", "number": 3, "options": undefined },
-          { "name": "TARGET_TYPE_FIELD", "number": 4, "options": undefined },
-          { "name": "TARGET_TYPE_ONEOF", "number": 5, "options": undefined },
-          { "name": "TARGET_TYPE_ENUM", "number": 6, "options": undefined },
-          { "name": "TARGET_TYPE_ENUM_ENTRY", "number": 7, "options": undefined },
-          { "name": "TARGET_TYPE_SERVICE", "number": 8, "options": undefined },
-          { "name": "TARGET_TYPE_METHOD", "number": 9, "options": undefined },
-        ],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
-      "reservedRange": [{ "start": 4, "end": 5 }, { "start": 18, "end": 19 }],
+      "reservedRange": [{ "start": 4, "end": 5 }],
       "reservedName": [],
       "visibility": 0,
     }, {
       "name": "OneofOptions",
       "field": [{
-        "name": "features",
-        "number": 1,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
         "name": "uninterpreted_option",
         "number": 999,
         "label": 3,
@@ -6485,45 +4655,6 @@ export const protoMetadata = {
         "options": undefined,
         "proto3Optional": false,
       }, {
-        "name": "deprecated_legacy_json_field_conflicts",
-        "number": 6,
-        "label": 1,
-        "type": 8,
-        "typeName": "",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "deprecatedLegacyJsonFieldConflicts",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": true,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 0,
-          "targets": [],
-          "editionDefaults": [],
-          "features": undefined,
-          "featureSupport": undefined,
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "features",
-        "number": 7,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
         "name": "uninterpreted_option",
         "number": 999,
         "label": 3,
@@ -6560,42 +4691,6 @@ export const protoMetadata = {
         "options": undefined,
         "proto3Optional": false,
       }, {
-        "name": "features",
-        "number": 2,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "debug_redact",
-        "number": 3,
-        "label": 1,
-        "type": 8,
-        "typeName": "",
-        "extendee": "",
-        "defaultValue": "false",
-        "oneofIndex": 0,
-        "jsonName": "debugRedact",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "feature_support",
-        "number": 4,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FieldOptions.FeatureSupport",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "featureSupport",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
         "name": "uninterpreted_option",
         "number": 999,
         "label": 3,
@@ -6620,18 +4715,6 @@ export const protoMetadata = {
     }, {
       "name": "ServiceOptions",
       "field": [{
-        "name": "features",
-        "number": 34,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
         "name": "deprecated",
         "number": 33,
         "label": 1,
@@ -6689,18 +4772,6 @@ export const protoMetadata = {
         "defaultValue": "IDEMPOTENCY_UNKNOWN",
         "oneofIndex": 0,
         "jsonName": "idempotencyLevel",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "features",
-        "number": 35,
-        "label": 1,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSet",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "features",
         "options": undefined,
         "proto3Optional": false,
       }, {
@@ -6869,536 +4940,6 @@ export const protoMetadata = {
       "reservedName": [],
       "visibility": 0,
     }, {
-      "name": "FeatureSet",
-      "field": [{
-        "name": "field_presence",
-        "number": 1,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.FieldPresence",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "fieldPresence",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 1,
-          "targets": [4, 1],
-          "editionDefaults": [{ "edition": 900, "value": "EXPLICIT" }, { "edition": 999, "value": "IMPLICIT" }, {
-            "edition": 1000,
-            "value": "EXPLICIT",
-          }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1000,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "enum_type",
-        "number": 2,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.EnumType",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "enumType",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 1,
-          "targets": [6, 1],
-          "editionDefaults": [{ "edition": 900, "value": "CLOSED" }, { "edition": 999, "value": "OPEN" }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1000,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "repeated_field_encoding",
-        "number": 3,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.RepeatedFieldEncoding",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "repeatedFieldEncoding",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 1,
-          "targets": [4, 1],
-          "editionDefaults": [{ "edition": 900, "value": "EXPANDED" }, { "edition": 999, "value": "PACKED" }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1000,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "utf8_validation",
-        "number": 4,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.Utf8Validation",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "utf8Validation",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 1,
-          "targets": [4, 1],
-          "editionDefaults": [{ "edition": 900, "value": "NONE" }, { "edition": 999, "value": "VERIFY" }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1000,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "message_encoding",
-        "number": 5,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.MessageEncoding",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "messageEncoding",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 1,
-          "targets": [4, 1],
-          "editionDefaults": [{ "edition": 900, "value": "LENGTH_PREFIXED" }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1000,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "json_format",
-        "number": 6,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.JsonFormat",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "jsonFormat",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 1,
-          "targets": [3, 6, 1],
-          "editionDefaults": [{ "edition": 900, "value": "LEGACY_BEST_EFFORT" }, { "edition": 999, "value": "ALLOW" }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1000,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "enforce_naming_style",
-        "number": 7,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.EnforceNamingStyle",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "enforceNamingStyle",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 2,
-          "targets": [1, 2, 3, 4, 5, 6, 7, 8, 9],
-          "editionDefaults": [{ "edition": 900, "value": "STYLE_LEGACY" }, { "edition": 1001, "value": "STYLE2024" }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1001,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }, {
-        "name": "default_symbol_visibility",
-        "number": 8,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.FeatureSet.VisibilityFeature.DefaultSymbolVisibility",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "defaultSymbolVisibility",
-        "options": {
-          "ctype": 0,
-          "packed": false,
-          "jstype": 0,
-          "lazy": false,
-          "unverifiedLazy": false,
-          "deprecated": false,
-          "weak": false,
-          "debugRedact": false,
-          "retention": 2,
-          "targets": [1],
-          "editionDefaults": [{ "edition": 900, "value": "EXPORT_ALL" }, {
-            "edition": 1001,
-            "value": "EXPORT_TOP_LEVEL",
-          }],
-          "features": undefined,
-          "featureSupport": {
-            "editionIntroduced": 1001,
-            "editionDeprecated": 0,
-            "deprecationWarning": "",
-            "editionRemoved": 0,
-          },
-          "uninterpretedOption": [],
-        },
-        "proto3Optional": false,
-      }],
-      "extension": [],
-      "nestedType": [{
-        "name": "VisibilityFeature",
-        "field": [],
-        "extension": [],
-        "nestedType": [],
-        "enumType": [{
-          "name": "DefaultSymbolVisibility",
-          "value": [
-            { "name": "DEFAULT_SYMBOL_VISIBILITY_UNKNOWN", "number": 0, "options": undefined },
-            { "name": "EXPORT_ALL", "number": 1, "options": undefined },
-            { "name": "EXPORT_TOP_LEVEL", "number": 2, "options": undefined },
-            { "name": "LOCAL_ALL", "number": 3, "options": undefined },
-            { "name": "STRICT", "number": 4, "options": undefined },
-          ],
-          "options": undefined,
-          "reservedRange": [],
-          "reservedName": [],
-          "visibility": 0,
-        }],
-        "extensionRange": [],
-        "oneofDecl": [],
-        "options": undefined,
-        "reservedRange": [{ "start": 1, "end": 536870912 }],
-        "reservedName": [],
-        "visibility": 0,
-      }],
-      "enumType": [{
-        "name": "FieldPresence",
-        "value": [
-          { "name": "FIELD_PRESENCE_UNKNOWN", "number": 0, "options": undefined },
-          { "name": "EXPLICIT", "number": 1, "options": undefined },
-          { "name": "IMPLICIT", "number": 2, "options": undefined },
-          { "name": "LEGACY_REQUIRED", "number": 3, "options": undefined },
-        ],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "EnumType",
-        "value": [{ "name": "ENUM_TYPE_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "OPEN",
-          "number": 1,
-          "options": undefined,
-        }, { "name": "CLOSED", "number": 2, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "RepeatedFieldEncoding",
-        "value": [{ "name": "REPEATED_FIELD_ENCODING_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "PACKED",
-          "number": 1,
-          "options": undefined,
-        }, { "name": "EXPANDED", "number": 2, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "Utf8Validation",
-        "value": [{ "name": "UTF8_VALIDATION_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "VERIFY",
-          "number": 2,
-          "options": undefined,
-        }, { "name": "NONE", "number": 3, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [{ "start": 1, "end": 1 }],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "MessageEncoding",
-        "value": [{ "name": "MESSAGE_ENCODING_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "LENGTH_PREFIXED",
-          "number": 1,
-          "options": undefined,
-        }, { "name": "DELIMITED", "number": 2, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "JsonFormat",
-        "value": [{ "name": "JSON_FORMAT_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "ALLOW",
-          "number": 1,
-          "options": undefined,
-        }, { "name": "LEGACY_BEST_EFFORT", "number": 2, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }, {
-        "name": "EnforceNamingStyle",
-        "value": [{ "name": "ENFORCE_NAMING_STYLE_UNKNOWN", "number": 0, "options": undefined }, {
-          "name": "STYLE2024",
-          "number": 1,
-          "options": undefined,
-        }, { "name": "STYLE_LEGACY", "number": 2, "options": undefined }],
-        "options": undefined,
-        "reservedRange": [],
-        "reservedName": [],
-        "visibility": 0,
-      }],
-      "extensionRange": [
-        {
-          "start": 1000,
-          "end": 9995,
-          "options": {
-            "uninterpretedOption": [],
-            "declaration": [
-              {
-                "number": 1000,
-                "fullName": ".pb.cpp",
-                "type": ".pb.CppFeatures",
-                "reserved": false,
-                "repeated": false,
-              },
-              {
-                "number": 1001,
-                "fullName": ".pb.java",
-                "type": ".pb.JavaFeatures",
-                "reserved": false,
-                "repeated": false,
-              },
-              { "number": 1002, "fullName": ".pb.go", "type": ".pb.GoFeatures", "reserved": false, "repeated": false },
-              {
-                "number": 1003,
-                "fullName": ".pb.python",
-                "type": ".pb.PythonFeatures",
-                "reserved": false,
-                "repeated": false,
-              },
-              {
-                "number": 1100,
-                "fullName": ".imp.impress_feature_set",
-                "type": ".imp.ImpressFeatureSet",
-                "reserved": false,
-                "repeated": false,
-              },
-              {
-                "number": 9989,
-                "fullName": ".pb.java_mutable",
-                "type": ".pb.JavaMutableFeatures",
-                "reserved": false,
-                "repeated": false,
-              },
-              {
-                "number": 9990,
-                "fullName": ".pb.proto1",
-                "type": ".pb.Proto1Features",
-                "reserved": false,
-                "repeated": false,
-              },
-            ],
-            "features": undefined,
-            "verification": 1,
-          },
-        },
-        { "start": 9995, "end": 10000, "options": undefined },
-        { "start": 10000, "end": 10001, "options": undefined },
-      ],
-      "oneofDecl": [],
-      "options": undefined,
-      "reservedRange": [{ "start": 999, "end": 1000 }],
-      "reservedName": [],
-      "visibility": 0,
-    }, {
-      "name": "FeatureSetDefaults",
-      "field": [{
-        "name": "defaults",
-        "number": 1,
-        "label": 3,
-        "type": 11,
-        "typeName": ".google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "defaults",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "minimum_edition",
-        "number": 4,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.Edition",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "minimumEdition",
-        "options": undefined,
-        "proto3Optional": false,
-      }, {
-        "name": "maximum_edition",
-        "number": 5,
-        "label": 1,
-        "type": 14,
-        "typeName": ".google.protobuf.Edition",
-        "extendee": "",
-        "defaultValue": "",
-        "oneofIndex": 0,
-        "jsonName": "maximumEdition",
-        "options": undefined,
-        "proto3Optional": false,
-      }],
-      "extension": [],
-      "nestedType": [{
-        "name": "FeatureSetEditionDefault",
-        "field": [{
-          "name": "edition",
-          "number": 3,
-          "label": 1,
-          "type": 14,
-          "typeName": ".google.protobuf.Edition",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "edition",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "overridable_features",
-          "number": 4,
-          "label": 1,
-          "type": 11,
-          "typeName": ".google.protobuf.FeatureSet",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "overridableFeatures",
-          "options": undefined,
-          "proto3Optional": false,
-        }, {
-          "name": "fixed_features",
-          "number": 5,
-          "label": 1,
-          "type": 11,
-          "typeName": ".google.protobuf.FeatureSet",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "fixedFeatures",
-          "options": undefined,
-          "proto3Optional": false,
-        }],
-        "extension": [],
-        "nestedType": [],
-        "enumType": [],
-        "extensionRange": [],
-        "oneofDecl": [],
-        "options": undefined,
-        "reservedRange": [{ "start": 1, "end": 2 }, { "start": 2, "end": 3 }],
-        "reservedName": ["features"],
-        "visibility": 0,
-      }],
-      "enumType": [],
-      "extensionRange": [],
-      "oneofDecl": [],
-      "options": undefined,
-      "reservedRange": [],
-      "reservedName": [],
-      "visibility": 0,
-    }, {
       "name": "SourceCodeInfo",
       "field": [{
         "name": "location",
@@ -7518,22 +5059,7 @@ export const protoMetadata = {
         "visibility": 0,
       }],
       "enumType": [],
-      "extensionRange": [{
-        "start": 536000000,
-        "end": 536000001,
-        "options": {
-          "uninterpretedOption": [],
-          "declaration": [{
-            "number": 536000000,
-            "fullName": ".buf.descriptor.v1.buf_source_code_info_extension",
-            "type": ".buf.descriptor.v1.SourceCodeInfoExtension",
-            "reserved": false,
-            "repeated": false,
-          }],
-          "features": undefined,
-          "verification": 1,
-        },
-      }],
+      "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
@@ -7620,33 +5146,10 @@ export const protoMetadata = {
           "jsonName": "end",
           "options": undefined,
           "proto3Optional": false,
-        }, {
-          "name": "semantic",
-          "number": 5,
-          "label": 1,
-          "type": 14,
-          "typeName": ".google.protobuf.GeneratedCodeInfo.Annotation.Semantic",
-          "extendee": "",
-          "defaultValue": "",
-          "oneofIndex": 0,
-          "jsonName": "semantic",
-          "options": undefined,
-          "proto3Optional": false,
         }],
         "extension": [],
         "nestedType": [],
-        "enumType": [{
-          "name": "Semantic",
-          "value": [{ "name": "NONE", "number": 0, "options": undefined }, {
-            "name": "SET",
-            "number": 1,
-            "options": undefined,
-          }, { "name": "ALIAS", "number": 2, "options": undefined }],
-          "options": undefined,
-          "reservedRange": [],
-          "reservedName": [],
-          "visibility": 0,
-        }],
+        "enumType": [],
         "extensionRange": [],
         "oneofDecl": [],
         "options": undefined,
@@ -7662,39 +5165,7 @@ export const protoMetadata = {
       "reservedName": [],
       "visibility": 0,
     }],
-    "enumType": [{
-      "name": "Edition",
-      "value": [
-        { "name": "EDITION_UNKNOWN", "number": 0, "options": undefined },
-        { "name": "EDITION_LEGACY", "number": 900, "options": undefined },
-        { "name": "EDITION_PROTO2", "number": 998, "options": undefined },
-        { "name": "EDITION_PROTO3", "number": 999, "options": undefined },
-        { "name": "EDITION_2023", "number": 1000, "options": undefined },
-        { "name": "EDITION_2024", "number": 1001, "options": undefined },
-        { "name": "EDITION_UNSTABLE", "number": 9999, "options": undefined },
-        { "name": "EDITION_1_TEST_ONLY", "number": 1, "options": undefined },
-        { "name": "EDITION_2_TEST_ONLY", "number": 2, "options": undefined },
-        { "name": "EDITION_99997_TEST_ONLY", "number": 99997, "options": undefined },
-        { "name": "EDITION_99998_TEST_ONLY", "number": 99998, "options": undefined },
-        { "name": "EDITION_99999_TEST_ONLY", "number": 99999, "options": undefined },
-        { "name": "EDITION_MAX", "number": 2147483647, "options": undefined },
-      ],
-      "options": undefined,
-      "reservedRange": [],
-      "reservedName": [],
-      "visibility": 0,
-    }, {
-      "name": "SymbolVisibility",
-      "value": [{ "name": "VISIBILITY_UNSET", "number": 0, "options": undefined }, {
-        "name": "VISIBILITY_LOCAL",
-        "number": 1,
-        "options": undefined,
-      }, { "name": "VISIBILITY_EXPORT", "number": 2, "options": undefined }],
-      "options": undefined,
-      "reservedRange": [],
-      "reservedName": [],
-      "visibility": 0,
-    }],
+    "enumType": [],
     "service": [],
     "extension": [],
     "options": {
@@ -7723,1005 +5194,672 @@ export const protoMetadata = {
     "sourceCodeInfo": {
       "location": [{
         "path": [8, 9],
-        "span": [51, 0, 28],
+        "span": [52, 0, 28],
         "leadingComments":
           " descriptor.proto must be optimized for speed because reflection-based\n algorithms don't work during bootstrapping.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 0],
-        "span": [55, 0, 64, 1],
+        "span": [56, 0, 58, 1],
         "leadingComments":
           " The protocol compiler can output a FileDescriptorSet containing the .proto\n files it parses.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 0, 5],
-        "span": [59, 2, 63, 5],
-        "leadingComments": " Extensions for tooling.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0],
-        "span": [67, 0, 103, 1],
-        "leadingComments": " The full set of known editions.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 0],
-        "span": [69, 2, 22],
-        "leadingComments": " A placeholder for an unknown edition value.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 1],
-        "span": [73, 2, 23],
-        "leadingComments":
-          ' A placeholder edition for specifying default behaviors *before* a feature\n was first introduced.  This is effectively an "infinite past".\n',
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 2],
-        "span": [79, 2, 23],
-        "leadingComments":
-          ' Legacy syntax "editions".  These pre-date editions, but behave much like\n distinct editions.  These can\'t be used to specify the edition of proto\n files, but feature definitions must supply proto2/proto3 defaults for\n backwards compatibility.\n',
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 4],
-        "span": [85, 2, 22],
-        "leadingComments":
-          " Editions that have been released.  The specific values are arbitrary and\n should not be depended on, but they will always be time-ordered for easy\n comparison.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 6],
-        "span": [89, 2, 26],
-        "leadingComments": " A placeholder edition for developing and testing unscheduled features.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 7],
-        "span": [93, 2, 26],
-        "leadingComments":
-          " Placeholder editions for testing feature resolution.  These should not be\n used or relied on outside of tests.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 0, 2, 12],
-        "span": [102, 2, 27],
-        "leadingComments":
-          " Placeholder for specifying unbounded edition support.  This should only\n ever be used by plugins that can expect to never require any changes to\n support a new edition.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 1],
-        "span": [106, 0, 150, 1],
+        "span": [61, 0, 90, 1],
         "leadingComments": " Describes a complete .proto file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 0],
-        "span": [107, 2, 27],
+        "span": [62, 2, 27],
         "leadingComments": "",
         "trailingComments": " file name, relative to root of source tree\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 1],
-        "span": [108, 2, 30],
+        "span": [63, 2, 30],
         "leadingComments": "",
         "trailingComments": ' e.g. "foo", "foo.bar", etc.\n',
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 2],
-        "span": [111, 2, 33],
+        "span": [66, 2, 33],
         "leadingComments": " Names of files imported by this file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 3],
-        "span": [113, 2, 40],
+        "span": [68, 2, 40],
         "leadingComments": " Indexes of the public imported files in the dependency list above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 4],
-        "span": [116, 2, 38],
+        "span": [71, 2, 38],
         "leadingComments":
           " Indexes of the weak imported files in the dependency list.\n For Google-internal migration only. Do not use.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 5],
-        "span": [120, 2, 41],
-        "leadingComments":
-          " Names of files imported by this file purely for the purpose of providing\n option extensions. These are excluded from the dependency list above.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 1, 2, 6],
-        "span": [123, 2, 44],
+        "span": [74, 2, 44],
         "leadingComments": " All top-level definitions in this file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 1, 2, 11],
-        "span": [134, 2, 47],
+        "path": [4, 1, 2, 10],
+        "span": [85, 2, 47],
         "leadingComments":
           " This field contains optional information about the original source code.\n You may safely remove this entire field without harming runtime\n functionality of the descriptors -- the information is needed only by\n development tools.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 1, 2, 12],
-        "span": [143, 2, 30],
-        "leadingComments":
-          ' The syntax of the proto file.\n The supported values are "proto2", "proto3", and "editions".\n\n If `edition` is present, this value must be "editions".\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n',
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 1, 2, 13],
-        "span": [149, 2, 32],
-        "leadingComments":
-          " The edition of the proto file.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
+        "path": [4, 1, 2, 11],
+        "span": [89, 2, 30],
+        "leadingComments": ' The syntax of the proto file.\n The supported values are "proto2" and "proto3".\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2],
-        "span": [153, 0, 188, 1],
+        "span": [93, 0, 125, 1],
         "leadingComments": " Describes a message type.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 3, 0, 2, 0],
-        "span": [163, 4, 29],
+        "span": [103, 4, 29],
         "leadingComments": "",
         "trailingComments": " Inclusive.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 3, 0, 2, 1],
-        "span": [164, 4, 27],
+        "span": [104, 4, 27],
         "leadingComments": "",
         "trailingComments": " Exclusive.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 3, 1],
-        "span": [177, 2, 180, 3],
+        "span": [117, 2, 120, 3],
         "leadingComments":
           " Range of reserved tag numbers. Reserved tag numbers may not be used by\n fields or extension ranges in the same message. Reserved ranges may\n not overlap.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 3, 1, 2, 0],
-        "span": [178, 4, 29],
+        "span": [118, 4, 29],
         "leadingComments": "",
         "trailingComments": " Inclusive.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 3, 1, 2, 1],
-        "span": [179, 4, 27],
+        "span": [119, 4, 27],
         "leadingComments": "",
         "trailingComments": " Exclusive.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 2, 9],
-        "span": [184, 2, 37],
+        "span": [124, 2, 37],
         "leadingComments":
           " Reserved field names, which may not be used by fields in the same message.\n A given name may only be reserved once.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 2, 2, 10],
-        "span": [187, 2, 44],
-        "leadingComments": " Support for `export` and `local` keywords on enums.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 3, 2, 0],
-        "span": [192, 2, 58],
+        "span": [129, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 3, 3, 0, 2, 0],
-        "span": [196, 4, 30],
-        "leadingComments": " The extension number declared within the extension range.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 3, 0, 2, 1],
-        "span": [200, 4, 34],
-        "leadingComments":
-          " The fully-qualified name of the extension field. There must be a leading\n dot in front of the full name.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 3, 0, 2, 2],
-        "span": [205, 4, 29],
-        "leadingComments":
-          " The fully-qualified type name of the extension field. Unlike\n Metadata.type, Declaration.type must have a leading dot for messages\n and enums.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 3, 0, 2, 3],
-        "span": [210, 4, 31],
-        "leadingComments":
-          " If true, indicates that the number is reserved in the extension range,\n and any extension field with the number will fail to compile. Set this\n when a declared extension field is deleted.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 3, 0, 2, 4],
-        "span": [214, 4, 31],
-        "leadingComments":
-          " If true, indicates that the extension must be defined as repeated.\n Otherwise the extension must be defined as optional.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 3, 0, 9],
-        "span": [216, 4, 15],
-        "leadingComments": "",
-        "trailingComments": " removed is_repeated\n",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 2, 1],
-        "span": [222, 2, 70],
-        "leadingComments":
-          " For external users: DO NOT USE. We are in the process of open sourcing\n extension declaration and executing internal cleanups before it can be\n used externally.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 2, 2],
-        "span": [225, 2, 36],
-        "leadingComments": " Any features defined in the specific edition.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 4, 0],
-        "span": [228, 2, 232, 3],
-        "leadingComments": " The verification state of the extension range.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 4, 0, 2, 0],
-        "span": [230, 4, 20],
-        "leadingComments": " All the extensions of the range must be declared.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 3, 2, 3],
-        "span": [237, 2, 238, 59],
-        "leadingComments":
-          " The verification state of the range.\n TODO: flip the default to DECLARATION once all empty ranges\n are marked as UNVERIFIED.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 3, 5],
-        "span": [241, 2, 25],
+        "span": [133, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4],
-        "span": [245, 0, 349, 1],
+        "span": [137, 0, 238, 1],
         "leadingComments": " Describes a field within a message.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 0],
-        "span": [249, 4, 20],
+        "span": [141, 4, 20],
         "leadingComments": " 0 is reserved for errors.\n Order is weird for historical reasons.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 2],
-        "span": [253, 4, 19],
+        "span": [145, 4, 19],
         "leadingComments":
           " Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT64 if\n negative values are likely.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 4],
-        "span": [257, 4, 19],
+        "span": [149, 4, 19],
         "leadingComments":
           " Not ZigZag encoded.  Negative numbers take 10 bytes.  Use TYPE_SINT32 if\n negative values are likely.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 9],
-        "span": [267, 4, 20],
+        "span": [158, 4, 20],
         "leadingComments":
-          " Tag-delimited aggregate.\n Group type is deprecated and not supported after google.protobuf. However, Proto3\n implementations should still be able to parse the group wire format and\n treat group fields as unknown fields.  In Editions, the group wire format\n can be enabled via the `message_encoding` feature.\n",
+          " Tag-delimited aggregate.\n Group type is deprecated and not supported in proto3. However, Proto3\n implementations should still be able to parse the group wire format and\n treat group fields as unknown fields.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 10],
-        "span": [268, 4, 22],
+        "span": [159, 4, 22],
         "leadingComments": "",
         "trailingComments": " Length-delimited aggregate.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 11],
-        "span": [271, 4, 20],
+        "span": [162, 4, 20],
         "leadingComments": " New in version 2.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 16],
-        "span": [276, 4, 21],
+        "span": [167, 4, 21],
         "leadingComments": "",
         "trailingComments": " Uses ZigZag encoding.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 0, 2, 17],
-        "span": [277, 4, 21],
+        "span": [168, 4, 21],
         "leadingComments": "",
         "trailingComments": " Uses ZigZag encoding.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 4, 1, 2, 0],
-        "span": [282, 4, 23],
+        "span": [173, 4, 23],
         "leadingComments": " 0 is reserved for errors\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 4, 4, 1, 2, 2],
-        "span": [287, 4, 23],
-        "leadingComments":
-          " The required label is only allowed in google.protobuf.  In proto3 and Editions\n it's explicitly prohibited.  In Editions, the `field_presence` feature\n can be used to get this behavior.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 4, 2, 3],
-        "span": [296, 2, 25],
+        "span": [184, 2, 25],
         "leadingComments":
           " If type_name is set, this need not be set.  If both this and type_name\n are set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 2, 4],
-        "span": [303, 2, 32],
+        "span": [191, 2, 32],
         "leadingComments":
           " For message and enum types, this is the name of the type.  If the name\n starts with a '.', it is fully-qualified.  Otherwise, C++-like scoping\n rules are used to find the type (i.e. first the nested types within this\n message are searched, then within the parent, on up to the root\n namespace).\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 2, 5],
-        "span": [307, 2, 31],
+        "span": [195, 2, 31],
         "leadingComments":
           " For extensions, this is the name of the type being extended.  It is\n resolved in the same manner as type_name.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 2, 6],
-        "span": [313, 2, 36],
+        "span": [202, 2, 36],
         "leadingComments":
-          ' For numeric types, contains the original text representation of the value.\n For booleans, "true" or "false".\n For strings, contains the default text contents (not escaped in any way).\n For bytes, contains the C escaped value.  All bytes >= 128 are escaped.\n',
+          ' For numeric types, contains the original text representation of the value.\n For booleans, "true" or "false".\n For strings, contains the default text contents (not escaped in any way).\n For bytes, contains the C escaped value.  All bytes >= 128 are escaped.\n TODO(kenton):  Base-64 encode?\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 2, 7],
-        "span": [317, 2, 33],
+        "span": [206, 2, 33],
         "leadingComments":
           " If set, gives the index of a oneof in the containing type's oneof_decl\n list.  This field is a member of that oneof.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 2, 8],
-        "span": [323, 2, 33],
+        "span": [212, 2, 33],
         "leadingComments":
           " JSON name of this field. The value is set by protocol compiler. If the\n user has set a \"json_name\" option on this field, that option's value\n will be used. Otherwise, it's deduced from the field's name by converting\n it to camelCase.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 4, 2, 10],
-        "span": [348, 2, 37],
+        "span": [237, 2, 37],
         "leadingComments":
-          ' If true, this is a proto3 "optional". When a proto3 field is optional, it\n tracks presence regardless of field type.\n\n When proto3_optional is true, this field must belong to a oneof to signal\n to old proto3 clients that presence is tracked for this field. This oneof\n is known as a "synthetic" oneof, and this field must be its sole member\n (each proto3 optional field gets its own synthetic oneof). Synthetic oneofs\n exist in the descriptor only, and do not generate any API. Synthetic oneofs\n must be ordered after all "real" oneofs.\n\n For message fields, proto3_optional doesn\'t create any semantic change,\n since non-repeated message fields always track presence. However it still\n indicates the semantic detail of whether the user wrote "optional" or not.\n This can be useful for round-tripping the .proto file. For consistency we\n give message fields a synthetic oneof also, even though it is not required\n to track presence. This is especially important because the parser can\'t\n tell if a field is a message or an enum, so it must always create a\n synthetic oneof.\n\n Proto2 optional fields do not set this flag, because they already indicate\n optional with `LABEL_OPTIONAL`.\n',
+          ' If true, this is a proto3 "optional". When a proto3 field is optional, it\n tracks presence regardless of field type.\n\n When proto3_optional is true, this field must be belong to a oneof to\n signal to old proto3 clients that presence is tracked for this field. This\n oneof is known as a "synthetic" oneof, and this field must be its sole\n member (each proto3 optional field gets its own synthetic oneof). Synthetic\n oneofs exist in the descriptor only, and do not generate any API. Synthetic\n oneofs must be ordered after all "real" oneofs.\n\n For message fields, proto3_optional doesn\'t create any semantic change,\n since non-repeated message fields always track presence. However it still\n indicates the semantic detail of whether the user wrote "optional" or not.\n This can be useful for round-tripping the .proto file. For consistency we\n give message fields a synthetic oneof also, even though it is not required\n to track presence. This is especially important because the parser can\'t\n tell if a field is a message or an enum, so it must always create a\n synthetic oneof.\n\n Proto2 optional fields do not set this flag, because they already indicate\n optional with `LABEL_OPTIONAL`.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 5],
-        "span": [352, 0, 355, 1],
+        "span": [241, 0, 244, 1],
         "leadingComments": " Describes a oneof.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 6],
-        "span": [358, 0, 387, 1],
+        "span": [247, 0, 273, 1],
         "leadingComments": " Describes an enum type.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 6, 3, 0],
-        "span": [371, 2, 374, 3],
+        "span": [260, 2, 263, 3],
         "leadingComments":
           " Range of reserved numeric values. Reserved values may not be used by\n entries in the same enum. Reserved ranges may not overlap.\n\n Note that this is distinct from DescriptorProto.ReservedRange in that it\n is inclusive such that it can appropriately represent the entire int32\n domain.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 6, 3, 0, 2, 0],
-        "span": [372, 4, 29],
+        "span": [261, 4, 29],
         "leadingComments": "",
         "trailingComments": " Inclusive.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 6, 3, 0, 2, 1],
-        "span": [373, 4, 27],
+        "span": [262, 4, 27],
         "leadingComments": "",
         "trailingComments": " Inclusive.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 6, 2, 3],
-        "span": [379, 2, 48],
+        "span": [268, 2, 48],
         "leadingComments":
           " Range of reserved numeric values. Reserved numeric values may not be used\n by enum values in the same enum declaration. Reserved ranges may not\n overlap.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 6, 2, 4],
-        "span": [383, 2, 36],
+        "span": [272, 2, 36],
         "leadingComments":
           " Reserved enum value names, which may not be reused. A given name may only\n be reserved once.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 6, 2, 5],
-        "span": [386, 2, 43],
-        "leadingComments": " Support for `export` and `local` keywords on enums.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 7],
-        "span": [390, 0, 395, 1],
+        "span": [276, 0, 281, 1],
         "leadingComments": " Describes a value within an enum.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 8],
-        "span": [398, 0, 406, 1],
+        "span": [284, 0, 289, 1],
         "leadingComments": " Describes a service.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 9],
-        "span": [409, 0, 423, 1],
+        "span": [292, 0, 306, 1],
         "leadingComments": " Describes a method of a service.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 9, 2, 1],
-        "span": [414, 2, 33],
+        "span": [297, 2, 33],
         "leadingComments":
           " Input and output type names.  These are resolved in the same way as\n FieldDescriptorProto.type_name, but must refer to a message type.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 9, 2, 4],
-        "span": [420, 2, 55],
+        "span": [303, 2, 55],
         "leadingComments": " Identifies if client streams multiple client messages\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 9, 2, 5],
-        "span": [422, 2, 55],
+        "span": [305, 2, 55],
         "leadingComments": " Identifies if server streams multiple server messages\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 0],
-        "span": [463, 2, 35],
+        "span": [347, 2, 35],
         "leadingComments":
           " Sets the Java package where classes generated from this .proto will be\n placed.  By default, the proto package is used, but this is often\n inappropriate because proto packages do not normally start with backwards\n domain names.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 1],
-        "span": [470, 2, 43],
+        "span": [355, 2, 43],
         "leadingComments":
           " Controls the name of the wrapper Java class generated for the .proto file.\n That class will always contain the .proto file's getDescriptor() method as\n well as any top-level extensions defined in the .proto file.\n If java_multiple_files is disabled, then all the other classes from the\n .proto file will be nested inside the single wrapper outer class.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 2],
-        "span": [478, 2, 488, 4],
+        "span": [363, 2, 59],
         "leadingComments":
           " If enabled, then the Java code generator will generate a separate .java\n file for each top-level message, enum, and service defined in the .proto\n file.  Thus, these types will *not* be nested inside the wrapper class\n named by java_outer_classname.  However, the wrapper class will still be\n generated to contain the file's getDescriptor() method as well as any\n top-level extensions defined in the file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 3],
-        "span": [491, 2, 69],
+        "span": [366, 2, 69],
         "leadingComments": " This option does nothing.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 4],
-        "span": [503, 2, 62],
+        "span": [374, 2, 62],
         "leadingComments":
-          " A proto2 file can set this to true to opt in to UTF-8 checking for Java,\n which will throw an exception if invalid UTF-8 is parsed from the wire or\n assigned to a string field.\n\n TODO: clarify exactly what kinds of field types this option\n applies to, and update these docs accordingly.\n\n Proto3 files already perform these checks. Setting the option explicitly to\n false has no effect: it cannot be used to opt proto3 files out of UTF-8\n checks.\n",
+          " If set true, then the Java2 code generator will generate code that\n throws an exception whenever an attempt is made to assign a non-UTF-8\n byte sequence to a string field.\n Message reflection will do the same.\n However, an extension field still accepts non-UTF-8 byte sequences.\n This option has no effect on when used with the lite runtime.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 4, 0],
-        "span": [506, 2, 511, 3],
+        "span": [378, 2, 383, 3],
         "leadingComments": " Generated classes can be optimized for speed or code size.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 4, 0, 2, 0],
-        "span": [507, 4, 14],
+        "span": [379, 4, 14],
         "leadingComments": "",
         "trailingComments": " Generate complete code for parsing, serialization,\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 4, 0, 2, 1],
-        "span": [509, 4, 18],
+        "span": [381, 4, 18],
         "leadingComments": " etc.\n",
         "trailingComments": " Use ReflectionOps to implement these methods.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 4, 0, 2, 2],
-        "span": [510, 4, 21],
+        "span": [382, 4, 21],
         "leadingComments": "",
         "trailingComments": " Generate code using MessageLite and the lite runtime.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 6],
-        "span": [519, 2, 34],
+        "span": [391, 2, 34],
         "leadingComments":
           " Sets the Go package where structs generated from this .proto will be\n placed. If omitted, the Go package will be derived from the following:\n   - The basename of the package import path, if provided.\n   - Otherwise, the package statement in the .proto file, if present.\n   - Otherwise, the basename of the .proto file, without extension.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 7],
-        "span": [531, 2, 59],
+        "span": [406, 2, 59],
         "leadingComments":
           ' Should generic services be generated in each language?  "Generic" services\n are not specific to any particular RPC system.  They are generated by the\n main code generators in each language (without additional plugins).\n Generic services were the only kind of service generation supported by\n early versions of google.protobuf.\n\n Generic services are now considered deprecated in favor of using plugins\n that generate code specific to your particular RPC system.  Therefore,\n these default to false.  Old code which depends on generic services should\n explicitly set them to true.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 9],
-        "span": [534, 2, 14],
-        "leadingComments": "",
-        "trailingComments": " removed php_generic_services\n",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 10, 2, 10],
-        "span": [541, 2, 50],
+        "path": [4, 10, 2, 11],
+        "span": [415, 2, 50],
         "leadingComments":
           " Is this file deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for everything in the file, or it will be completely ignored; in the very\n least, this is a formalization for deprecating files.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 11],
-        "span": [545, 2, 55],
+        "path": [4, 10, 2, 12],
+        "span": [419, 2, 55],
         "leadingComments":
           " Enables the use of arenas for the proto messages in this file. This applies\n only to generated classes for C++.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 12],
-        "span": [549, 2, 41],
+        "path": [4, 10, 2, 13],
+        "span": [424, 2, 41],
         "leadingComments":
           " Sets the objective c class prefix which is prepended to all objective c\n generated classes from this .proto. There is no default.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 13],
-        "span": [552, 2, 40],
+        "path": [4, 10, 2, 14],
+        "span": [427, 2, 40],
         "leadingComments": " Namespace for generated classes; defaults to the package.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 14],
-        "span": [558, 2, 36],
+        "path": [4, 10, 2, 15],
+        "span": [433, 2, 36],
         "leadingComments":
           " By default Swift generators will take the proto package and CamelCase it\n replacing '.' with underscore and use that to prefix the types/symbols\n defined. When this options is provided, they will use this value instead\n to prefix the types/symbols defined.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 15],
-        "span": [562, 2, 40],
+        "path": [4, 10, 2, 16],
+        "span": [437, 2, 40],
         "leadingComments":
           " Sets the php class prefix which is prepended to all php generated classes\n from this .proto. Default is empty.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 16],
-        "span": [567, 2, 37],
+        "path": [4, 10, 2, 17],
+        "span": [442, 2, 37],
         "leadingComments":
           " Use this option to change the namespace of php generated classes. Default\n is empty. When this option is empty, the package name will be used for\n determining the namespace.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 17],
-        "span": [572, 2, 46],
+        "path": [4, 10, 2, 18],
+        "span": [447, 2, 46],
         "leadingComments":
           " Use this option to change the namespace of php generated metadata classes.\n Default is empty. When this option is empty, the proto file name will be\n used for determining the namespace.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 18],
-        "span": [577, 2, 36],
+        "path": [4, 10, 2, 19],
+        "span": [452, 2, 36],
         "leadingComments":
           " Use this option to change the package of ruby generated classes. Default\n is empty. When this option is not set, the package name will be used for\n determining the ruby package.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 10, 2, 19],
-        "span": [583, 2, 36],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 10, 2, 20],
-        "span": [587, 2, 58],
+        "span": [457, 2, 58],
         "leadingComments":
           ' The parser stores options it doesn\'t recognize here.\n See the documentation for the "Options" section above.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 5],
-        "span": [591, 2, 25],
+        "span": [461, 2, 25],
         "leadingComments":
           ' Clients can define custom options in extensions of this message.\n See the documentation for the "Options" section above.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 0],
-        "span": [615, 2, 62],
+        "span": [485, 2, 62],
         "leadingComments":
           " Set true to use the old proto1 MessageSet wire format for extensions.\n This is provided for backwards-compatibility with the MessageSet wire\n format.  You should not use this for any other reason:  It's less\n efficient, has fewer features, and is more complicated.\n\n The message must be defined exactly as follows:\n   message Foo {\n     option message_set_wire_format = true;\n     extensions 4 to max;\n   }\n Note that the message cannot have any defined fields; MessageSets only\n have extensions.\n\n All extensions of your type must be singular messages; e.g. they cannot\n be int32s, enums, or repeated messages.\n\n Because this is an option, the above two restrictions are not enforced by\n the protocol compiler.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 1],
-        "span": [620, 2, 70],
+        "span": [490, 2, 70],
         "leadingComments":
           ' Disables the generation of the standard "descriptor()" accessor, which can\n conflict with a field of the same name.  This is meant to make migration\n from proto1 easier; new code should avoid fields named "descriptor".\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 2],
-        "span": [626, 2, 49],
+        "span": [496, 2, 49],
         "leadingComments":
           " Is this message deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the message, or it will be completely ignored; in the very least,\n this is a formalization for deprecating messages.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 3],
-        "span": [651, 2, 30],
+        "span": [521, 2, 30],
         "leadingComments":
           " Whether the message is an automatically generated map entry type for the\n maps field.\n\n For maps fields:\n     map<KeyType, ValueType> map_field = 1;\n The parsed descriptor looks like:\n     message MapFieldEntry {\n         option map_entry = true;\n         optional KeyType key = 1;\n         optional ValueType value = 2;\n     }\n     repeated MapFieldEntry map_field = 1;\n\n Implementations may choose not to generate the map_entry=true message, but\n use a native map in the target language to hold the keys and values.\n The reflection APIs in such implementations still need to work as\n if the field is a repeated message field.\n\n NOTE: Do not set the option in .proto files. Always use the maps syntax\n instead. The option should only be implicitly set by the proto compiler\n parser.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 9],
-        "span": [653, 2, 13],
+        "span": [523, 2, 13],
         "leadingComments": "",
         "trailingComments": " javalite_serializable\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 9],
-        "span": [654, 2, 13],
+        "span": [524, 2, 13],
         "leadingComments": "",
         "trailingComments": " javanano_as_lite\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 4],
-        "span": [666, 2, 80],
-        "leadingComments":
-          " Enable the legacy handling of JSON field name conflicts.  This lowercases\n and strips underscored from the fields before comparison in proto3 only.\n The new behavior takes `json_name` into account and applies to proto2 as\n well.\n\n This should only be used as a temporary measure against broken builds due\n to the change in behavior for JSON field name conflicts.\n\n TODO This is legacy behavior we plan to remove once downstream\n teams have had time to migrate.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 11, 2, 5],
-        "span": [672, 2, 36],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 11, 2, 6],
-        "span": [675, 2, 58],
+        "span": [528, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 5],
-        "span": [678, 2, 25],
+        "span": [531, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 0],
-        "span": [689, 2, 69],
+        "span": [539, 2, 46],
         "leadingComments":
-          ' NOTE: ctype is deprecated. Use `features.(pb.cpp).string_type` instead.\n The ctype option instructs the C++ code generator to use a different\n representation of the field than it normally would.  See the specific\n options below.  This option is only implemented to support use of\n [ctype=CORD] and [ctype=STRING] (the default) on non-repeated fields of\n type "bytes" in the open source release.\n TODO: make ctype actually deprecated.\n',
+          " The ctype option instructs the C++ code generator to use a different\n representation of the field than it normally would.  See the specific\n options below.  This option is not yet implemented in the open source\n release -- sorry, we'll try to include it in a future version!\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 0, 2, 0],
-        "span": [692, 4, 15],
+        "span": [542, 4, 15],
         "leadingComments": " Default mode.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 12, 4, 0, 2, 1],
-        "span": [700, 4, 13],
-        "leadingComments":
-          ' The option [ctype=CORD] may be applied to a non-repeated field of type\n "bytes". It indicates that in C++, the data should be stored in a Cord\n instead of a string.  For very large strings, this may reduce memory\n fragmentation. It may also allow better performance when parsing from a\n Cord, or when parsing with aliasing enabled, as the parsed Cord may then\n alias the original buffer.\n',
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 12, 2, 1],
-        "span": [711, 2, 27],
+        "span": [553, 2, 27],
         "leadingComments":
-          " The packed option can be enabled for repeated primitive fields to enable\n a more efficient representation on the wire. Rather than repeatedly\n writing the tag and type for each element, the entire array is encoded as\n a single length-delimited blob. In proto3, only explicit setting it to\n false will avoid using packed encoding.  This option is prohibited in\n Editions, but the `repeated_field_encoding` feature can be used to control\n the behavior.\n",
+          " The packed option can be enabled for repeated primitive fields to enable\n a more efficient representation on the wire. Rather than repeatedly\n writing the tag and type for each element, the entire array is encoded as\n a single length-delimited blob. In proto3, only explicit setting it to\n false will avoid using packed encoding.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 2],
-        "span": [724, 2, 51],
+        "span": [566, 2, 51],
         "leadingComments":
           ' The jstype option determines the JavaScript type used for values of the\n field.  The option is permitted only for 64 bit integral and fixed types\n (int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING\n is represented as JavaScript string, which avoids loss of precision that\n can happen when a large value is converted to a floating point JavaScript.\n Specifying JS_NUMBER for the jstype causes the generated JavaScript code to\n use the JavaScript "number" type.  The behavior of the default option\n JS_NORMAL is implementation dependent.\n\n This option is an enum to permit additional types to be added, e.g.\n goog.math.Integer.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 1, 2, 0],
-        "span": [727, 4, 18],
+        "span": [569, 4, 18],
         "leadingComments": " Use the default type.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 1, 2, 1],
-        "span": [730, 4, 18],
+        "span": [572, 4, 18],
         "leadingComments": " Use JavaScript strings.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 1, 2, 2],
-        "span": [733, 4, 18],
+        "span": [575, 4, 18],
         "leadingComments": " Use JavaScript numbers.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 3],
-        "span": [758, 2, 43],
+        "span": [606, 2, 43],
         "leadingComments":
-          " Should this field be parsed lazily?  Lazy applies only to message-type\n fields.  It means that when the outer message is initially parsed, the\n inner message's contents will not be parsed but instead stored in encoded\n form.  The inner message will actually be parsed when it is first accessed.\n\n This is only a hint.  Implementations are free to choose whether to use\n eager or lazy parsing regardless of the value of this option.  However,\n setting this option true suggests that the protocol author believes that\n using lazy parsing on this field is worth the additional bookkeeping\n overhead typically needed to implement it.\n\n This option does not affect the public interface of any generated code;\n all method signatures remain the same.  Furthermore, thread-safety of the\n interface is not affected by this option; const methods remain safe to\n call from multiple threads concurrently, while non-const methods continue\n to require exclusive access.\n\n Note that lazy message fields are still eagerly verified to check\n ill-formed wireformat or missing required fields. Calling IsInitialized()\n on the outer message would fail if the inner message has missing required\n fields. Failed verification would result in parsing failure (except when\n uninitialized messages are acceptable).\n",
+          " Should this field be parsed lazily?  Lazy applies only to message-type\n fields.  It means that when the outer message is initially parsed, the\n inner message's contents will not be parsed but instead stored in encoded\n form.  The inner message will actually be parsed when it is first accessed.\n\n This is only a hint.  Implementations are free to choose whether to use\n eager or lazy parsing regardless of the value of this option.  However,\n setting this option true suggests that the protocol author believes that\n using lazy parsing on this field is worth the additional bookkeeping\n overhead typically needed to implement it.\n\n This option does not affect the public interface of any generated code;\n all method signatures remain the same.  Furthermore, thread-safety of the\n interface is not affected by this option; const methods remain safe to\n call from multiple threads concurrently, while non-const methods continue\n to require exclusive access.\n\n\n Note that implementations may choose not to check required fields within\n a lazy sub-message.  That is, calling IsInitialized() on the outer message\n may return true even if the inner message has missing required fields.\n This is necessary because otherwise the inner message would have to be\n parsed in order to perform the check, defeating the purpose of lazy\n parsing.  An implementation which chooses not to check required fields\n must be consistent about it.  That is, for any particular sub-message, the\n implementation must either *always* check its required fields, or *never*\n check its required fields, regardless of whether or not the message has\n been parsed.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 4],
-        "span": [763, 2, 55],
-        "leadingComments":
-          " unverified_lazy does no correctness checks on the byte stream. This should\n only be used where lazy with verification is prohibitive for performance\n reasons.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 2, 5],
-        "span": [769, 2, 49],
+        "span": [612, 2, 49],
         "leadingComments":
           " Is this field deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for accessors, or it will be completely ignored; in the very least, this\n is a formalization for deprecating fields.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
+        "path": [4, 12, 2, 5],
+        "span": [615, 2, 44],
+        "leadingComments": " For Google-internal migration only. Do not use.\n",
+        "trailingComments": "",
+        "leadingDetachedComments": [],
+      }, {
         "path": [4, 12, 2, 6],
-        "span": [773, 2, 63],
-        "leadingComments": " DEPRECATED. DO NOT USE!\n For Google-internal migration only. Do not use.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 2, 7],
-        "span": [777, 2, 52],
-        "leadingComments":
-          " Indicate that the field value should not be printed out when using debug\n formats, e.g. when the field contains sensitive credentials.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 4, 2],
-        "span": [780, 2, 784, 3],
-        "leadingComments": " If set to RETENTION_SOURCE, the option will be omitted from the binary.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 4, 3],
-        "span": [791, 2, 802, 3],
-        "leadingComments":
-          " This indicates the types of entities that the field may apply to when used\n as an option. If it is unset, then the field may be freely used as an\n option on any kind of entity.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 0, 2, 1],
-        "span": [808, 4, 30],
-        "leadingComments": "",
-        "trailingComments": " Textproto value.\n",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 2, 11],
-        "span": [816, 2, 36],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 1],
-        "span": [819, 2, 841, 3],
-        "leadingComments": " Information about the support window of a feature.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 1, 2, 0],
-        "span": [823, 4, 44],
-        "leadingComments":
-          " The edition that this feature was first available in.  In editions\n earlier than this one, the default assigned to EDITION_LEGACY will be\n used, and proto files will not be able to override it.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 1, 2, 1],
-        "span": [827, 4, 44],
-        "leadingComments":
-          " The edition this feature becomes deprecated in.  Using this after this\n edition may trigger warnings.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 1, 2, 2],
-        "span": [831, 4, 44],
-        "leadingComments":
-          " The deprecation warning text if this feature is used after the edition it\n was marked deprecated in.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 1, 2, 3],
-        "span": [836, 4, 41],
-        "leadingComments":
-          " The edition this feature is no longer available in.  In editions after\n this one, the last default assigned will be used, and proto files will\n not be able to override it.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 3, 1, 2, 4],
-        "span": [840, 4, 38],
-        "leadingComments": " The removal error text if this feature is used after the edition it was\n removed in.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 12, 2, 13],
-        "span": [845, 2, 58],
+        "span": [619, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 5],
-        "span": [848, 2, 25],
+        "span": [622, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 9],
-        "span": [850, 2, 13],
+        "span": [624, 2, 13],
         "leadingComments": "",
         "trailingComments": " removed jtype\n",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 12, 9],
-        "span": [851, 2, 14],
-        "leadingComments": "",
-        "trailingComments": " reserve target, target_obsolete_do_not_use\n",
-        "leadingDetachedComments": [],
-      }, {
         "path": [4, 13, 2, 0],
-        "span": [859, 2, 35],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 13, 2, 1],
-        "span": [862, 2, 58],
+        "span": [629, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 13, 5],
-        "span": [865, 2, 25],
+        "span": [632, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 2, 0],
-        "span": [872, 2, 32],
+        "span": [639, 2, 32],
         "leadingComments": " Set this option to true to allow mapping different tag names to the same\n value.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 2, 1],
-        "span": [878, 2, 49],
+        "span": [645, 2, 49],
         "leadingComments":
           " Is this enum deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the enum, or it will be completely ignored; in the very least, this\n is a formalization for deprecating enums.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 9],
-        "span": [880, 2, 13],
+        "span": [647, 2, 13],
         "leadingComments": "",
         "trailingComments": " javanano_as_lite\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 2, 2],
-        "span": [888, 2, 79],
-        "leadingComments":
-          " Enable the legacy handling of JSON field name conflicts.  This lowercases\n and strips underscored from the fields before comparison in proto3 only.\n The new behavior takes `json_name` into account and applies to proto2 as\n well.\n TODO Remove this legacy behavior once downstream teams have\n had time to migrate.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 14, 2, 3],
-        "span": [894, 2, 35],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 14, 2, 4],
-        "span": [897, 2, 58],
+        "span": [650, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 5],
-        "span": [900, 2, 25],
+        "span": [653, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 15, 2, 0],
-        "span": [908, 2, 49],
+        "span": [661, 2, 49],
         "leadingComments":
           " Is this enum value deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the enum value, or it will be completely ignored; in the very least,\n this is a formalization for deprecating enum values.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 15, 2, 1],
-        "span": [914, 2, 35],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 15, 2, 2],
-        "span": [919, 2, 51],
-        "leadingComments":
-          " Indicate that fields annotated with this enum value should not be printed\n out when using debug formats, e.g. when the field contains sensitive\n credentials.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 15, 2, 3],
-        "span": [922, 2, 59],
-        "leadingComments": " Information about the support window of a feature value.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 15, 2, 4],
-        "span": [925, 2, 58],
+        "span": [664, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 15, 5],
-        "span": [928, 2, 25],
+        "span": [667, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 16, 2, 0],
-        "span": [937, 2, 36],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 16, 2, 1],
-        "span": [948, 2, 50],
+        "span": [681, 2, 50],
         "leadingComments":
           " Is this service deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the service, or it will be completely ignored; in the very least,\n this is a formalization for deprecating services.\n",
         "trailingComments": "",
@@ -8729,20 +5867,20 @@ export const protoMetadata = {
           " Note:  Field numbers 1 through 32 are reserved for Google's internal RPC\n   framework.  We apologize for hoarding these numbers to ourselves, but\n   we were already using them long before we decided to release Protocol\n   Buffers.\n",
         ],
       }, {
-        "path": [4, 16, 2, 2],
-        "span": [951, 2, 58],
+        "path": [4, 16, 2, 1],
+        "span": [684, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 16, 5],
-        "span": [954, 2, 25],
+        "span": [687, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 2, 0],
-        "span": [968, 2, 50],
+        "span": [701, 2, 50],
         "leadingComments":
           " Is this method deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the method, or it will be completely ignored; in the very least,\n this is a formalization for deprecating methods.\n",
         "trailingComments": "",
@@ -8751,152 +5889,59 @@ export const protoMetadata = {
         ],
       }, {
         "path": [4, 17, 4, 0],
-        "span": [973, 2, 977, 3],
+        "span": [706, 2, 710, 3],
         "leadingComments":
           " Is this method side-effect-free (or safe in HTTP parlance), or idempotent,\n or neither? HTTP based RPC implementation may choose GET verb for safe\n methods, and PUT verb for idempotent methods instead of the default POST.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 4, 0, 2, 1],
-        "span": [975, 4, 24],
+        "span": [708, 4, 24],
         "leadingComments": "",
         "trailingComments": " implies idempotent\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 4, 0, 2, 2],
-        "span": [976, 4, 19],
+        "span": [709, 4, 19],
         "leadingComments": "",
         "trailingComments": " idempotent, but may have side effects\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 2, 2],
-        "span": [985, 2, 36],
-        "leadingComments":
-          " Any features defined in the specific edition.\n WARNING: This field should only be used by protobuf plugins or special\n cases like the proto compiler. Other uses are discouraged and\n developers should rely on the protoreflect APIs for their client language.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 17, 2, 3],
-        "span": [988, 2, 58],
+        "span": [715, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 5],
-        "span": [991, 2, 25],
+        "span": [718, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 18],
-        "span": [1000, 0, 1020, 1],
+        "span": [728, 0, 748, 1],
         "leadingComments":
           " A message representing a option the parser does not recognize. This only\n appears in options protos created by the compiler::Parser class.\n DescriptorPool resolves these when building Descriptor objects. Therefore,\n options protos in descriptor objects (e.g. returned by Descriptor::options(),\n or produced by Descriptor::CopyTo()) will never have UninterpretedOptions\n in them.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 18, 3, 0],
-        "span": [1006, 2, 1009, 3],
+        "span": [734, 2, 737, 3],
         "leadingComments":
-          ' The name of the uninterpreted option.  Each string represents a segment in\n a dot-separated name.  is_extension is true iff a segment represents an\n extension (denoted with parentheses in options specs in .proto files).\n E.g.,{ ["foo", false], ["bar.baz", true], ["moo", false] } represents\n "foo.(bar.baz).moo".\n',
+          ' The name of the uninterpreted option.  Each string represents a segment in\n a dot-separated name.  is_extension is true iff a segment represents an\n extension (denoted with parentheses in options specs in .proto files).\n E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents\n "foo.(bar.baz).qux".\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 18, 2, 1],
-        "span": [1014, 2, 39],
+        "span": [742, 2, 39],
         "leadingComments":
           " The value of the uninterpreted option, in whatever type the tokenizer\n identified it as during parsing. Exactly one of these should be set.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 19],
-        "span": [1031, 0, 1223, 1],
-        "leadingComments":
-          " TODO Enums in C++ gencode (and potentially other languages) are\n not well scoped.  This means that each of the feature enums below can clash\n with each other.  The short names we've chosen maximize call-site\n readability, but leave us very open to this scenario.  A future feature will\n be designed and implemented to handle this, hopefully before we ever hit a\n conflict here.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [
-          " ===================================================================\n Features\n",
-        ],
-      }, {
-        "path": [4, 19, 3, 0, 4, 0, 2, 1],
-        "span": [1159, 6, 21],
-        "leadingComments": " Default pre-EDITION_2024, all UNSET visibility are export.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 19, 3, 0, 4, 0, 2, 2],
-        "span": [1162, 6, 27],
-        "leadingComments": " All top-level symbols default to export, nested default to local.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 19, 3, 0, 4, 0, 2, 3],
-        "span": [1165, 6, 20],
-        "leadingComments": " All symbols default to local.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 19, 3, 0, 4, 0, 2, 4],
-        "span": [1170, 6, 17],
-        "leadingComments":
-          " All symbols local by default. Nested types cannot be exported.\n With special case caveat for message { enum {} reserved 1 to max; }\n This is the recommended setting for new protos.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 19, 5],
-        "span": [1221, 2, 26],
-        "leadingComments": "",
-        "trailingComments": " For internal testing\n",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 19, 5],
-        "span": [1222, 2, 19],
-        "leadingComments": "",
-        "trailingComments": " for https://github.com/bufbuild/protobuf-es\n",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 20],
-        "span": [1229, 0, 1255, 1],
-        "leadingComments":
-          " A compiled specification for the defaults of a set of features.  These\n messages are generated from FeatureSet extensions and can be used to seed\n feature resolution. The resolution with this object becomes a simple search\n for the closest matching edition, followed by proto merges.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 20, 3, 0],
-        "span": [1234, 2, 1245, 3],
-        "leadingComments":
-          " A map from every known edition with a unique set of defaults to its\n defaults. Not all editions may be contained here.  For a given edition,\n the defaults at the closest matching edition ordered at or before it should\n be used.  This field must be in strict ascending order by edition.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 20, 3, 0, 2, 1],
-        "span": [1238, 4, 49],
-        "leadingComments": " Defaults of features that can be overridden in this edition.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 20, 3, 0, 2, 2],
-        "span": [1241, 4, 43],
-        "leadingComments": " Defaults of features that can't be overridden in this edition.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 20, 2, 1],
-        "span": [1250, 2, 39],
-        "leadingComments":
-          " The minimum supported edition (inclusive) when this was constructed.\n Editions before this will not have defaults.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 20, 2, 2],
-        "span": [1254, 2, 39],
-        "leadingComments":
-          " The maximum known edition (inclusive) when this was constructed. Editions\n after this will not have reliable defaults.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 21],
-        "span": [1262, 0, 1398, 1],
+        "span": [755, 0, 884, 1],
         "leadingComments":
           " Encapsulates information about the original source file from which a\n FileDescriptorProto was generated.\n",
         "trailingComments": "",
@@ -8904,109 +5949,72 @@ export const protoMetadata = {
           " ===================================================================\n Optional source code info\n",
         ],
       }, {
-        "path": [4, 21, 2, 0],
-        "span": [1306, 2, 33],
+        "path": [4, 19, 2, 0],
+        "span": [799, 2, 33],
         "leadingComments":
           ' A Location identifies a piece of source code in a .proto file which\n corresponds to a particular definition.  This information is intended\n to be useful to IDEs, code indexers, documentation generators, and similar\n tools.\n\n For example, say we have a file like:\n   message Foo {\n     optional string foo = 1;\n   }\n Let\'s look at just the field definition:\n   optional string foo = 1;\n   ^       ^^     ^^  ^  ^^^\n   a       bc     de  f  ghi\n We have the following locations:\n   span   path               represents\n   [a,i)  [ 4, 0, 2, 0 ]     The whole field definition.\n   [a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).\n   [c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).\n   [e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).\n   [g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).\n\n Notes:\n - A location may refer to a repeated field itself (i.e. not to any\n   particular index within it).  This is used whenever a set of elements are\n   logically enclosed in a single code segment.  For example, an entire\n   extend block (possibly containing multiple extension definitions) will\n   have an outer location whose path refers to the "extensions" repeated\n   field without an index.\n - Multiple locations may have the same path.  This happens when a single\n   logical declaration is spread out across multiple places.  The most\n   obvious example is the "extend" block again -- there may be multiple\n   extend blocks in the same scope, each of which will have the same path.\n - A location\'s span is not always a subset of its parent\'s span.  For\n   example, the "extendee" of an extension declaration appears at the\n   beginning of the "extend" block and is shared by all extensions within\n   the block.\n - Just because a location\'s span is a subset of some other location\'s span\n   does not mean that it is a descendant.  For example, a "group" defines\n   both a type and a field in a single declaration.  Thus, the locations\n   corresponding to the type and field and their components will overlap.\n - Code which tries to interpret locations should probably be designed to\n   ignore those that it doesn\'t understand, as more types of locations could\n   be recorded in the future.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 21, 3, 0, 2, 0],
-        "span": [1331, 4, 44],
+        "path": [4, 19, 3, 0, 2, 0],
+        "span": [824, 4, 44],
         "leadingComments":
-          " Identifies which part of the FileDescriptorProto was defined at this\n location.\n\n Each element is a field number or an index.  They form a path from\n the root FileDescriptorProto to the place where the definition appears.\n For example, this path:\n   [ 4, 3, 2, 7, 1 ]\n refers to:\n   file.message_type(3)  // 4, 3\n       .field(7)         // 2, 7\n       .name()           // 1\n This is because FileDescriptorProto.message_type has field number 4:\n   repeated DescriptorProto message_type = 4;\n and DescriptorProto.field has field number 2:\n   repeated FieldDescriptorProto field = 2;\n and FieldDescriptorProto.name has field number 1:\n   optional string name = 1;\n\n Thus, the above path gives the location of a field name.  If we removed\n the last element:\n   [ 4, 3, 2, 7 ]\n this path refers to the whole field declaration (from the beginning\n of the label to the terminating semicolon).\n",
+          " Identifies which part of the FileDescriptorProto was defined at this\n location.\n\n Each element is a field number or an index.  They form a path from\n the root FileDescriptorProto to the place where the definition.  For\n example, this path:\n   [ 4, 3, 2, 7, 1 ]\n refers to:\n   file.message_type(3)  // 4, 3\n       .field(7)         // 2, 7\n       .name()           // 1\n This is because FileDescriptorProto.message_type has field number 4:\n   repeated DescriptorProto message_type = 4;\n and DescriptorProto.field has field number 2:\n   repeated FieldDescriptorProto field = 2;\n and FieldDescriptorProto.name has field number 1:\n   optional string name = 1;\n\n Thus, the above path gives the location of a field name.  If we removed\n the last element:\n   [ 4, 3, 2, 7 ]\n this path refers to the whole field declaration (from the beginning\n of the label to the terminating semicolon).\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 21, 3, 0, 2, 1],
-        "span": [1338, 4, 44],
+        "path": [4, 19, 3, 0, 2, 1],
+        "span": [831, 4, 44],
         "leadingComments":
           " Always has exactly three or four elements: start line, start column,\n end line (optional, otherwise assumed same as start line), end column.\n These are packed into a single field for efficiency.  Note that line\n and column numbers are zero-based -- typically you will want to add\n 1 to each before displaying to a user.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 21, 3, 0, 2, 2],
-        "span": [1387, 4, 41],
+        "path": [4, 19, 3, 0, 2, 2],
+        "span": [880, 4, 41],
         "leadingComments":
-          " If this SourceCodeInfo represents a complete declaration, these are any\n comments appearing before and after the declaration which appear to be\n attached to the declaration.\n\n A series of line comments appearing on consecutive lines, with no other\n tokens appearing on those lines, will be treated as a single comment.\n\n leading_detached_comments will keep paragraphs of comments that appear\n before (but not connected to) the current element. Each paragraph,\n separated by empty lines, will be one comment element in the repeated\n field.\n\n Only the comment content is provided; comment markers (e.g. //) are\n stripped out.  For block comments, leading whitespace and an asterisk\n will be stripped from the beginning of each line other than the first.\n Newlines are included in the output.\n\n Examples:\n\n   optional int32 foo = 1;  // Comment attached to foo.\n   // Comment attached to bar.\n   optional int32 bar = 2;\n\n   optional string baz = 3;\n   // Comment attached to baz.\n   // Another line attached to baz.\n\n   // Comment attached to moo.\n   //\n   // Another line attached to moo.\n   optional double moo = 4;\n\n   // Detached comment for corge. This is not leading or trailing comments\n   // to moo or corge because there are blank lines separating it from\n   // both.\n\n   // Detached comment for corge paragraph 2.\n\n   optional string corge = 5;\n   /* Block comment attached\n    * to corge.  Leading asterisks\n    * will be removed. */\n   /* Block comment attached to\n    * grault. */\n   optional int32 grault = 6;\n\n   // ignored detached comments.\n",
+          " If this SourceCodeInfo represents a complete declaration, these are any\n comments appearing before and after the declaration which appear to be\n attached to the declaration.\n\n A series of line comments appearing on consecutive lines, with no other\n tokens appearing on those lines, will be treated as a single comment.\n\n leading_detached_comments will keep paragraphs of comments that appear\n before (but not connected to) the current element. Each paragraph,\n separated by empty lines, will be one comment element in the repeated\n field.\n\n Only the comment content is provided; comment markers (e.g. //) are\n stripped out.  For block comments, leading whitespace and an asterisk\n will be stripped from the beginning of each line other than the first.\n Newlines are included in the output.\n\n Examples:\n\n   optional int32 foo = 1;  // Comment attached to foo.\n   // Comment attached to bar.\n   optional int32 bar = 2;\n\n   optional string baz = 3;\n   // Comment attached to baz.\n   // Another line attached to baz.\n\n   // Comment attached to qux.\n   //\n   // Another line attached to qux.\n   optional double qux = 4;\n\n   // Detached comment for corge. This is not leading or trailing comments\n   // to qux or corge because there are blank lines separating it from\n   // both.\n\n   // Detached comment for corge paragraph 2.\n\n   optional string corge = 5;\n   /* Block comment attached\n    * to corge.  Leading asterisks\n    * will be removed. */\n   /* Block comment attached to\n    * grault. */\n   optional int32 grault = 6;\n\n   // ignored detached comments.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 21, 5],
-        "span": [1393, 2, 1397, 5],
-        "leadingComments": " Extensions for tooling.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 22],
-        "span": [1403, 0, 1436, 1],
+        "path": [4, 20],
+        "span": [889, 0, 910, 1],
         "leadingComments":
           " Describes the relationship between generated code and its original source\n file. A GeneratedCodeInfo message is associated with only one generated\n source file, but may contain references to different source .proto files.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 22, 2, 0],
-        "span": [1406, 2, 37],
+        "path": [4, 20, 2, 0],
+        "span": [892, 2, 37],
         "leadingComments":
           " An Annotation connects some span of text in generated code to an element\n of its generating .proto file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 22, 3, 0, 2, 0],
-        "span": [1410, 4, 44],
+        "path": [4, 20, 3, 0, 2, 0],
+        "span": [896, 4, 44],
         "leadingComments":
           " Identifies the element in the original source .proto file. This field\n is formatted the same as SourceCodeInfo.Location.path.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 22, 3, 0, 2, 1],
-        "span": [1413, 4, 36],
+        "path": [4, 20, 3, 0, 2, 1],
+        "span": [899, 4, 36],
         "leadingComments": " Identifies the filesystem path to the original source .proto.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 22, 3, 0, 2, 2],
-        "span": [1417, 4, 29],
+        "path": [4, 20, 3, 0, 2, 2],
+        "span": [903, 4, 29],
         "leadingComments":
           " Identifies the starting offset in bytes in the generated code\n that relates to the identified object.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
-        "path": [4, 22, 3, 0, 2, 3],
-        "span": [1422, 4, 27],
+        "path": [4, 20, 3, 0, 2, 3],
+        "span": [908, 4, 27],
         "leadingComments":
-          " Identifies the ending offset in bytes in the generated code that\n relates to the identified object. The end offset should be one past\n the last relevant byte (so the length of the text = end - begin).\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 22, 3, 0, 4, 0],
-        "span": [1426, 4, 1433, 5],
-        "leadingComments": " Represents the identified object's effect on the element in the original\n .proto file.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 22, 3, 0, 4, 0, 2, 0],
-        "span": [1428, 6, 15],
-        "leadingComments": " There is no effect or the effect is indescribable.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 22, 3, 0, 4, 0, 2, 1],
-        "span": [1430, 6, 14],
-        "leadingComments": " The element is set or otherwise mutated.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [4, 22, 3, 0, 4, 0, 2, 2],
-        "span": [1432, 6, 16],
-        "leadingComments": " An alias to the element is returned.\n",
-        "trailingComments": "",
-        "leadingDetachedComments": [],
-      }, {
-        "path": [5, 1],
-        "span": [1443, 0, 1447, 1],
-        "leadingComments":
-          " Describes the 'visibility' of a symbol with respect to the proto import\n system. Symbols can only be imported when the visibility rules do not prevent\n it (ex: local symbols cannot be imported).  Visibility modifiers can only set\n on `message` and `enum` as they are the only types available to be referenced\n from other files.\n",
+          " Identifies the ending offset in bytes in the generated code that\n relates to the identified offset. The end offset should be one past\n the last relevant byte (so the length of the text = end - begin).\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }],
@@ -9015,16 +6023,12 @@ export const protoMetadata = {
     "edition": 0,
   },
   references: {
-    ".google.protobuf.Edition": Edition,
-    ".google.protobuf.SymbolVisibility": SymbolVisibility,
     ".google.protobuf.FileDescriptorSet": FileDescriptorSet,
     ".google.protobuf.FileDescriptorProto": FileDescriptorProto,
     ".google.protobuf.DescriptorProto": DescriptorProto,
     ".google.protobuf.DescriptorProto.ExtensionRange": DescriptorProto_ExtensionRange,
     ".google.protobuf.DescriptorProto.ReservedRange": DescriptorProto_ReservedRange,
     ".google.protobuf.ExtensionRangeOptions": ExtensionRangeOptions,
-    ".google.protobuf.ExtensionRangeOptions.VerificationState": ExtensionRangeOptions_VerificationState,
-    ".google.protobuf.ExtensionRangeOptions.Declaration": ExtensionRangeOptions_Declaration,
     ".google.protobuf.FieldDescriptorProto": FieldDescriptorProto,
     ".google.protobuf.FieldDescriptorProto.Type": FieldDescriptorProto_Type,
     ".google.protobuf.FieldDescriptorProto.Label": FieldDescriptorProto_Label,
@@ -9040,10 +6044,6 @@ export const protoMetadata = {
     ".google.protobuf.FieldOptions": FieldOptions,
     ".google.protobuf.FieldOptions.CType": FieldOptions_CType,
     ".google.protobuf.FieldOptions.JSType": FieldOptions_JSType,
-    ".google.protobuf.FieldOptions.OptionRetention": FieldOptions_OptionRetention,
-    ".google.protobuf.FieldOptions.OptionTargetType": FieldOptions_OptionTargetType,
-    ".google.protobuf.FieldOptions.EditionDefault": FieldOptions_EditionDefault,
-    ".google.protobuf.FieldOptions.FeatureSupport": FieldOptions_FeatureSupport,
     ".google.protobuf.OneofOptions": OneofOptions,
     ".google.protobuf.EnumOptions": EnumOptions,
     ".google.protobuf.EnumValueOptions": EnumValueOptions,
@@ -9052,24 +6052,10 @@ export const protoMetadata = {
     ".google.protobuf.MethodOptions.IdempotencyLevel": MethodOptions_IdempotencyLevel,
     ".google.protobuf.UninterpretedOption": UninterpretedOption,
     ".google.protobuf.UninterpretedOption.NamePart": UninterpretedOption_NamePart,
-    ".google.protobuf.FeatureSet": FeatureSet,
-    ".google.protobuf.FeatureSet.FieldPresence": FeatureSet_FieldPresence,
-    ".google.protobuf.FeatureSet.EnumType": FeatureSet_EnumType,
-    ".google.protobuf.FeatureSet.RepeatedFieldEncoding": FeatureSet_RepeatedFieldEncoding,
-    ".google.protobuf.FeatureSet.Utf8Validation": FeatureSet_Utf8Validation,
-    ".google.protobuf.FeatureSet.MessageEncoding": FeatureSet_MessageEncoding,
-    ".google.protobuf.FeatureSet.JsonFormat": FeatureSet_JsonFormat,
-    ".google.protobuf.FeatureSet.EnforceNamingStyle": FeatureSet_EnforceNamingStyle,
-    ".google.protobuf.FeatureSet.VisibilityFeature": FeatureSet_VisibilityFeature,
-    ".google.protobuf.FeatureSet.VisibilityFeature.DefaultSymbolVisibility":
-      FeatureSet_VisibilityFeature_DefaultSymbolVisibility,
-    ".google.protobuf.FeatureSetDefaults": FeatureSetDefaults,
-    ".google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault": FeatureSetDefaults_FeatureSetEditionDefault,
     ".google.protobuf.SourceCodeInfo": SourceCodeInfo,
     ".google.protobuf.SourceCodeInfo.Location": SourceCodeInfo_Location,
     ".google.protobuf.GeneratedCodeInfo": GeneratedCodeInfo,
     ".google.protobuf.GeneratedCodeInfo.Annotation": GeneratedCodeInfo_Annotation,
-    ".google.protobuf.GeneratedCodeInfo.Annotation.Semantic": GeneratedCodeInfo_Annotation_Semantic,
   },
   dependencies: [],
 } as const satisfies ProtoMetadata;
