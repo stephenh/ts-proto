@@ -471,9 +471,9 @@ export const FooServiceDefinition = {
   methods: {
     create: {
       name: "Create",
-      requestType: FooServiceCreateRequest,
+      requestType: FooServiceCreateRequest as typeof FooServiceCreateRequest,
       requestStream: false,
-      responseType: FooServiceCreateResponse,
+      responseType: FooServiceCreateResponse as typeof FooServiceCreateResponse,
       responseStream: false,
       options: {},
     },

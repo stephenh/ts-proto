@@ -86,18 +86,18 @@ export const TimestampMessage: MessageFns<TimestampMessage> = {
 export type TestService = typeof TestService;
 export const TestService = {
   simpleNow: {
-    path: "/simple.Test/SimpleNow",
-    requestStream: false,
-    responseStream: false,
+    path: "/simple.Test/SimpleNow" as const,
+    requestStream: false as const,
+    responseStream: false as const,
     requestSerialize: (value: Timestamp): Buffer => Buffer.from(Timestamp.encode(value).finish()),
     requestDeserialize: (value: Buffer): Timestamp => Timestamp.decode(value),
     responseSerialize: (value: Timestamp): Buffer => Buffer.from(Timestamp.encode(value).finish()),
     responseDeserialize: (value: Buffer): Timestamp => Timestamp.decode(value),
   },
   wrappedNow: {
-    path: "/simple.Test/WrappedNow",
-    requestStream: false,
-    responseStream: false,
+    path: "/simple.Test/WrappedNow" as const,
+    requestStream: false as const,
+    responseStream: false as const,
     requestSerialize: (value: TimestampMessage): Buffer => Buffer.from(TimestampMessage.encode(value).finish()),
     requestDeserialize: (value: Buffer): TimestampMessage => TimestampMessage.decode(value),
     responseSerialize: (value: TimestampMessage): Buffer => Buffer.from(TimestampMessage.encode(value).finish()),
