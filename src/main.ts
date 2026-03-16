@@ -60,6 +60,35 @@ import { Context } from './context';
 import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
+import * as protobuf from 'protobufjs/minimal';
+import { TransientExtensionMeta } from './context';
+
+/**
+ * Check whether a field has the `transient: true` permission set, by
+ * decoding the `permissions` extension from the field's unknown options.
+ */
+function isTransientField(fieldDesc: FieldDescriptorProto, meta: TransientExtensionMeta | undefined): boolean {
+  if (!meta) return false;
+
+  const unknownFields = (fieldDesc.options as any)?._unknownFields;
+  if (!unknownFields) return false;
+
+  const permissionBuffers: Array<Uint8Array> | undefined = unknownFields[meta.permissionsTag];
+  if (!permissionBuffers?.length) return false;
+
+  return permissionBuffers.some((buf) => {
+    const reader = protobuf.Reader.create(buf);
+    const end = reader.len;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      if ((tag >>> 3) === meta.transientFieldNumber) {
+        return reader.bool();
+      }
+      reader.skipType(tag & 7);
+    }
+    return false;
+  });
+}
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -525,7 +554,8 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, options) ? '?' : '';
-    chunks.push(code`${name}${q}: ${type}, `);
+    const ro = isTransientField(fieldDesc, ctx.transientMeta) ? 'readonly ' : '';
+    chunks.push(code`${ro}${name}${q}: ${type}, `);
   });
 
   chunks.push(code`}`);

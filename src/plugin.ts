@@ -1,11 +1,61 @@
-import { CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponse_Feature } from 'ts-proto-descriptors';
+import {
+  CodeGeneratorRequest,
+  CodeGeneratorResponse,
+  CodeGeneratorResponse_Feature,
+  FieldDescriptorProto,
+  FileDescriptorProto,
+} from 'ts-proto-descriptors';
 import { promisify } from 'util';
 import { prefixDisableLinter, readToBuffer } from './utils';
 import { generateFile, makeUtils } from './main';
 import { createTypeMap } from './types';
-import { Context } from './context';
+import { Context, TransientExtensionMeta } from './context';
 import { getTsPoetOpts, optionsFromParameter } from './options';
 import { generateTypeRegistry } from './generate-type-registry';
+
+/**
+ * Resolve the protobuf field numbers for the `permissions` extension on
+ * FieldOptions and the `transient` field inside the Permission message,
+ * by looking them up by name in the file descriptors.
+ */
+function resolveTransientExtension(
+  protoFiles: Array<FileDescriptorProto>
+): TransientExtensionMeta | undefined {
+  // Find the "permissions" extension on FieldOptions
+  let ext: FieldDescriptorProto | undefined;
+  for (const file of protoFiles) {
+    for (const e of file.extension) {
+      if (e.name === 'permissions' && e.extendee === '.google.protobuf.FieldOptions') {
+        ext = e;
+        break;
+      }
+    }
+    if (ext) break;
+  }
+  if (!ext) return undefined;
+
+  // Find the Permission message and its "transient" field
+  let transientFieldNumber: number | undefined;
+  for (const file of protoFiles) {
+    for (const msg of file.messageType) {
+      if (msg.name === 'Permission') {
+        const transientField = msg.field.find((f) => f.name === 'transient');
+        if (transientField) {
+          transientFieldNumber = transientField.number;
+        }
+        break;
+      }
+    }
+    if (transientFieldNumber !== undefined) break;
+  }
+  if (transientFieldNumber === undefined) return undefined;
+
+  // Wire type 2 = length-delimited (embedded message)
+  return {
+    permissionsTag: (ext.number << 3) | 2,
+    transientFieldNumber,
+  };
+}
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -17,7 +67,8 @@ async function main() {
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
   const utils = makeUtils(options);
-  const ctx: Context = { typeMap, options, utils };
+  const transientMeta = resolveTransientExtension(request.protoFile);
+  const ctx: Context = { typeMap, options, utils, transientMeta };
 
   const files = await Promise.all(
     request.protoFile.map(async (file) => {
@@ -29,7 +80,7 @@ async function main() {
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);
-    const ctx: Context = { options, typeMap, utils };
+    const ctx: Context = { options, typeMap, utils, transientMeta };
 
     const path = 'typeRegistry.ts';
     const code = generateTypeRegistry(ctx);
