@@ -609,7 +609,7 @@ function makeByteUtils(options: Options) {
       default:
         return code`
         if ((${globalThis} as any).Buffer) {
-          ${bytesFromBase64NodeSnippet}
+          return Uint8Array.from((${globalThis} as any).Buffer.from(b64, 'base64'));
           } else {
             ${bytesFromBase64BrowserSnippet}
           }
@@ -647,7 +647,7 @@ function makeByteUtils(options: Options) {
       default:
         return code`
           if ((${globalThis} as any).Buffer) {
-            ${base64FromBytesNodeSnippet}
+            return (${globalThis} as any).Buffer.from(arr).toString('base64');
           } else {
             ${base64FromBytesBrowserSnippet}
           }
