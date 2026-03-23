@@ -7,8 +7,6 @@ import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
 import { Empty } from "./google/protobuf/empty";
 
-export const protobufPackage = "hero";
-
 export interface HeroById {
   id: number;
 }
