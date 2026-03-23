@@ -1,3 +1,10 @@
+## [2.11.6](https://github.com/stephenh/ts-proto/compare/v2.11.5...v2.11.6) (2026-03-23)
+
+
+### Bug Fixes
+
+* cast globalThis.Buffer to any in env=both base64 helpers ([#1249](https://github.com/stephenh/ts-proto/issues/1249)) ([b2e344d](https://github.com/stephenh/ts-proto/commit/b2e344d5e6f5bfaf21da6d810a688f227730cf29)), closes [#967](https://github.com/stephenh/ts-proto/issues/967) [#999](https://github.com/stephenh/ts-proto/issues/999)
+
 ## [2.11.5](https://github.com/stephenh/ts-proto/compare/v2.11.4...v2.11.5) (2026-03-09)
 
 
