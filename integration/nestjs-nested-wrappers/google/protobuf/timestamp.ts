@@ -102,7 +102,7 @@ export interface Timestamp {
    * be between -62135596800 and 253402300799 inclusive (which corresponds to
    * 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z).
    */
-  seconds: string;
+  seconds: number;
   /**
    * Non-negative fractions of a second at nanosecond resolution. This field is
    * the nanosecond portion of the duration, not an alternative to seconds.
