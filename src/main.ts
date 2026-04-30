@@ -183,12 +183,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       const prefix = camelToSnake(fileDesc.package.replace(/\./g, "_"));
       chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
     }
-    if (
-      options.useDate === DateOption.DATE &&
-      fileDesc.messageType.find((message) =>
-        message.field.find((field) => field.typeName === ".google.protobuf.Timestamp"),
-      )
-    ) {
+    if (options.useDate === DateOption.DATE && fileDesc.messageType.find(hasTimestampField)) {
       chunks.push(makeProtobufTimestampWrapper());
     }
   }
@@ -528,8 +523,18 @@ function makeProtobufTimestampWrapper() {
       } as any;`;
 }
 
+function hasField(message: DescriptorProto, predicate: (field: FieldDescriptorProto) => boolean): boolean {
+  return (
+    message.field.some(predicate) || message.nestedType.some((nestedMessage) => hasField(nestedMessage, predicate))
+  );
+}
+
+function hasTimestampField(message: DescriptorProto): boolean {
+  return hasField(message, isTimestamp);
+}
+
 function hasStructTypeField(message: DescriptorProto): boolean {
-  return message.field.some(isStructType) || message.nestedType.some(hasStructTypeField);
+  return hasField(message, isStructType);
 }
 
 function makeProtobufStructWrapper(options: Options) {
