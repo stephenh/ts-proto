@@ -365,7 +365,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   }
 
   if (options.nestJs) {
-    if (fileDesc.messageType.find((message) => message.field.find(isStructType))) {
+    if (fileDesc.messageType.find(hasStructTypeField)) {
       chunks.push(makeProtobufStructWrapper(options));
     }
   }
@@ -526,6 +526,10 @@ function makeProtobufTimestampWrapper() {
           return new Date(message.seconds * 1000 + message.nanos / 1e6);
         },
       } as any;`;
+}
+
+function hasStructTypeField(message: DescriptorProto): boolean {
+  return message.field.some(isStructType) || message.nestedType.some(hasStructTypeField);
 }
 
 function makeProtobufStructWrapper(options: Options) {
