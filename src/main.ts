@@ -183,10 +183,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       const prefix = camelToSnake(fileDesc.package.replace(/\./g, "_"));
       chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
     }
-    if (
-      options.useDate === DateOption.DATE &&
-      fileDesc.messageType.find(hasTimestampField)
-    ) {
+    if (options.useDate === DateOption.DATE && fileDesc.messageType.find(hasTimestampField)) {
       chunks.push(makeProtobufTimestampWrapper());
     }
   }
