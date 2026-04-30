@@ -10,7 +10,7 @@ export const protobufPackage = "google.protobuf";
  * `NullValue` is a singleton enumeration to represent the null value for the
  * `Value` type union.
  *
- *  The JSON representation for `NullValue` is JSON `null`.
+ * The JSON representation for `NullValue` is JSON `null`.
  */
 export enum NullValue {
   /** NULL_VALUE - Null value. */
@@ -92,7 +92,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of gt.Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields[key] = Value.wrap(object[key]);
       }
     }
@@ -102,7 +102,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of gt.Object.keys(message.fields)) {
+      for (const key of globalThis.Object.keys(message.fields)) {
         object[key] = Value.unwrap(message.fields[key]);
       }
     }
@@ -125,12 +125,12 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
       result.numberValue = value;
     } else if (typeof value === "string") {
       result.stringValue = value;
-    } else if (gt.Array.isArray(value)) {
+    } else if (globalThis.Array.isArray(value)) {
       result.listValue = ListValue.wrap(value);
     } else if (typeof value === "object") {
       result.structValue = Struct.wrap(value);
     } else if (typeof value !== "undefined") {
-      throw new gt.Error("Unsupported any value type: " + typeof value);
+      throw new globalThis.Error("Unsupported any value type: " + typeof value);
     }
     return result;
   },
@@ -165,7 +165,7 @@ export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
   },
 
   unwrap(message: ListValue): Array<any> {
-    if (message?.hasOwnProperty("values") && gt.Array.isArray(message.values)) {
+    if (message?.hasOwnProperty("values") && globalThis.Array.isArray(message.values)) {
       return message.values.map(Value.unwrap);
     } else {
       return message as any;
@@ -174,25 +174,6 @@ export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
 };
 
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const gt: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 export interface MessageFns<T> {
 }
