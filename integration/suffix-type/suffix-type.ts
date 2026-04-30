@@ -39,7 +39,7 @@ export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPSuffixTypeGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPSuffixTypeGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -87,7 +87,11 @@ export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
 
   fromJSON(object: any): GRPCPSuffixTypeGRPCS {
     return {
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       mask: isSet(object.mask) ? GRPCPFieldMaskGRPCS.unwrap(GRPCPFieldMaskGRPCS.fromJSON(object.mask)) : undefined,
       struct: isObject(object.struct) ? object.struct : undefined,
       listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,

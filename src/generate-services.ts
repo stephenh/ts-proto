@@ -71,7 +71,7 @@ export function generateService(
       const Metadata = imp(options.metadataType);
       params.push(code`metadata?: ${Metadata}`);
     } else if (options.addGrpcMetadata) {
-      const Metadata = imp("Metadata@@grpc/grpc-js");
+      const Metadata = imp("t:Metadata@@grpc/grpc-js");
       params.push(code`metadata?: ${Metadata}`);
     }
 
@@ -113,7 +113,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
-  const metadataType = options.metadataType ? imp(options.metadataType) : imp("Metadata@@grpc/grpc-js");
+  const metadataType = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
 
   const params = [
     ...(options.context ? [code`ctx: Context`] : []),
@@ -293,7 +293,12 @@ export function generateServiceClientImpl(
       }
     }
 
-    if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
+    if (
+      options.context &&
+      methodDesc.name.match(/^Get[A-Z]/) &&
+      !methodDesc.serverStreaming &&
+      !methodDesc.clientStreaming
+    ) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
       chunks.push(generateRegularRpcMethod(ctx, methodDesc));
@@ -383,8 +388,8 @@ function generateCachingRpcMethod(
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+          methodDesc.name
+        }", data);
         return ${outputType}.decode(new ${BinaryReader}(response));
       });
       return Promise.all(responses);
@@ -421,7 +426,7 @@ function generateCachingRpcMethod(
  */
 export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Code {
   const { options } = ctx;
-  const metadata = options.metadataType ? imp(options.metadataType) : imp("Metadata@@grpc/grpc-js");
+  const metadata = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
   const metadataType = metadata.symbol;
   const maybeContext = options.context ? "<Context>" : "";
   const maybeContextParam = options.context ? "ctx: Context," : "";

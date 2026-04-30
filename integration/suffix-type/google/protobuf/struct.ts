@@ -109,7 +109,7 @@ function createBaseGRPCPStructGRPCS(): GRPCPStructGRPCS {
 
 export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns = {
   encode(message: GRPCPStructGRPCS, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    globalThis.Object.entries(message.fields).forEach(([key, value]: [string, any | undefined]) => {
       if (value !== undefined) {
         GRPCPStruct_FieldsEntryGRPCS.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
       }
@@ -119,7 +119,7 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPStructGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPStructGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -147,10 +147,13 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
   fromJSON(object: any): GRPCPStructGRPCS {
     return {
       fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
+          (acc: { [key: string]: any | undefined }, [key, value]: [string, any]) => {
+            acc[key] = value as any | undefined;
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -158,7 +161,7 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
   toJSON(message: GRPCPStructGRPCS): unknown {
     const obj: any = {};
     if (message.fields) {
-      const entries = Object.entries(message.fields);
+      const entries = globalThis.Object.entries(message.fields) as [string, any | undefined][];
       if (entries.length > 0) {
         obj.fields = {};
         entries.forEach(([k, v]) => {
@@ -174,8 +177,8 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
   },
   fromPartial<I extends Exact<DeepPartial<GRPCPStructGRPCS>, I>>(object: I): GRPCPStructGRPCS {
     const message = createBaseGRPCPStructGRPCS();
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
+    message.fields = (globalThis.Object.entries(object.fields ?? {}) as [string, any | undefined][]).reduce(
+      (acc: { [key: string]: any | undefined }, [key, value]: [string, any | undefined]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -190,7 +193,7 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
     const struct = createBaseGRPCPStructGRPCS();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields[key] = object[key];
       }
     }
@@ -200,7 +203,7 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
   unwrap(message: GRPCPStructGRPCS): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of Object.keys(message.fields)) {
+      for (const key of globalThis.Object.keys(message.fields)) {
         object[key] = message.fields[key];
       }
     }
@@ -225,7 +228,7 @@ export const GRPCPStruct_FieldsEntryGRPCS: MessageFns<GRPCPStruct_FieldsEntryGRP
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPStruct_FieldsEntryGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPStruct_FieldsEntryGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -320,7 +323,7 @@ export const GRPCPValueGRPCS: MessageFns<GRPCPValueGRPCS> & AnyValueWrapperFns =
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPValueGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPValueGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -384,12 +387,36 @@ export const GRPCPValueGRPCS: MessageFns<GRPCPValueGRPCS> & AnyValueWrapperFns =
 
   fromJSON(object: any): GRPCPValueGRPCS {
     return {
-      nullValue: isSet(object.nullValue) ? gRPCPNullValueGRPCSFromJSON(object.nullValue) : undefined,
-      numberValue: isSet(object.numberValue) ? globalThis.Number(object.numberValue) : undefined,
-      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : undefined,
-      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : undefined,
-      structValue: isObject(object.structValue) ? object.structValue : undefined,
-      listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      nullValue: isSet(object.nullValue)
+        ? gRPCPNullValueGRPCSFromJSON(object.nullValue)
+        : isSet(object.null_value)
+        ? gRPCPNullValueGRPCSFromJSON(object.null_value)
+        : undefined,
+      numberValue: isSet(object.numberValue)
+        ? globalThis.Number(object.numberValue)
+        : isSet(object.number_value)
+        ? globalThis.Number(object.number_value)
+        : undefined,
+      stringValue: isSet(object.stringValue)
+        ? globalThis.String(object.stringValue)
+        : isSet(object.string_value)
+        ? globalThis.String(object.string_value)
+        : undefined,
+      boolValue: isSet(object.boolValue)
+        ? globalThis.Boolean(object.boolValue)
+        : isSet(object.bool_value)
+        ? globalThis.Boolean(object.bool_value)
+        : undefined,
+      structValue: isObject(object.structValue)
+        ? object.structValue
+        : isObject(object.struct_value)
+        ? object.struct_value
+        : undefined,
+      listValue: globalThis.Array.isArray(object.listValue)
+        ? [...object.listValue]
+        : globalThis.Array.isArray(object.list_value)
+        ? [...object.list_value]
+        : undefined,
     };
   },
 
@@ -482,7 +509,7 @@ export const GRPCPListValueGRPCS: MessageFns<GRPCPListValueGRPCS> & ListValueWra
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPListValueGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGRPCPListValueGRPCS();
     while (reader.pos < end) {
       const tag = reader.uint32();

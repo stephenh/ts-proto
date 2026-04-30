@@ -43,7 +43,7 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
-        for (const key of Object.keys(object)) {
+        for (const key of ${ctx.utils.globalThis}.Object.keys(object)) {
           ${setStatement}
         }
       }
@@ -116,7 +116,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
       chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
-          for (const key of Object.keys(message.fields)) {
+          for (const key of ${ctx.utils.globalThis}.Object.keys(message.fields)) {
             object[key] = Value.unwrap(message.fields[key]);
           }
         }
@@ -133,14 +133,14 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
       if (message?.hasOwnProperty('${fieldNames.stringValue}') && message.${fieldNames.stringValue} !== undefined) {
         return message.${fieldNames.stringValue};
       } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${
-      fieldNames.numberValue
-    } !== undefined) {
+        fieldNames.numberValue
+      } !== undefined) {
         return message.${fieldNames.numberValue};
       } else if (message?.hasOwnProperty('${fieldNames.boolValue}') && message?.${fieldNames.boolValue} !== undefined) {
         return message.${fieldNames.boolValue};
       } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${
-      fieldNames.structValue
-    } !== undefined) {
+        fieldNames.structValue
+      } !== undefined) {
         return ${wrapTypeName(ctx.options, "Struct")}.unwrap(message.${fieldNames.structValue} as any);
       } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
         return ${wrapTypeName(ctx.options, "ListValue")}.unwrap(message.${fieldNames.listValue});
@@ -190,7 +190,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
-        for (const key of Object.keys(object)) {
+        for (const key of ${ctx.utils.globalThis}.Object.keys(object)) {
           ${setStatement}
         }
       }
@@ -204,9 +204,9 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${wrapTypeName(
-        ctx.options,
-        "NullValue",
-      )}.NULL_VALUE};
+            ctx.options,
+            "NullValue",
+          )}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
         } else if (typeof value === 'number') {
@@ -226,7 +226,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', value };
+          result.kind = {$case: '${fieldNames.nullValue}', value: ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', value };
         } else if (typeof value === 'number') {
@@ -307,7 +307,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
       chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
-          for (const key of Object.keys(message.fields)) {
+          for (const key of ${ctx.utils.globalThis}.Object.keys(message.fields)) {
             object[key] = message.fields[key];
           }
         }
@@ -343,7 +343,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         ctx.options,
         "Value",
       )}): string | number | boolean | Object | null | Array<any> | undefined {
-        return message.kind?.value;
+        return (message.kind?.$case === '${fieldNames.nullValue}') ? null : message.kind?.value;
       }`);
     } else {
       chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {

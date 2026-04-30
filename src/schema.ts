@@ -13,7 +13,7 @@ import { basicTypeName, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { EnvOption, OutputSchemaOption } from "./options";
 
-const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
+const fileDescriptorProto = imp("t:FileDescriptorProto@ts-proto-descriptors");
 
 const extensionCache: { [key: string]: { [key: string]: FieldDescriptorProto } } = {};
 
@@ -91,7 +91,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   const dependencies = fileDesc.dependency.map((dep) => {
-    return code`${impFile(options, `protoMetadata@./${dep.replace(".proto", "")}`)}`;
+    return code`${impFile(options, `protoMetadata@./${dep.replace(".proto", "")}${options.fileSuffix}`)}`;
   });
 
   // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
@@ -186,8 +186,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   chunks.push(code`
     export const ${def("protoMetadata")}${outputAsConst ? "" : ": ProtoMetadata"} = {
       ${outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""}references: { ${joinCode(references, {
-    on: ",",
-  })} },
+        on: ",",
+      })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0

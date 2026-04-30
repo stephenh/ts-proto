@@ -130,7 +130,7 @@ export const NoUseDatePTimestampNoUseDateS: MessageFns<NoUseDatePTimestampNoUseD
 
   decode(input: BinaryReader | Uint8Array, length?: number): NoUseDatePTimestampNoUseDateS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNoUseDatePTimestampNoUseDateS();
     while (reader.pos < end) {
       const tag = reader.uint32();

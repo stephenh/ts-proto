@@ -39,8 +39,8 @@ function generateMessageType(ctx: BaseContext): Code {
   }
 
   if (ctx.options.outputEncodeMethods) {
-    const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
-    const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
+    const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
+    const BinaryWriter = imp("t:BinaryWriter@@bufbuild/protobuf/wire");
 
     chunks.push(code`encode(message: Message, writer?: ${BinaryWriter}): ${BinaryWriter};`);
     chunks.push(code`decode(input: ${BinaryReader} | Uint8Array, length?: number): Message;`);

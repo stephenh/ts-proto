@@ -70,7 +70,7 @@ export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
       writer.uint32(24).int32(message.int3);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -82,7 +82,7 @@ export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -181,7 +181,7 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -193,7 +193,7 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -271,11 +271,9 @@ function createBaseGroupsRepeatedTest(): GroupsRepeatedTest {
 export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
   encode(message: GroupsRepeatedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
-      writer.uint32(10).fork();
       for (const v of message.int1) {
-        writer.int32(v);
+        writer.uint32(8).int32(v!);
       }
-      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -283,14 +281,12 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
       }
     }
     if (message.int3 !== undefined && message.int3.length !== 0) {
-      writer.uint32(26).fork();
       for (const v of message.int3) {
-        writer.int32(v);
+        writer.uint32(24).int32(v!);
       }
-      writer.join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -302,7 +298,7 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -443,7 +439,7 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -455,7 +451,7 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -545,11 +541,9 @@ function createBaseGroupsNestedTest(): GroupsNestedTest {
 export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
   encode(message: GroupsNestedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
-      writer.uint32(10).fork();
       for (const v of message.int1) {
-        writer.int32(v);
+        writer.uint32(8).int32(v!);
       }
-      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -557,14 +551,12 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
       }
     }
     if (message.int3 !== undefined && message.int3.length !== 0) {
-      writer.uint32(26).fork();
       for (const v of message.int3) {
-        writer.int32(v);
+        writer.uint32(24).int32(v!);
       }
-      writer.join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -576,7 +568,7 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -712,7 +704,7 @@ export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -724,7 +716,7 @@ export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -802,7 +794,7 @@ export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Ne
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -814,7 +806,7 @@ export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Ne
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -892,7 +884,7 @@ export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_
       writer.uint32(10).string(message.string1);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -904,7 +896,7 @@ export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested_Nested2 {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
     while (reader.pos < end) {
       const tag = reader.uint32();

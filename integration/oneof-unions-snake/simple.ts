@@ -30,7 +30,7 @@ export const SimpleStruct: MessageFns<SimpleStruct> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleStruct {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -53,13 +53,19 @@ export const SimpleStruct: MessageFns<SimpleStruct> = {
   },
 
   fromJSON(object: any): SimpleStruct {
-    return { simple_struct: isObject(object.simple_struct) ? object.simple_struct : undefined };
+    return {
+      simple_struct: isObject(object.simpleStruct)
+        ? object.simpleStruct
+        : isObject(object.simple_struct)
+        ? object.simple_struct
+        : undefined,
+    };
   },
 
   toJSON(message: SimpleStruct): unknown {
     const obj: any = {};
     if (message.simple_struct !== undefined) {
-      obj.simple_struct = message.simple_struct;
+      obj.simpleStruct = message.simple_struct;
     }
     return obj;
   },

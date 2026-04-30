@@ -392,6 +392,16 @@ Generated code will be placed in the Gradle build directory.
 
   `FooBar.FOO_BAR_BAZ = "FOO_BAR_BAZ"` will generate `FooBar.BAZ = "FOO_BAR_BAZ"`
 
+  If any value in the enum would be made invalid by removing the enum name, the enum name will be present for all the values in the enum.
+
+  `FooBar.FOO_BAR_1 = "FOO_BAR_BAZ"` will generate `FooBar.FOO_BAR_1 = "FOO_BAR_BAZ"`
+
+  `FooBar.FOO_BAR_1A = "FOO_BAR_BAZ"` will generate `FooBar.FOO_BAR_1A = "FOO_BAR_BAZ"`
+
+  `FooBar.FOO_BAR_Infinity = "FOO_BAR_BAZ"` will generate `FooBar.FOO_BAR_Infinity = "FOO_BAR_BAZ"` (this is technically valid but is likely to lead to downstream issues)
+
+  `FooBar.FOO_BAR_INFINITY = "FOO_BAR_BAZ"` will generate `FooBar.INFINITY = "FOO_BAR_BAZ"`
+
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 - With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case in both the message keys and the `toJSON` / `fromJSON` methods.
@@ -403,6 +413,9 @@ Generated code will be placed in the Gradle build directory.
   Note that to use the `json_name` attribute, you'll have to use the `json`.
 
   The default behavior is `keys_json`, i.e. both will be camel cased, and `json_name` will be used if set.
+
+- With `--ts_proto_opt=protoJsonFormat=true` (default), the `toJSON` and `fromJSON`  methods follow the [protoJSON format](https://protobuf.dev/programming-guides/json). This means `toJSON` will output standard lowerCamelCase keys (or custom `json_name` if set). `fromJSON` will accept both the lowerCamelCase key (or `json_name`) AND the original proto field name.
+With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disabled. The JSON keys will simply follow the `snakeToCamel` option, and `fromJSON` will only accept that specific format.
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
@@ -645,6 +658,7 @@ export interface User {
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
 
+- With `--ts_proto_opt=useDuration=string`, the generated code will use the `string` type for `google.protobuf.Duration` instead of `{seconds: number, nano: number}`.
 
 ### NestJS Support
 
@@ -794,7 +808,6 @@ ts-protoc --ts_proto_out=./output -I=./protos ./protoc/*.proto
 
 # Todo
 
-- Support the string-based encoding of duration in `fromJSON`/`toJSON`
 - Make `oneof=unions-value` the default behavior in 2.0
 - Probably change `forceLong` default in 2.0, should default to `forceLong=long`
 - Make `esModuleInterop=true` the default in 2.0
@@ -817,13 +830,11 @@ Instead, we recommend using the `oneof=unions-value` option, which will change t
 
 ```typescript
 interface YourMessage {
-  eitherField?: { $case: "field_a"; value: string } | { $case: "field_b"; value: string };
+  eitherField: { $case: "field_a"; value: string } | { $case: "field_b"; value: string } | undefined;
 }
 ```
 
 As this will automatically enforce only one of `field_a` or `field_b` "being set" at a time, because the values are stored in the `eitherField` field that can only have a single value at a time.
-
-(Note that `eitherField` is optional b/c `oneof` in Protobuf means "at most one field" is set, and does not mean one of the fields _must_ be set.)
 
 In ts-proto's currently-unscheduled 2.x release, `oneof=unions-value` will become the default behavior.
 
@@ -831,7 +842,7 @@ There is also a `oneof=unions` option, which generates a union where the field n
 
 ```typescript
 interface YourMessage {
-  eitherField?: { $case: "field_a"; field_a: string } | { $case: "field_b"; field_b: string };
+  eitherField: { $case: "field_a"; field_a: string } | { $case: "field_b"; field_b: string } | undefined;
 }
 ```
 
@@ -1072,13 +1083,15 @@ ExampleMessage.encode({ anything: true });
 The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
 The `useJsonTimestamp` flag controls precision when `useDate` is `false`.
 
-| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` | `useDate=string-nano` |
-| --------------------------- | ---------------------- | ------------------------------------ | ---------------- | --------------------- |
-| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         | `string`              |
+| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` | `useDate=string-nano` | `useDate=temporal` |
+| --------------------------- | ---------------------- | ------------------------------------ | ---------------- | --------------------- | ------------------ |
+| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         | `string`              | `Temporal.Instant` |
 
 When using `useDate=false` and `useJsonTimestamp=raw` timestamp is represented as `{ seconds: number, nanos: number }`, but has nanosecond precision.
 
 When using `useDate=string-nano` timestamp is represented as an ISO string with nanosecond precision `1970-01-01T14:27:59.987654321Z` and relies on [nano-date](https://www.npmjs.com/package/nano-date) library for conversion. You'll need to install it in your project.
+
+When using `useDate=temporal` timestamp is represented as a [Temporal.Instant](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/Instant) object with nanosecond precision. Since the [Temporal](https://github.com/tc39/proposal-temporal) proposal isn't yet fully implemented in all browsers, this will rely on having a polyfilled environment, such as through [temporal-polyfill](https://www.npmjs.com/package/temporal-polyfill). You'll need to install it in your project. Enabling this feature _may_ also require ensuring you have `BigInt` support, either directly or through a polyfill, depending on your choice of `Temporal` library.
 
 # Number Types
 

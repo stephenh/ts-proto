@@ -15,6 +15,7 @@ module.exports = {
   resolver: 'jest-ts-webcompat-resolver',
   moduleFileExtensions: ['js', 'ts'],
   testMatch: ['<rootDir>/integration/**/*-test.ts', '<rootDir>/tests/**/*-test.ts'],
+  prettierPath: require.resolve('prettier-legacy'),
   testPathIgnorePatterns: [
       '<rootDir>/integration/simple-esmodule-interop/*',
       '<rootDir>/integration/batching-with-context-esModuleInterop/*'

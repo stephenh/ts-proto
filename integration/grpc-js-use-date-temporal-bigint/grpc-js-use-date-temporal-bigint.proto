@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package simple;
+
+service Test {
+  rpc SimpleNow(google.protobuf.Timestamp) returns (google.protobuf.Timestamp);
+  rpc WrappedNow(TimestampMessage) returns (TimestampMessage);
+}
+
+message TimestampMessage { google.protobuf.Timestamp timestamp = 1; }

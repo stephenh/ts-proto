@@ -62,7 +62,7 @@ export const Simple: MessageFns<Simple> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Simple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -142,15 +142,45 @@ export const Simple: MessageFns<Simple> = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.other_name) ? globalThis.String(object.other_name) : "",
-      age: isSet(object.other_age) ? globalThis.Number(object.other_age) : undefined,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
-      hyphen: isSet(object["hyphened-name"]) ? globalThis.String(object["hyphened-name"]) : "",
-      spaces: isSet(object["name with spaces"]) ? globalThis.String(object["name with spaces"]) : "",
-      dollarStart: isSet(object.$dollar) ? globalThis.String(object.$dollar) : "",
-      dollarEnd: isSet(object.dollar$) ? globalThis.String(object.dollar$) : "",
+      name: isSet(object.other_name)
+        ? globalThis.String(object.other_name)
+        : isSet(object.name)
+        ? globalThis.String(object.name)
+        : "",
+      age: isSet(object.other_age)
+        ? globalThis.Number(object.other_age)
+        : isSet(object.age)
+        ? globalThis.Number(object.age)
+        : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
+      hyphen: isSet(object["hyphened-name"])
+        ? globalThis.String(object["hyphened-name"])
+        : isSet(object.hyphen)
+        ? globalThis.String(object.hyphen)
+        : "",
+      spaces: isSet(object["name with spaces"])
+        ? globalThis.String(object["name with spaces"])
+        : isSet(object.spaces)
+        ? globalThis.String(object.spaces)
+        : "",
+      dollarStart: isSet(object.$dollar)
+        ? globalThis.String(object.$dollar)
+        : isSet(object.dollarStart)
+        ? globalThis.String(object.dollarStart)
+        : "",
+      dollarEnd: isSet(object.dollar$)
+        ? globalThis.String(object.dollar$)
+        : isSet(object.dollarEnd)
+        ? globalThis.String(object.dollarEnd)
+        : "",
       hyphenList: globalThis.Array.isArray(object?.["hyphen-list"])
         ? object["hyphen-list"].map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.hyphenList)
+        ? object.hyphenList.map((e: any) => globalThis.String(e))
         : [],
     };
   },

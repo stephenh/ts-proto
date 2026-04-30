@@ -1,3 +1,157 @@
+## [2.11.6](https://github.com/stephenh/ts-proto/compare/v2.11.5...v2.11.6) (2026-03-23)
+
+
+### Bug Fixes
+
+* cast globalThis.Buffer to any in env=both base64 helpers ([#1249](https://github.com/stephenh/ts-proto/issues/1249)) ([b2e344d](https://github.com/stephenh/ts-proto/commit/b2e344d5e6f5bfaf21da6d810a688f227730cf29)), closes [#967](https://github.com/stephenh/ts-proto/issues/967) [#999](https://github.com/stephenh/ts-proto/issues/999)
+
+## [2.11.5](https://github.com/stephenh/ts-proto/compare/v2.11.4...v2.11.5) (2026-03-09)
+
+
+### Bug Fixes
+
+* add explicit type annotations for isolatedDeclarations compatibility ([#1246](https://github.com/stephenh/ts-proto/issues/1246)) ([15c8dcc](https://github.com/stephenh/ts-proto/commit/15c8dccd0401610fbc87a0247ed7f1ee7fd29796)), closes [#1193](https://github.com/stephenh/ts-proto/issues/1193) [#1192](https://github.com/stephenh/ts-proto/issues/1192)
+
+## [2.11.4](https://github.com/stephenh/ts-proto/compare/v2.11.3...v2.11.4) (2026-02-26)
+
+
+### Bug Fixes
+
+* useOptionals=none when handle oneof as union ([#1244](https://github.com/stephenh/ts-proto/issues/1244)) ([97e0899](https://github.com/stephenh/ts-proto/commit/97e08995a8ef95cdd6a438f776d88983a93f37f5)), closes [#1243](https://github.com/stephenh/ts-proto/issues/1243)
+
+## [2.11.3](https://github.com/stephenh/ts-proto/compare/v2.11.2...v2.11.3) (2026-02-25)
+
+
+### Bug Fixes
+
+* Don't generate caching methods for streaming RPCs ([#1245](https://github.com/stephenh/ts-proto/issues/1245)) ([abc7bf6](https://github.com/stephenh/ts-proto/commit/abc7bf62c294ec9d9d72f9c5018452571d07f96c))
+
+## [2.11.2](https://github.com/stephenh/ts-proto/compare/v2.11.1...v2.11.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* generate void | Promise<void> return type on empty response ([#1206](https://github.com/stephenh/ts-proto/issues/1206)) ([bf67f78](https://github.com/stephenh/ts-proto/commit/bf67f78389399739dac28371e32769654bca00ed))
+
+## [2.11.1](https://github.com/stephenh/ts-proto/compare/v2.11.0...v2.11.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* apply fileSuffix to protoMetadata imports when using outputSchema ([#1242](https://github.com/stephenh/ts-proto/issues/1242)) ([ec1c90a](https://github.com/stephenh/ts-proto/commit/ec1c90a17bc8c7bc1b23757ba1a2b3aa80463440)), closes [#1238](https://github.com/stephenh/ts-proto/issues/1238)
+
+# [2.11.0](https://github.com/stephenh/ts-proto/compare/v2.10.1...v2.11.0) (2026-01-14)
+
+
+### Features
+
+* add protoJsonFormat option to support standard Protobuf JSON message ([#1241](https://github.com/stephenh/ts-proto/issues/1241)) ([0634e21](https://github.com/stephenh/ts-proto/commit/0634e21b1f4660662be1b73af13054317fd5494d)), closes [#1012](https://github.com/stephenh/ts-proto/issues/1012)
+
+## [2.10.1](https://github.com/stephenh/ts-proto/compare/v2.10.0...v2.10.1) (2025-12-25)
+
+
+### Bug Fixes
+
+* Use globalThis.Object to avoid name collision with the message name ([#1240](https://github.com/stephenh/ts-proto/issues/1240)) ([d5713c9](https://github.com/stephenh/ts-proto/commit/d5713c999821e32619953d2449bdef8fd3fb012f)), closes [#1239](https://github.com/stephenh/ts-proto/issues/1239) [#988](https://github.com/stephenh/ts-proto/issues/988)
+
+# [2.10.0](https://github.com/stephenh/ts-proto/compare/v2.9.0...v2.10.0) (2025-12-21)
+
+
+### Features
+
+* Upgrade buf/protobuf. ([#1236](https://github.com/stephenh/ts-proto/issues/1236)) ([88e38b6](https://github.com/stephenh/ts-proto/commit/88e38b6fa3222af4e7914d6bc12bca3b68e33cd2))
+
+# [2.9.0](https://github.com/stephenh/ts-proto/compare/v2.8.3...v2.9.0) (2025-12-20)
+
+
+### Features
+
+* **editions:** support editions in plugin ([#1234](https://github.com/stephenh/ts-proto/issues/1234)) ([19ce1e3](https://github.com/stephenh/ts-proto/commit/19ce1e3eba0c61c3c9ba5da318c559d3929ee5f8))
+
+## [2.8.3](https://github.com/stephenh/ts-proto/compare/v2.8.2...v2.8.3) (2025-10-29)
+
+
+### Bug Fixes
+
+* NullValue handling when oneof=unions-value is set ([#1203](https://github.com/stephenh/ts-proto/issues/1203)) ([6d57de9](https://github.com/stephenh/ts-proto/commit/6d57de9151b0971cb3adff9fa9029f379e9946c1)), closes [#1202](https://github.com/stephenh/ts-proto/issues/1202)
+
+## [2.8.2](https://github.com/stephenh/ts-proto/compare/v2.8.1...v2.8.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* Keep enum prefix if would be numeric without ([#1223](https://github.com/stephenh/ts-proto/issues/1223)) ([a6bad92](https://github.com/stephenh/ts-proto/commit/a6bad92255bcb735c64e16d5c44c0f71dc784fdc))
+
+## [2.8.1](https://github.com/stephenh/ts-proto/compare/v2.8.0...v2.8.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* fix double division, fix loss of millisecond unit ([#1221](https://github.com/stephenh/ts-proto/issues/1221)) ([d25e922](https://github.com/stephenh/ts-proto/commit/d25e922ccd3ee5b78064df1012d79def00075032))
+
+# [2.8.0](https://github.com/stephenh/ts-proto/compare/v2.7.7...v2.8.0) (2025-10-21)
+
+
+### Features
+
+* add option for using Temporal timestamp representation ([#1219](https://github.com/stephenh/ts-proto/issues/1219)) ([c46c020](https://github.com/stephenh/ts-proto/commit/c46c0201125821fe44bdc7db8bf917054d01b600))
+
+## [2.7.7](https://github.com/stephenh/ts-proto/compare/v2.7.6...v2.7.7) (2025-08-09)
+
+
+### Bug Fixes
+
+* Honour packed repeated fields encoding for proto2 ([#1210](https://github.com/stephenh/ts-proto/issues/1210)) ([8b071d3](https://github.com/stephenh/ts-proto/commit/8b071d35f48fcf901d83a019d3620ad672ce2048))
+
+## [2.7.6](https://github.com/stephenh/ts-proto/compare/v2.7.5...v2.7.6) (2025-08-08)
+
+
+### Bug Fixes
+
+* Honour packed repeated fields encoding ([#1208](https://github.com/stephenh/ts-proto/issues/1208)) ([445ca02](https://github.com/stephenh/ts-proto/commit/445ca022fa28dcb8e69f5b494a0fb479477d5c76))
+
+## [2.7.5](https://github.com/stephenh/ts-proto/compare/v2.7.4...v2.7.5) (2025-06-13)
+
+
+### Bug Fixes
+
+* use import type for type-only references ([#1196](https://github.com/stephenh/ts-proto/issues/1196)) ([eab441a](https://github.com/stephenh/ts-proto/commit/eab441a771645683e764ac43e7eb3937fed21e4a))
+
+## [2.7.4](https://github.com/stephenh/ts-proto/compare/v2.7.3...v2.7.4) (2025-06-11)
+
+
+### Bug Fixes
+
+* use const for reader end variable ([#1195](https://github.com/stephenh/ts-proto/issues/1195)) ([e97f241](https://github.com/stephenh/ts-proto/commit/e97f241508085e6f1750cd18e15afba68a200412))
+
+## [2.7.3](https://github.com/stephenh/ts-proto/compare/v2.7.2...v2.7.3) (2025-06-06)
+
+
+### Bug Fixes
+
+* improve type safety in service definition ([#1193](https://github.com/stephenh/ts-proto/issues/1193)) ([d4bc002](https://github.com/stephenh/ts-proto/commit/d4bc00226d0a6cee7d1b39f502cf3649afb79bc0))
+
+## [2.7.2](https://github.com/stephenh/ts-proto/compare/v2.7.1...v2.7.2) (2025-05-30)
+
+
+### Bug Fixes
+
+* types export path ([#1163](https://github.com/stephenh/ts-proto/issues/1163)) ([2b4d1eb](https://github.com/stephenh/ts-proto/commit/2b4d1eb05bb2c8c8a0e340cd7e7cf2e4fe734d40))
+
+## [2.7.1](https://github.com/stephenh/ts-proto/compare/v2.7.0...v2.7.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* Bump ts-poet for dts imports. ([#1189](https://github.com/stephenh/ts-proto/issues/1189)) ([0b6400f](https://github.com/stephenh/ts-proto/commit/0b6400f9da74a0514af56eda397e0b5573d85e27)), closes [#1184](https://github.com/stephenh/ts-proto/issues/1184)
+
+# [2.7.0](https://github.com/stephenh/ts-proto/compare/v2.6.1...v2.7.0) (2025-03-25)
+
+
+### Features
+
+* Support string form of duration ([#1168](https://github.com/stephenh/ts-proto/issues/1168)) ([8308893](https://github.com/stephenh/ts-proto/commit/83088930554319c7f35805c25295520918b7b09f))
+
 ## [2.6.1](https://github.com/stephenh/ts-proto/compare/v2.6.0...v2.6.1) (2024-12-27)
 
 

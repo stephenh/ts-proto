@@ -72,7 +72,7 @@ export const Simple: MessageFns<Simple, "simple.Simple"> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Simple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -132,8 +132,16 @@ export const Simple: MessageFns<Simple, "simple.Simple"> = {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      testField: isSet(object.testField) ? globalThis.String(object.testField) : "",
-      testNotDeprecated: isSet(object.testNotDeprecated) ? globalThis.String(object.testNotDeprecated) : "",
+      testField: isSet(object.testField)
+        ? globalThis.String(object.testField)
+        : isSet(object.test_field)
+        ? globalThis.String(object.test_field)
+        : "",
+      testNotDeprecated: isSet(object.testNotDeprecated)
+        ? globalThis.String(object.testNotDeprecated)
+        : isSet(object.test_not_deprecated)
+        ? globalThis.String(object.test_not_deprecated)
+        : "",
     };
   },
 
@@ -187,7 +195,7 @@ export const Child: MessageFns<Child, "simple.Child"> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();

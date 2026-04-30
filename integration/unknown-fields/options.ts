@@ -47,7 +47,7 @@ export const MyMessage: MessageFns<MyMessage> = {
       writer.uint32(34).string(message.quux);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -59,7 +59,7 @@ export const MyMessage: MessageFns<MyMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MyMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -121,7 +121,7 @@ function createBaseRequestType(): RequestType {
 export const RequestType: MessageFns<RequestType> = {
   encode(message: RequestType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -133,7 +133,7 @@ export const RequestType: MessageFns<RequestType> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): RequestType {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -163,7 +163,7 @@ function createBaseResponseType(): ResponseType {
 export const ResponseType: MessageFns<ResponseType> = {
   encode(message: ResponseType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -175,7 +175,7 @@ export const ResponseType: MessageFns<ResponseType> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ResponseType {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
       const tag = reader.uint32();

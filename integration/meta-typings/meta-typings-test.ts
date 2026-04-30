@@ -9,6 +9,7 @@ describe("simple", () => {
             "dependencies": [],
             "fileDescriptor": {
               "dependency": [],
+              "edition": 0,
               "enumType": [],
               "extension": [],
               "messageType": [
@@ -63,14 +64,17 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "name": "google/type/date.proto",
+              "optionDependency": [],
               "options": {
                 "ccEnableArenas": true,
                 "ccGenericServices": false,
                 "csharpNamespace": "",
                 "deprecated": false,
+                "features": undefined,
                 "goPackage": "google.golang.org/genproto/googleapis/type/date;date",
                 "javaGenerateEqualsAndHash": false,
                 "javaGenericServices": false,
@@ -81,7 +85,6 @@ describe("simple", () => {
                 "objcClassPrefix": "GTP",
                 "optimizeFor": 1,
                 "phpClassPrefix": "",
-                "phpGenericServices": false,
                 "phpMetadataNamespace": "",
                 "phpNamespace": "",
                 "pyGenericServices": false,
@@ -190,6 +193,7 @@ describe("simple", () => {
             "dependencies": [],
             "fileDescriptor": {
               "dependency": [],
+              "edition": 0,
               "enumType": [],
               "extension": [],
               "messageType": [
@@ -218,6 +222,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -244,6 +249,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -270,6 +276,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -296,6 +303,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -322,6 +330,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -348,6 +357,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -374,6 +384,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -400,6 +411,7 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -426,14 +438,17 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "name": "google/protobuf/wrappers.proto",
+              "optionDependency": [],
               "options": {
                 "ccEnableArenas": true,
                 "ccGenericServices": false,
                 "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                 "deprecated": false,
+                "features": undefined,
                 "goPackage": "github.com/golang/protobuf/ptypes/wrappers",
                 "javaGenerateEqualsAndHash": false,
                 "javaGenericServices": false,
@@ -444,7 +459,6 @@ describe("simple", () => {
                 "objcClassPrefix": "GPB",
                 "optimizeFor": 1,
                 "phpClassPrefix": "",
-                "phpGenericServices": false,
                 "phpMetadataNamespace": "",
                 "phpNamespace": "",
                 "pyGenericServices": false,
@@ -820,6 +834,7 @@ describe("simple", () => {
             "dependencies": [],
             "fileDescriptor": {
               "dependency": [],
+              "edition": 0,
               "enumType": [],
               "extension": [],
               "messageType": [
@@ -861,14 +876,17 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "name": "google/protobuf/timestamp.proto",
+              "optionDependency": [],
               "options": {
                 "ccEnableArenas": true,
                 "ccGenericServices": false,
                 "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                 "deprecated": false,
+                "features": undefined,
                 "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
                 "javaGenerateEqualsAndHash": false,
                 "javaGenericServices": false,
@@ -879,7 +897,6 @@ describe("simple", () => {
                 "objcClassPrefix": "GPB",
                 "optimizeFor": 1,
                 "phpClassPrefix": "",
-                "phpGenericServices": false,
                 "phpMetadataNamespace": "",
                 "phpNamespace": "",
                 "pyGenericServices": false,
@@ -1057,6 +1074,7 @@ describe("simple", () => {
                 "dependencies": [],
                 "fileDescriptor": {
                   "dependency": [],
+                  "edition": 0,
                   "enumType": [],
                   "extension": [],
                   "messageType": [
@@ -1098,14 +1116,17 @@ describe("simple", () => {
                       "options": undefined,
                       "reservedName": [],
                       "reservedRange": [],
+                      "visibility": 0,
                     },
                   ],
                   "name": "google/protobuf/timestamp.proto",
+                  "optionDependency": [],
                   "options": {
                     "ccEnableArenas": true,
                     "ccGenericServices": false,
                     "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                     "deprecated": false,
+                    "features": undefined,
                     "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
                     "javaGenerateEqualsAndHash": false,
                     "javaGenericServices": false,
@@ -1116,7 +1137,6 @@ describe("simple", () => {
                     "objcClassPrefix": "GPB",
                     "optimizeFor": 1,
                     "phpClassPrefix": "",
-                    "phpGenericServices": false,
                     "phpMetadataNamespace": "",
                     "phpNamespace": "",
                     "pyGenericServices": false,
@@ -1293,6 +1313,7 @@ describe("simple", () => {
               "dependency": [
                 "google/protobuf/timestamp.proto",
               ],
+              "edition": 0,
               "enumType": [],
               "extension": [],
               "messageType": [
@@ -1321,9 +1342,11 @@ describe("simple", () => {
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "name": "import_dir/thing.proto",
+              "optionDependency": [],
               "options": undefined,
               "package": "simple",
               "publicDependency": [],
@@ -1349,6 +1372,7 @@ describe("simple", () => {
             "google/protobuf/timestamp.proto",
             "import_dir/thing.proto",
           ],
+          "edition": 0,
           "enumType": [
             {
               "name": "StateEnum",
@@ -1372,6 +1396,7 @@ describe("simple", () => {
                   "options": undefined,
                 },
               ],
+              "visibility": 0,
             },
           ],
           "extension": [],
@@ -1557,6 +1582,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [
@@ -1582,6 +1608,7 @@ describe("simple", () => {
                       "options": undefined,
                     },
                   ],
+                  "visibility": 0,
                 },
               ],
               "extension": [],
@@ -1620,6 +1647,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [
@@ -1645,6 +1673,7 @@ describe("simple", () => {
                       "options": undefined,
                     },
                   ],
+                  "visibility": 0,
                 },
               ],
               "extension": [],
@@ -1751,18 +1780,21 @@ describe("simple", () => {
                       "options": undefined,
                       "reservedName": [],
                       "reservedRange": [],
+                      "visibility": 0,
                     },
                   ],
                   "oneofDecl": [],
                   "options": undefined,
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "oneofDecl": [],
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -1807,6 +1839,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -1885,6 +1918,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -1911,6 +1945,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2022,6 +2057,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2029,6 +2066,7 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -2067,6 +2105,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2074,6 +2114,7 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -2112,6 +2153,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2119,6 +2162,7 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -2157,6 +2201,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2164,6 +2210,7 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
                 {
                   "enumType": [],
@@ -2202,6 +2249,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2209,12 +2258,14 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "oneofDecl": [],
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2274,6 +2325,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2281,12 +2334,14 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "oneofDecl": [],
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2346,6 +2401,8 @@ describe("simple", () => {
                   "oneofDecl": [],
                   "options": {
                     "deprecated": false,
+                    "deprecatedLegacyJsonFieldConflicts": false,
+                    "features": undefined,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
@@ -2353,12 +2410,14 @@ describe("simple", () => {
                   },
                   "reservedName": [],
                   "reservedRange": [],
+                  "visibility": 0,
                 },
               ],
               "oneofDecl": [],
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2385,6 +2444,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2411,6 +2471,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2580,6 +2641,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2713,6 +2775,7 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
             {
               "enumType": [],
@@ -2725,9 +2788,11 @@ describe("simple", () => {
               "options": undefined,
               "reservedName": [],
               "reservedRange": [],
+              "visibility": 0,
             },
           ],
           "name": "simple.proto",
+          "optionDependency": [],
           "options": undefined,
           "package": "simple",
           "publicDependency": [],

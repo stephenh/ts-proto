@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package test;
+
+enum EnumTest {
+  ENUM_TEST_Unknown = 0;
+  ENUM_TEST_A = 1;
+}
+
+message MessageTest {
+  string test = 1;
+}

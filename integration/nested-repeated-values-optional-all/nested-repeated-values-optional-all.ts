@@ -31,7 +31,7 @@ export const NestedList: MessageFns<NestedList> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): NestedList {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNestedList();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -57,7 +57,13 @@ export const NestedList: MessageFns<NestedList> = {
   },
 
   fromJSON(object: any): NestedList {
-    return { aString: globalThis.Array.isArray(object?.aString) ? object.aString.map((e: any) => String(e)) : [] };
+    return {
+      aString: globalThis.Array.isArray(object?.aString)
+        ? object.aString.map((e: any) => String(e))
+        : globalThis.Array.isArray(object?.a_string)
+        ? object.a_string.map((e: any) => String(e))
+        : [],
+    };
   },
 
   toJSON(message: NestedList): unknown {
@@ -92,7 +98,7 @@ export const Example: MessageFns<Example> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Example {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExample();
     while (reader.pos < end) {
       const tag = reader.uint32();

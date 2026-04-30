@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto } from "ts-proto-descriptors";
+import type { FileDescriptorProto } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1, Timestamp } from "../google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
@@ -26,7 +26,7 @@ export const ImportedThing: MessageFns<ImportedThing> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportedThing();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -77,6 +77,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": ["google/protobuf/timestamp.proto"],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "ImportedThing",
       "field": [{
@@ -100,6 +101,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -107,6 +109,7 @@ export const protoMetadata: ProtoMetadata = {
     "options": undefined,
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: { ".simple.ImportedThing": ImportedThing },
   dependencies: [protoMetadata1],

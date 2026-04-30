@@ -24,7 +24,7 @@ export const SimpleMessage: MessageFns<SimpleMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -47,7 +47,13 @@ export const SimpleMessage: MessageFns<SimpleMessage> = {
   },
 
   fromJSON(object: any): SimpleMessage {
-    return { numberField: isSet(object.numberField) ? globalThis.Number(object.numberField) : 0 };
+    return {
+      numberField: isSet(object.numberField)
+        ? globalThis.Number(object.numberField)
+        : isSet(object.number_field)
+        ? globalThis.Number(object.number_field)
+        : 0,
+    };
   },
 
   toJSON(message: SimpleMessage): unknown {

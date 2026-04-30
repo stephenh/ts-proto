@@ -25,7 +25,7 @@ export const NoUseDatePSuffixTypeNoUseDateS: MessageFns<NoUseDatePSuffixTypeNoUs
 
   decode(input: BinaryReader | Uint8Array, length?: number): NoUseDatePSuffixTypeNoUseDateS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNoUseDatePSuffixTypeNoUseDateS();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -48,7 +48,13 @@ export const NoUseDatePSuffixTypeNoUseDateS: MessageFns<NoUseDatePSuffixTypeNoUs
   },
 
   fromJSON(object: any): NoUseDatePSuffixTypeNoUseDateS {
-    return { createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined };
+    return {
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
+    };
   },
 
   toJSON(message: NoUseDatePSuffixTypeNoUseDateS): unknown {

@@ -1,0 +1,12 @@
+syntax = "proto3";
+package oneof;
+
+message Example {
+    oneof some {
+        ClassA option1 = 1;
+        ClassB option2 = 2;
+    }
+}
+
+message ClassA {}
+message ClassB {}

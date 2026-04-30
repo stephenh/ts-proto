@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
+import type { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.protobuf";
 
@@ -969,7 +969,7 @@ export const FileDescriptorSet: MessageFns<FileDescriptorSet> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FileDescriptorSet {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileDescriptorSet();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1020,16 +1020,12 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
     for (const v of message.dependency) {
       writer.uint32(26).string(v!);
     }
-    writer.uint32(82).fork();
     for (const v of message.publicDependency) {
-      writer.int32(v);
+      writer.uint32(80).int32(v!);
     }
-    writer.join();
-    writer.uint32(90).fork();
     for (const v of message.weakDependency) {
-      writer.int32(v);
+      writer.uint32(88).int32(v!);
     }
-    writer.join();
     for (const v of message.messageType) {
       DescriptorProto.encode(v!, writer.uint32(34).fork()).join();
     }
@@ -1056,7 +1052,7 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FileDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1239,7 +1235,7 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1354,7 +1350,7 @@ export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_Extensio
 
   decode(input: BinaryReader | Uint8Array, length?: number): DescriptorProto_ExtensionRange {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto_ExtensionRange();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1410,7 +1406,7 @@ export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedR
 
   decode(input: BinaryReader | Uint8Array, length?: number): DescriptorProto_ReservedRange {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto_ReservedRange();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1455,7 +1451,7 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ExtensionRangeOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExtensionRangeOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1534,7 +1530,7 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FieldDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1654,7 +1650,7 @@ export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OneofDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneofDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1711,7 +1707,7 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1783,7 +1779,7 @@ export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorPro
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumDescriptorProto_EnumReservedRange {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumDescriptorProto_EnumReservedRange();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1834,7 +1830,7 @@ export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumValueDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumValueDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1893,7 +1889,7 @@ export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ServiceDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseServiceDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1968,7 +1964,7 @@ export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MethodDescriptorProto {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMethodDescriptorProto();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2127,7 +2123,7 @@ export const FileOptions: MessageFns<FileOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FileOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2342,7 +2338,7 @@ export const MessageOptions: MessageFns<MessageOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MessageOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessageOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2429,7 +2425,7 @@ export const FieldOptions: MessageFns<FieldOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FieldOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2514,7 +2510,7 @@ export const OneofOptions: MessageFns<OneofOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OneofOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneofOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2557,7 +2553,7 @@ export const EnumOptions: MessageFns<EnumOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2613,7 +2609,7 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): EnumValueOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumValueOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2661,7 +2657,7 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ServiceOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseServiceOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2712,7 +2708,7 @@ export const MethodOptions: MessageFns<MethodOptions> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MethodOptions {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMethodOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2791,7 +2787,7 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): UninterpretedOption {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUninterpretedOption();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2879,7 +2875,7 @@ export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePa
 
   decode(input: BinaryReader | Uint8Array, length?: number): UninterpretedOption_NamePart {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUninterpretedOption_NamePart();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2924,7 +2920,7 @@ export const SourceCodeInfo: MessageFns<SourceCodeInfo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SourceCodeInfo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSourceCodeInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2977,7 +2973,7 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SourceCodeInfo_Location {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSourceCodeInfo_Location();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3066,7 +3062,7 @@ export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GeneratedCodeInfo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGeneratedCodeInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3114,7 +3110,7 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
 
   decode(input: BinaryReader | Uint8Array, length?: number): GeneratedCodeInfo_Annotation {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGeneratedCodeInfo_Annotation();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3199,6 +3195,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": [],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "FileDescriptorSet",
       "field": [{
@@ -3222,6 +3219,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FileDescriptorProto",
       "field": [{
@@ -3377,6 +3375,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "DescriptorProto",
       "field": [{
@@ -3548,6 +3547,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "ReservedRange",
         "field": [{
@@ -3583,6 +3583,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -3590,6 +3591,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ExtensionRangeOptions",
       "field": [{
@@ -3613,6 +3615,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FieldDescriptorProto",
       "field": [{
@@ -3775,6 +3778,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "Label",
         "value": [{ "name": "LABEL_OPTIONAL", "number": 1, "options": undefined }, {
@@ -3785,12 +3789,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "OneofDescriptorProto",
       "field": [{
@@ -3826,6 +3832,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumDescriptorProto",
       "field": [{
@@ -3925,6 +3932,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -3932,6 +3940,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumValueDescriptorProto",
       "field": [{
@@ -3979,6 +3988,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ServiceDescriptorProto",
       "field": [{
@@ -4026,6 +4036,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "MethodDescriptorProto",
       "field": [{
@@ -4109,6 +4120,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FileOptions",
       "field": [{
@@ -4162,8 +4174,15 @@ export const protoMetadata: ProtoMetadata = {
           "packed": false,
           "jstype": 0,
           "lazy": false,
+          "unverifiedLazy": false,
           "deprecated": true,
           "weak": false,
+          "debugRedact": false,
+          "retention": 0,
+          "targets": [],
+          "editionDefaults": [],
+          "features": undefined,
+          "featureSupport": undefined,
           "uninterpretedOption": [],
         },
         "proto3Optional": false,
@@ -4384,12 +4403,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [{ "start": 38, "end": 39 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "MessageOptions",
       "field": [{
@@ -4464,6 +4485,7 @@ export const protoMetadata: ProtoMetadata = {
         "end": 9,
       }, { "start": 9, "end": 10 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "FieldOptions",
       "field": [{
@@ -4563,6 +4585,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }, {
         "name": "JSType",
         "value": [{ "name": "JS_NORMAL", "number": 0, "options": undefined }, {
@@ -4573,12 +4596,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [{ "start": 4, "end": 5 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "OneofOptions",
       "field": [{
@@ -4602,6 +4627,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumOptions",
       "field": [{
@@ -4649,6 +4675,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [{ "start": 5, "end": 6 }],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "EnumValueOptions",
       "field": [{
@@ -4684,6 +4711,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ServiceOptions",
       "field": [{
@@ -4719,6 +4747,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "MethodOptions",
       "field": [{
@@ -4770,12 +4799,14 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "UninterpretedOption",
       "field": [{
@@ -4899,6 +4930,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -4906,6 +4938,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "SourceCodeInfo",
       "field": [{
@@ -4939,8 +4972,15 @@ export const protoMetadata: ProtoMetadata = {
             "packed": true,
             "jstype": 0,
             "lazy": false,
+            "unverifiedLazy": false,
             "deprecated": false,
             "weak": false,
+            "debugRedact": false,
+            "retention": 0,
+            "targets": [],
+            "editionDefaults": [],
+            "features": undefined,
+            "featureSupport": undefined,
             "uninterpretedOption": [],
           },
           "proto3Optional": false,
@@ -4959,8 +4999,15 @@ export const protoMetadata: ProtoMetadata = {
             "packed": true,
             "jstype": 0,
             "lazy": false,
+            "unverifiedLazy": false,
             "deprecated": false,
             "weak": false,
+            "debugRedact": false,
+            "retention": 0,
+            "targets": [],
+            "editionDefaults": [],
+            "features": undefined,
+            "featureSupport": undefined,
             "uninterpretedOption": [],
           },
           "proto3Optional": false,
@@ -5009,6 +5056,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -5016,6 +5064,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "GeneratedCodeInfo",
       "field": [{
@@ -5049,8 +5098,15 @@ export const protoMetadata: ProtoMetadata = {
             "packed": true,
             "jstype": 0,
             "lazy": false,
+            "unverifiedLazy": false,
             "deprecated": false,
             "weak": false,
+            "debugRedact": false,
+            "retention": 0,
+            "targets": [],
+            "editionDefaults": [],
+            "features": undefined,
+            "featureSupport": undefined,
             "uninterpretedOption": [],
           },
           "proto3Optional": false,
@@ -5099,6 +5155,7 @@ export const protoMetadata: ProtoMetadata = {
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
+        "visibility": 0,
       }],
       "enumType": [],
       "extensionRange": [],
@@ -5106,6 +5163,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -5121,7 +5179,6 @@ export const protoMetadata: ProtoMetadata = {
       "ccGenericServices": false,
       "javaGenericServices": false,
       "pyGenericServices": false,
-      "phpGenericServices": false,
       "deprecated": false,
       "ccEnableArenas": true,
       "objcClassPrefix": "GPB",
@@ -5131,6 +5188,7 @@ export const protoMetadata: ProtoMetadata = {
       "phpNamespace": "",
       "phpMetadataNamespace": "",
       "rubyPackage": "",
+      "features": undefined,
       "uninterpretedOption": [],
     },
     "sourceCodeInfo": {
@@ -5962,6 +6020,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "",
+    "edition": 0,
   },
   references: {
     ".google.protobuf.FileDescriptorSet": FileDescriptorSet,

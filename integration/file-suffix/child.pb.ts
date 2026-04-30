@@ -57,7 +57,7 @@ export const Child: MessageFns<Child> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();

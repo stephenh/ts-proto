@@ -24,7 +24,7 @@ export function generateNestjsServiceController(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  const Metadata = imp("Metadata@@grpc/grpc-js");
+  const Metadata = imp("t:Metadata@@grpc/grpc-js");
 
   maybeAddComment(options, sourceInfo, chunks, serviceDesc.options?.deprecated);
   const t = options.context ? `<${contextTypeVar}>` : "";
@@ -54,7 +54,7 @@ export function generateNestjsServiceController(
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     let returns: Code;
     if (isEmptyType(methodDesc.outputType)) {
-      returns = code`void`;
+      returns = code`void | Promise<void>`;
     } else if (options.returnObservable || methodDesc.serverStreaming) {
       returns = code`${responseObservable(ctx, methodDesc)}`;
     } else {
@@ -97,7 +97,7 @@ export function generateNestjsServiceClient(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  const Metadata = imp("Metadata@@grpc/grpc-js");
+  const Metadata = imp("t:Metadata@@grpc/grpc-js");
 
   maybeAddComment(options, sourceInfo, chunks);
   const t = options.context ? `<${contextTypeVar}>` : ``;

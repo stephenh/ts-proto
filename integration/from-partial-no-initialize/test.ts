@@ -39,7 +39,7 @@ export const TPartialMessage: MessageFns<TPartialMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartialMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartialMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -95,7 +95,7 @@ export const TPartial: MessageFns<TPartial> = {
     if (message.string !== undefined && message.string !== "") {
       writer.uint32(18).string(message.string);
     }
-    Object.entries(message.map || {}).forEach(([key, value]) => {
+    globalThis.Object.entries(message.map || {}).forEach(([key, value]: [string, string]) => {
       TPartial_MapEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     if (message.message !== undefined) {
@@ -112,18 +112,16 @@ export const TPartial: MessageFns<TPartial> = {
       }
     }
     if (message.repeatedNumber !== undefined && message.repeatedNumber.length !== 0) {
-      writer.uint32(58).fork();
       for (const v of message.repeatedNumber) {
-        writer.int32(v);
+        writer.uint32(56).int32(v!);
       }
-      writer.join();
     }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartial {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -232,20 +230,29 @@ export const TPartial: MessageFns<TPartial> = {
       number: isSet(object.number) ? globalThis.Number(object.number) : undefined,
       string: isSet(object.string) ? globalThis.String(object.string) : undefined,
       map: isObject(object.map)
-        ? Object.entries(object.map).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.map) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : undefined,
       message: isSet(object.message) ? TPartialMessage.fromJSON(object.message) : undefined,
       repeatedMessage: globalThis.Array.isArray(object?.repeatedMessage)
         ? object.repeatedMessage.map((e: any) => TPartialMessage.fromJSON(e))
+        : globalThis.Array.isArray(object?.repeated_message)
+        ? object.repeated_message.map((e: any) => TPartialMessage.fromJSON(e))
         : undefined,
       repeatedString: globalThis.Array.isArray(object?.repeatedString)
         ? object.repeatedString.map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.repeated_string)
+        ? object.repeated_string.map((e: any) => globalThis.String(e))
         : undefined,
       repeatedNumber: globalThis.Array.isArray(object?.repeatedNumber)
         ? object.repeatedNumber.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.repeated_number)
+        ? object.repeated_number.map((e: any) => globalThis.Number(e))
         : undefined,
     };
   },
@@ -259,7 +266,7 @@ export const TPartial: MessageFns<TPartial> = {
       obj.string = message.string;
     }
     if (message.map) {
-      const entries = Object.entries(message.map);
+      const entries = globalThis.Object.entries(message.map) as [string, string][];
       if (entries.length > 0) {
         obj.map = {};
         entries.forEach(([k, v]) => {
@@ -291,12 +298,15 @@ export const TPartial: MessageFns<TPartial> = {
     message.string = object.string ?? undefined;
     message.map = (object.map === undefined || object.map === null)
       ? undefined
-      : Object.entries(object.map ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = globalThis.String(value);
-        }
-        return acc;
-      }, {});
+      : (globalThis.Object.entries(object.map ?? {}) as [string, string][]).reduce(
+        (acc: { [key: string]: string }, [key, value]: [string, string]) => {
+          if (value !== undefined) {
+            acc[key] = globalThis.String(value);
+          }
+          return acc;
+        },
+        {},
+      );
     message.message = (object.message !== undefined && object.message !== null)
       ? TPartialMessage.fromPartial(object.message)
       : undefined;
@@ -324,7 +334,7 @@ export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartial_MapEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial_MapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

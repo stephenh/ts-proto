@@ -33,7 +33,7 @@ export const Point: MessageFns<Point> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Point {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePoint();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -109,7 +109,7 @@ export const Area: MessageFns<Area> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Area {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArea();
     while (reader.pos < end) {
       const tag = reader.uint32();

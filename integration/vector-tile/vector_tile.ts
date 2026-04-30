@@ -95,7 +95,7 @@ export const Tile: MessageFns<Tile> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -173,7 +173,7 @@ export const Tile_Value: MessageFns<Tile_Value> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile_Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -245,13 +245,41 @@ export const Tile_Value: MessageFns<Tile_Value> = {
 
   fromJSON(object: any): Tile_Value {
     return {
-      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : "",
-      floatValue: isSet(object.floatValue) ? globalThis.Number(object.floatValue) : 0,
-      doubleValue: isSet(object.doubleValue) ? globalThis.Number(object.doubleValue) : 0,
-      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : 0,
-      uintValue: isSet(object.uintValue) ? globalThis.Number(object.uintValue) : 0,
-      sintValue: isSet(object.sintValue) ? globalThis.Number(object.sintValue) : 0,
-      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : false,
+      stringValue: isSet(object.stringValue)
+        ? globalThis.String(object.stringValue)
+        : isSet(object.string_value)
+        ? globalThis.String(object.string_value)
+        : "",
+      floatValue: isSet(object.floatValue)
+        ? globalThis.Number(object.floatValue)
+        : isSet(object.float_value)
+        ? globalThis.Number(object.float_value)
+        : 0,
+      doubleValue: isSet(object.doubleValue)
+        ? globalThis.Number(object.doubleValue)
+        : isSet(object.double_value)
+        ? globalThis.Number(object.double_value)
+        : 0,
+      intValue: isSet(object.intValue)
+        ? globalThis.Number(object.intValue)
+        : isSet(object.int_value)
+        ? globalThis.Number(object.int_value)
+        : 0,
+      uintValue: isSet(object.uintValue)
+        ? globalThis.Number(object.uintValue)
+        : isSet(object.uint_value)
+        ? globalThis.Number(object.uint_value)
+        : 0,
+      sintValue: isSet(object.sintValue)
+        ? globalThis.Number(object.sintValue)
+        : isSet(object.sint_value)
+        ? globalThis.Number(object.sint_value)
+        : 0,
+      boolValue: isSet(object.boolValue)
+        ? globalThis.Boolean(object.boolValue)
+        : isSet(object.bool_value)
+        ? globalThis.Boolean(object.bool_value)
+        : false,
     };
   },
 
@@ -324,7 +352,7 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile_Feature {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Feature();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -458,7 +486,7 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Tile_Layer {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Layer();
     while (reader.pos < end) {
       const tag = reader.uint32();

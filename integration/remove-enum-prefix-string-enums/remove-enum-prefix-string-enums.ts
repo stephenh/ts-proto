@@ -233,7 +233,7 @@ export const WithNestedEnum: MessageFns<WithNestedEnum> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WithNestedEnum {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithNestedEnum();
     while (reader.pos < end) {
       const tag = reader.uint32();

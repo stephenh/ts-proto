@@ -39,7 +39,7 @@ export const Foo: MessageFns<Foo, "foo.Foo"> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Foo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -99,7 +99,7 @@ export const Foo2: MessageFns<Foo2, "foo.Foo2"> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Foo2 {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo2();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -159,7 +159,7 @@ export const WithStruct: MessageFns<WithStruct, "foo.WithStruct"> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WithStruct {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
