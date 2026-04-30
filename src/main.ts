@@ -185,9 +185,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
     if (
       options.useDate === DateOption.DATE &&
-      fileDesc.messageType.find((message) =>
-        message.field.find((field) => field.typeName === ".google.protobuf.Timestamp"),
-      )
+      fileDesc.messageType.find(hasTimestampField)
     ) {
       chunks.push(makeProtobufTimestampWrapper());
     }
@@ -365,7 +363,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   }
 
   if (options.nestJs) {
-    if (fileDesc.messageType.find((message) => message.field.find(isStructType))) {
+    if (fileDesc.messageType.find(hasStructTypeField)) {
       chunks.push(makeProtobufStructWrapper(options));
     }
   }
@@ -528,8 +526,6 @@ function makeProtobufTimestampWrapper() {
       } as any;`;
 }
 
-<<<<<<< HEAD
-=======
 function hasField(message: DescriptorProto, predicate: (field: FieldDescriptorProto) => boolean): boolean {
   return (
     message.field.some(predicate) || message.nestedType.some((nestedMessage) => hasField(nestedMessage, predicate))
@@ -544,7 +540,6 @@ function hasStructTypeField(message: DescriptorProto): boolean {
   return hasField(message, isStructType);
 }
 
->>>>>>> 136da09e (fix: wrappers are not generated for google.types.Struct and google.types.Timestamp)
 function makeProtobufStructWrapper(options: Options) {
   const wrappers = imp("wrappers@protobufjs");
   const Struct = impProto(options, "google/protobuf/struct", wrapTypeName(options, "Struct"));
