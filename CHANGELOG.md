@@ -1,3 +1,10 @@
+## [2.11.7](https://github.com/stephenh/ts-proto/compare/v2.11.6...v2.11.7) (2026-05-03)
+
+
+### Bug Fixes
+
+* wrappers are not generated for nested google.protobuf.Timestamp and google.protobuf.Struct ([#1254](https://github.com/stephenh/ts-proto/issues/1254)) ([79b82f7](https://github.com/stephenh/ts-proto/commit/79b82f7e15f38436b7d23c10a74859f05f75d912))
+
 ## [2.11.6](https://github.com/stephenh/ts-proto/compare/v2.11.5...v2.11.6) (2026-03-23)
 
 
