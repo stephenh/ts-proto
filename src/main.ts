@@ -2233,14 +2233,37 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
   // Handle Duration string format as a special case
   if (fullTypeName === "google.protobuf.Duration" && ctx.options.useDuration === DurationOption.STRING) {
+    let parseSeconds: Code;
+    switch (ctx.options.forceLong) {
+      case LongOption.BIGINT:
+        parseSeconds = code`negative && secondsStr !== "0" ? -BigInt(secondsStr) : BigInt(secondsStr)`;
+        break;
+      case LongOption.LONG:
+        // Long.fromString handles the sign internally, including the asymmetric i64 min case.
+        parseSeconds = code`${utils.Long}.fromString(negative ? "-" + secondsStr : secondsStr)`;
+        break;
+      case LongOption.STRING:
+        parseSeconds = code`negative && secondsStr !== "0" ? "-" + secondsStr : secondsStr`;
+        break;
+      case LongOption.NUMBER:
+      default:
+        parseSeconds = code`negative && secondsStr !== "0" ? -Number(secondsStr) : Number(secondsStr)`;
+        break;
+    }
     return code`
       fromJSON(object: string): ${fullName} {
-        const match = object.match(/^(-?[0-9.]+)s$/);
-        if (!match) throw new Error('Invalid duration string');
-        const seconds = Number(match[1]);
-        const wholeSeconds = Math.trunc(seconds);
-        const nanos = Math.round((seconds - wholeSeconds) * 1e9);
-        return { seconds: wholeSeconds, nanos };
+        if (!object.endsWith("s")) throw new Error("Invalid duration string");
+        const body = object.slice(0, -1);
+        const negative = body.startsWith("-");
+        const unsigned = negative ? body.slice(1) : body;
+        const dot = unsigned.indexOf(".");
+        const secondsStr = dot < 0 ? unsigned : unsigned.slice(0, dot);
+        const fracStr = dot < 0 ? "" : unsigned.slice(dot + 1);
+        if (secondsStr.length === 0) throw new Error("Invalid duration string");
+        const seconds = ${parseSeconds};
+        const nanosAbs = fracStr === "" ? 0 : Number(fracStr.padEnd(9, "0").slice(0, 9));
+        const nanos = negative && nanosAbs !== 0 ? -nanosAbs : nanosAbs;
+        return { seconds, nanos };
       }
     `;
   }
@@ -2577,7 +2600,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals, useNullAsOptional, useDuration }: Options,
+  { useOptionals, useNullAsOptional, useDuration, forceLong }: Options,
 ): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
@@ -2590,11 +2613,38 @@ function generateCanonicalToJson(
   `;
   }
   if (fullProtobufTypeName === "google.protobuf.Duration" && useDuration === DurationOption.STRING) {
+    let isNegSeconds: Code;
+    let absSeconds: Code;
+    switch (forceLong) {
+      case LongOption.BIGINT:
+        isNegSeconds = code`message.seconds < 0n`;
+        absSeconds = code`message.seconds < 0n ? -message.seconds : message.seconds`;
+        break;
+      case LongOption.LONG:
+        // Format via toString rather than negate(); Long.MIN_VALUE.negate() === Long.MIN_VALUE.
+        isNegSeconds = code`message.seconds.isNegative()`;
+        absSeconds = code`message.seconds.isNegative() ? message.seconds.toString().slice(1) : message.seconds.toString()`;
+        break;
+      case LongOption.STRING:
+        isNegSeconds = code`message.seconds.startsWith("-")`;
+        absSeconds = code`message.seconds.startsWith("-") ? message.seconds.slice(1) : message.seconds`;
+        break;
+      case LongOption.NUMBER:
+      default:
+        isNegSeconds = code`message.seconds < 0`;
+        absSeconds = code`message.seconds < 0 ? -message.seconds : message.seconds`;
+        break;
+    }
     return code`
     toJSON(message: ${fullName}): string {
-        const secs = Number(message.seconds);
-        const nanos = message.nanos;
-        return \`\${secs + nanos/1e9}s\`;
+      const negative = ${isNegSeconds} || message.nanos < 0;
+      const sign = negative ? "-" : "";
+      const absSeconds = ${absSeconds};
+      const absNanos = message.nanos < 0 ? -message.nanos : message.nanos;
+      if (absNanos === 0) return \`\${sign}\${absSeconds}s\`;
+      const padded = absNanos.toString().padStart(9, "0");
+      const len = absNanos % 1_000_000 === 0 ? 3 : absNanos % 1_000 === 0 ? 6 : 9;
+      return \`\${sign}\${absSeconds}.\${padded.slice(0, len)}s\`;
     }
     `;
   }
