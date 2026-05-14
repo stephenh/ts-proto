@@ -1,0 +1,39 @@
+syntax = "proto3";
+package simple;
+
+service EntityService {
+  rpc BatchQuery(BatchQueryRequest) returns (BatchQueryResponse);
+
+  // A Get-prefixed method that would normally trigger DataLoader caching
+  rpc GetOnlyMethod(GetOnlyMethodRequest) returns (GetOnlyMethodResponse);
+
+  rpc WriteMethod(WriteMethodRequest) returns (WriteMethodResponse);
+}
+
+message BatchQueryRequest {
+  repeated string ids = 1;
+}
+
+message BatchQueryResponse {
+  repeated Entity entities = 1;
+}
+
+message GetOnlyMethodRequest {
+  string id = 1;
+}
+
+message GetOnlyMethodResponse {
+  Entity entity = 1;
+}
+
+message WriteMethodRequest {
+  string id = 1;
+}
+
+message WriteMethodResponse {
+}
+
+message Entity {
+  string id = 1;
+  string name = 2;
+}
