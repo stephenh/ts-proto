@@ -433,7 +433,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   }
 
-  if (options.context) {
+  if (options.context && options.useContextDataloaders) {
     chunks.push(generateDataLoaderOptionsType());
     chunks.push(generateDataLoadersType());
   }
@@ -3052,7 +3052,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   return joinCode(chunks, { on: "\n" });
 }
 
-export const contextTypeVar = "Context extends DataLoaders";
+export function contextTypeVar(options: Options): string {
+  return options.useContextDataloaders ? "Context extends DataLoaders" : "Context";
+}
 
 function convertFromObjectKey(
   ctx: Context,

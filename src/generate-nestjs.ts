@@ -27,7 +27,7 @@ export function generateNestjsServiceController(
   const Metadata = imp("t:Metadata@@grpc/grpc-js");
 
   maybeAddComment(options, sourceInfo, chunks, serviceDesc.options?.deprecated);
-  const t = options.context ? `<${contextTypeVar}>` : "";
+  const t = options.context ? `<${contextTypeVar(options)}>` : "";
   chunks.push(code`
     export interface ${serviceDesc.name}Controller${t} {
   `);
@@ -70,7 +70,7 @@ export function generateNestjsServiceController(
       ${methodDesc.formattedName}(${joinCode(params, { on: ", " })}): ${returns};
     `);
 
-    if (options.context) {
+    if (options.context && options.useContextDataloaders) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const maybeCtx = options.context ? "ctx: Context," : "";
@@ -100,7 +100,7 @@ export function generateNestjsServiceClient(
   const Metadata = imp("t:Metadata@@grpc/grpc-js");
 
   maybeAddComment(options, sourceInfo, chunks);
-  const t = options.context ? `<${contextTypeVar}>` : ``;
+  const t = options.context ? `<${contextTypeVar(options)}>` : ``;
   chunks.push(code`
     export interface ${serviceDesc.name}Client${t} {
   `);
@@ -132,7 +132,7 @@ export function generateNestjsServiceClient(
       ): ${returns};
     `);
 
-    if (options.context) {
+    if (options.context && options.useContextDataloaders) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const maybeContext = options.context ? `ctx: Context,` : "";
