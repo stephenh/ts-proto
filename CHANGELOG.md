@@ -1,3 +1,17 @@
+## [2.11.8](https://github.com/stephenh/ts-proto/compare/v2.11.7...v2.11.8) (2026-05-07)
+
+
+### Bug Fixes
+
+* precision and canonical form in useDuration=string Duration JSON helpers ([#1257](https://github.com/stephenh/ts-proto/issues/1257)) ([f31dada](https://github.com/stephenh/ts-proto/commit/f31dada3547557ffe8cb6c8c85aa6d3fd625ff75)), closes [#1176](https://github.com/stephenh/ts-proto/issues/1176) [#1176](https://github.com/stephenh/ts-proto/issues/1176)
+
+## [2.11.7](https://github.com/stephenh/ts-proto/compare/v2.11.6...v2.11.7) (2026-05-03)
+
+
+### Bug Fixes
+
+* wrappers are not generated for nested google.protobuf.Timestamp and google.protobuf.Struct ([#1254](https://github.com/stephenh/ts-proto/issues/1254)) ([79b82f7](https://github.com/stephenh/ts-proto/commit/79b82f7e15f38436b7d23c10a74859f05f75d912))
+
 ## [2.11.6](https://github.com/stephenh/ts-proto/compare/v2.11.5...v2.11.6) (2026-03-23)
 
 

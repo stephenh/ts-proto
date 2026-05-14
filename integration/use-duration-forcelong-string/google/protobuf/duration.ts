@@ -72,7 +72,7 @@ export interface Duration {
    * to +315,576,000,000 inclusive. Note: these bounds are computed from:
    * 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
    */
-  seconds: number;
+  seconds: string;
   /**
    * Signed fractions of a second at nanosecond resolution of the span
    * of time. Durations less than one second are represented with a 0
@@ -85,12 +85,12 @@ export interface Duration {
 }
 
 function createBaseDuration(): Duration {
-  return { seconds: 0, nanos: 0 };
+  return { seconds: "0", nanos: 0 };
 }
 
 export const Duration: MessageFns<Duration> = {
   encode(message: Duration, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.seconds !== 0) {
+    if (message.seconds !== "0") {
       writer.uint32(8).int64(message.seconds);
     }
     if (message.nanos !== 0) {
@@ -111,7 +111,7 @@ export const Duration: MessageFns<Duration> = {
             break;
           }
 
-          message.seconds = longToNumber(reader.int64());
+          message.seconds = reader.int64().toString();
           continue;
         }
         case 2: {
@@ -144,16 +144,16 @@ export const Duration: MessageFns<Duration> = {
     if (secondsStr.length === 0) {
       throw new Error("Invalid duration string");
     }
-    const seconds = negative && secondsStr !== "0" ? -Number(secondsStr) : Number(secondsStr);
+    const seconds = negative && secondsStr !== "0" ? "-" + secondsStr : secondsStr;
     const nanosAbs = fracStr === "" ? 0 : Number(fracStr.padEnd(9, "0").slice(0, 9));
     const nanos = negative && nanosAbs !== 0 ? -nanosAbs : nanosAbs;
     return { seconds, nanos };
   },
 
   toJSON(message: Duration): string {
-    const negative = message.seconds < 0 || message.nanos < 0;
+    const negative = message.seconds.startsWith("-") || message.nanos < 0;
     const sign = negative ? "-" : "";
-    const absSeconds = message.seconds < 0 ? -message.seconds : message.seconds;
+    const absSeconds = message.seconds.startsWith("-") ? message.seconds.slice(1) : message.seconds;
     const absNanos = message.nanos < 0 ? -message.nanos : message.nanos;
     if (absNanos === 0) {
       return `${sign}${absSeconds}s`;
@@ -168,7 +168,7 @@ export const Duration: MessageFns<Duration> = {
   },
   fromPartial<I extends Exact<DeepPartial<Duration>, I>>(object: I): Duration {
     const message = createBaseDuration();
-    message.seconds = object.seconds ?? 0;
+    message.seconds = object.seconds ?? "0";
     message.nanos = object.nanos ?? 0;
     return message;
   },
@@ -185,17 +185,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToNumber(int64: { toString(): string }): number {
-  const num = globalThis.Number(int64.toString());
-  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
-    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
-  }
-  return num;
-}
 
 export interface MessageFns<T> {
   encode(message: T, writer?: BinaryWriter): BinaryWriter;
