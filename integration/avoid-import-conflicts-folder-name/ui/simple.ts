@@ -78,7 +78,7 @@ export const Simple: MessageFns<Simple> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Simple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -156,7 +156,7 @@ export const SimpleEnums: MessageFns<SimpleEnums> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleEnums {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -188,8 +188,16 @@ export const SimpleEnums: MessageFns<SimpleEnums> = {
 
   fromJSON(object: any): SimpleEnums {
     return {
-      localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
-      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON3(object.importEnum) : 0,
+      localEnum: isSet(object.localEnum)
+        ? simpleEnumFromJSON(object.localEnum)
+        : isSet(object.local_enum)
+        ? simpleEnumFromJSON(object.local_enum)
+        : 0,
+      importEnum: isSet(object.importEnum)
+        ? simpleEnumFromJSON3(object.importEnum)
+        : isSet(object.import_enum)
+        ? simpleEnumFromJSON3(object.import_enum)
+        : 0,
     };
   },
 

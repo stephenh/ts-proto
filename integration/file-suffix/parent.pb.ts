@@ -34,7 +34,7 @@ export const Parent: MessageFns<Parent> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Parent {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseParent();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -75,8 +75,16 @@ export const Parent: MessageFns<Parent> = {
   fromJSON(object: any): Parent {
     return {
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      childEnum: isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      childEnum: isSet(object.childEnum)
+        ? childEnumFromJSON(object.childEnum)
+        : isSet(object.child_enum)
+        ? childEnumFromJSON(object.child_enum)
+        : 0,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
     };
   },
 

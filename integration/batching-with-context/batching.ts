@@ -63,7 +63,7 @@ export const BatchQueryRequest: MessageFns<BatchQueryRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): BatchQueryRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -121,7 +121,7 @@ export const BatchQueryResponse: MessageFns<BatchQueryResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): BatchQueryResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -181,7 +181,7 @@ export const BatchMapQueryRequest: MessageFns<BatchMapQueryRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -231,7 +231,7 @@ function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
 
 export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   encode(message: BatchMapQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entities).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entities).forEach(([key, value]: [string, Entity]) => {
       BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
@@ -239,7 +239,7 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -267,10 +267,13 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   fromJSON(object: any): BatchMapQueryResponse {
     return {
       entities: isObject(object.entities)
-        ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-          acc[key] = Entity.fromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.entities) as [string, any][]).reduce(
+          (acc: { [key: string]: Entity }, [key, value]: [string, any]) => {
+            acc[key] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -278,7 +281,7 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
-      const entries = Object.entries(message.entities);
+      const entries = globalThis.Object.entries(message.entities) as [string, Entity][];
       if (entries.length > 0) {
         obj.entities = {};
         entries.forEach(([k, v]) => {
@@ -294,12 +297,15 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   },
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(object: I): BatchMapQueryResponse {
     const message = createBaseBatchMapQueryResponse();
-    message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = Entity.fromPartial(value);
-      }
-      return acc;
-    }, {});
+    message.entities = (globalThis.Object.entries(object.entities ?? {}) as [string, Entity][]).reduce(
+      (acc: { [key: string]: Entity }, [key, value]: [string, Entity]) => {
+        if (value !== undefined) {
+          acc[key] = Entity.fromPartial(value);
+        }
+        return acc;
+      },
+      {},
+    );
     return message;
   },
 };
@@ -321,7 +327,7 @@ export const BatchMapQueryResponse_EntitiesEntry: MessageFns<BatchMapQueryRespon
 
   decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -400,7 +406,7 @@ export const GetOnlyMethodRequest: MessageFns<GetOnlyMethodRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GetOnlyMethodRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -458,7 +464,7 @@ export const GetOnlyMethodResponse: MessageFns<GetOnlyMethodResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GetOnlyMethodResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -518,7 +524,7 @@ export const WriteMethodRequest: MessageFns<WriteMethodRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WriteMethodRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -573,7 +579,7 @@ export const WriteMethodResponse: MessageFns<WriteMethodResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): WriteMethodResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -622,7 +628,7 @@ export const Entity: MessageFns<Entity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Entity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();

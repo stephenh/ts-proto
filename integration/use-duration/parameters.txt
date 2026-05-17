@@ -1,1 +1,1 @@
-useOptionals=all,outputEncodeMethods=false,outputClientImpl=false,onlyTypes=true,useJsonWireFormat=true,useDuration=string
+outputClientImpl=false,useDuration=string

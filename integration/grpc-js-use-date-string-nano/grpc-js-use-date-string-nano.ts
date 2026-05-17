@@ -3,14 +3,17 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { ChannelCredentials, Client, makeGenericClientConstructor, Metadata } from "@grpc/grpc-js";
-import type {
-  CallOptions,
-  ClientOptions,
-  ClientUnaryCall,
-  handleUnaryCall,
-  ServiceError,
-  UntypedServiceImplementation,
+import {
+  type CallOptions,
+  type ChannelCredentials,
+  Client,
+  type ClientOptions,
+  type ClientUnaryCall,
+  type handleUnaryCall,
+  makeGenericClientConstructor,
+  type Metadata,
+  type ServiceError,
+  type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import NanoDate from "nano-date";
 import { Timestamp } from "./google/protobuf/timestamp";
@@ -35,7 +38,7 @@ export const TimestampMessage: MessageFns<TimestampMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TimestampMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTimestampMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -82,22 +85,22 @@ export const TimestampMessage: MessageFns<TimestampMessage> = {
 export type TestService = typeof TestService;
 export const TestService = {
   simpleNow: {
-    path: "/simple.Test/SimpleNow",
-    requestStream: false,
-    responseStream: false,
-    requestSerialize: (value: string) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    requestDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
-    responseSerialize: (value: string) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    responseDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
+    path: "/simple.Test/SimpleNow" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: string): Buffer => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    requestDeserialize: (value: Buffer): string => fromTimestamp(Timestamp.decode(value)),
+    responseSerialize: (value: string): Buffer => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    responseDeserialize: (value: Buffer): string => fromTimestamp(Timestamp.decode(value)),
   },
   wrappedNow: {
-    path: "/simple.Test/WrappedNow",
-    requestStream: false,
-    responseStream: false,
-    requestSerialize: (value: TimestampMessage) => Buffer.from(TimestampMessage.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => TimestampMessage.decode(value),
-    responseSerialize: (value: TimestampMessage) => Buffer.from(TimestampMessage.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => TimestampMessage.decode(value),
+    path: "/simple.Test/WrappedNow" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: TimestampMessage): Buffer => Buffer.from(TimestampMessage.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TimestampMessage => TimestampMessage.decode(value),
+    responseSerialize: (value: TimestampMessage): Buffer => Buffer.from(TimestampMessage.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TimestampMessage => TimestampMessage.decode(value),
   },
 } as const;
 

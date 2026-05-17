@@ -70,7 +70,7 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** The kind of value. */
-  readonly kind?:
+  readonly kind:
     | //
     /** Represents a null value. */
     { readonly $case: "nullValue"; readonly nullValue: NullValue }
@@ -108,7 +108,7 @@ function createBaseStruct(): Struct {
 
 export const Struct: MessageFns<Struct> & StructWrapperFns = {
   encode(message: Struct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    globalThis.Object.entries(message.fields).forEach(([key, value]: [string, any | undefined]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
       }
@@ -118,7 +118,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Struct {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -146,10 +146,13 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   fromJSON(object: any): Struct {
     return {
       fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
+          (acc: { [key: string]: any | undefined }, [key, value]: [string, any]) => {
+            acc[key] = value as any | undefined;
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -157,7 +160,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   toJSON(message: Struct): unknown {
     const obj: any = {};
     if (message.fields) {
-      const entries = Object.entries(message.fields);
+      const entries = globalThis.Object.entries(message.fields) as [string, any | undefined][];
       if (entries.length > 0) {
         obj.fields = {};
         entries.forEach(([k, v]) => {
@@ -173,8 +176,8 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   },
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct() as any;
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
+    message.fields = (globalThis.Object.entries(object.fields ?? {}) as [string, any | undefined][]).reduce(
+      (acc: { [key: string]: any | undefined }, [key, value]: [string, any | undefined]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -189,7 +192,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields[key] = object[key];
       }
     }
@@ -199,7 +202,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of Object.keys(message.fields)) {
+      for (const key of globalThis.Object.keys(message.fields)) {
         object[key] = message.fields[key];
       }
     }
@@ -224,7 +227,7 @@ export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Struct_FieldsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct_FieldsEntry() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -314,7 +317,7 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValue() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -380,16 +383,28 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
     return {
       kind: isSet(object.nullValue)
         ? { $case: "nullValue", nullValue: nullValueFromJSON(object.nullValue) }
+        : isSet(object.null_value)
+        ? { $case: "nullValue", nullValue: nullValueFromJSON(object.null_value) }
         : isSet(object.numberValue)
         ? { $case: "numberValue", numberValue: globalThis.Number(object.numberValue) }
+        : isSet(object.number_value)
+        ? { $case: "numberValue", numberValue: globalThis.Number(object.number_value) }
         : isSet(object.stringValue)
         ? { $case: "stringValue", stringValue: globalThis.String(object.stringValue) }
+        : isSet(object.string_value)
+        ? { $case: "stringValue", stringValue: globalThis.String(object.string_value) }
         : isSet(object.boolValue)
         ? { $case: "boolValue", boolValue: globalThis.Boolean(object.boolValue) }
+        : isSet(object.bool_value)
+        ? { $case: "boolValue", boolValue: globalThis.Boolean(object.bool_value) }
         : isSet(object.structValue)
         ? { $case: "structValue", structValue: object.structValue }
+        : isSet(object.struct_value)
+        ? { $case: "structValue", structValue: object.struct_value }
         : isSet(object.listValue)
         ? { $case: "listValue", listValue: [...object.listValue] }
+        : isSet(object.list_value)
+        ? { $case: "listValue", listValue: [...object.list_value] }
         : undefined,
     };
   },
@@ -511,7 +526,7 @@ export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ListValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();

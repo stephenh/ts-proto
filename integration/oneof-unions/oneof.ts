@@ -13,7 +13,7 @@ export interface PleaseChoose {
    * Please to be choosing one of the fields within this oneof clause.
    * This text exists to ensure we transpose comments correctly.
    */
-  choice?:
+  choice:
     | //
     /**
      * Use this if you want a number. Numbers are great. Who doesn't
@@ -37,7 +37,7 @@ export interface PleaseChoose {
     | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum }
     | undefined;
   age: number;
-  eitherOr?: { $case: "either"; either: string } | { $case: "or"; or: string } | {
+  eitherOr: { $case: "either"; either: string } | { $case: "or"; or: string } | {
     $case: "thirdOption";
     thirdOption: string;
   } | undefined;
@@ -148,7 +148,7 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -271,14 +271,24 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       choice: isSet(object.aNumber)
         ? { $case: "aNumber", aNumber: globalThis.Number(object.aNumber) }
+        : isSet(object.a_number)
+        ? { $case: "aNumber", aNumber: globalThis.Number(object.a_number) }
         : isSet(object.aString)
         ? { $case: "aString", aString: globalThis.String(object.aString) }
+        : isSet(object.a_string)
+        ? { $case: "aString", aString: globalThis.String(object.a_string) }
         : isSet(object.aMessage)
         ? { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) }
+        : isSet(object.a_message)
+        ? { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromJSON(object.a_message) }
         : isSet(object.aBool)
         ? { $case: "aBool", aBool: globalThis.Boolean(object.aBool) }
+        : isSet(object.a_bool)
+        ? { $case: "aBool", aBool: globalThis.Boolean(object.a_bool) }
         : isSet(object.bunchaBytes)
         ? { $case: "bunchaBytes", bunchaBytes: bytesFromBase64(object.bunchaBytes) }
+        : isSet(object.buncha_bytes)
+        ? { $case: "bunchaBytes", bunchaBytes: bytesFromBase64(object.buncha_bytes) }
         : isSet(object.anEnum)
         ? { $case: "anEnum", anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) }
         : undefined,
@@ -289,6 +299,8 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
         ? { $case: "or", or: globalThis.String(object.or) }
         : isSet(object.thirdOption)
         ? { $case: "thirdOption", thirdOption: globalThis.String(object.thirdOption) }
+        : isSet(object.third_option)
+        ? { $case: "thirdOption", thirdOption: globalThis.String(object.third_option) }
         : undefined,
       signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
       value: isSet(object?.value) ? object.value : undefined,
@@ -417,7 +429,7 @@ export const PleaseChoose_Submessage: MessageFns<PleaseChoose_Submessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -478,7 +490,7 @@ export const SimpleButOptional: MessageFns<SimpleButOptional> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleButOptional {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -539,7 +551,7 @@ export const SimpleButOptional: MessageFns<SimpleButOptional> = {
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -552,7 +564,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+    return (globalThis as any).Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {

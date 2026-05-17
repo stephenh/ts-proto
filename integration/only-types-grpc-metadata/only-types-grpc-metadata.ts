@@ -2,7 +2,7 @@
 // source: only-types-grpc-metadata.proto
 
 /* eslint-disable */
-import { Metadata } from "@grpc/grpc-js";
+import type { Metadata } from "@grpc/grpc-js";
 
 export const protobufPackage = "basic";
 

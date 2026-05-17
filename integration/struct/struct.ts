@@ -25,7 +25,7 @@ export const StructMessage: MessageFns<StructMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): StructMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStructMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();

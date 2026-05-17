@@ -39,7 +39,7 @@ export const Todo: MessageFns<Todo> = {
     if (message.optionalOid !== undefined) {
       ObjectId.encode(toProtoObjectId(message.optionalOid), writer.uint32(34).fork()).join();
     }
-    Object.entries(message.mapOfOids).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfOids).forEach(([key, value]: [string, mongodb.ObjectId]) => {
       Todo_MapOfOidsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
@@ -47,7 +47,7 @@ export const Todo: MessageFns<Todo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -110,13 +110,30 @@ export const Todo: MessageFns<Todo> = {
       oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
       repeatedOid: globalThis.Array.isArray(object?.repeatedOid)
         ? object.repeatedOid.map((e: any) => fromJsonObjectId(e))
+        : globalThis.Array.isArray(object?.repeated_oid)
+        ? object.repeated_oid.map((e: any) => fromJsonObjectId(e))
         : [],
-      optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
+      optionalOid: isSet(object.optionalOid)
+        ? fromJsonObjectId(object.optionalOid)
+        : isSet(object.optional_oid)
+        ? fromJsonObjectId(object.optional_oid)
+        : undefined,
       mapOfOids: isObject(object.mapOfOids)
-        ? Object.entries(object.mapOfOids).reduce<{ [key: string]: mongodb.ObjectId }>((acc, [key, value]) => {
-          acc[key] = fromJsonObjectId(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapOfOids) as [string, any][]).reduce(
+          (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonObjectId(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.map_of_oids)
+        ? (globalThis.Object.entries(object.map_of_oids) as [string, any][]).reduce(
+          (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonObjectId(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -136,7 +153,7 @@ export const Todo: MessageFns<Todo> = {
       obj.optionalOid = message.optionalOid.toString();
     }
     if (message.mapOfOids) {
-      const entries = Object.entries(message.mapOfOids);
+      const entries = globalThis.Object.entries(message.mapOfOids) as [string, mongodb.ObjectId][];
       if (entries.length > 0) {
         obj.mapOfOids = {};
         entries.forEach(([k, v]) => {
@@ -158,8 +175,8 @@ export const Todo: MessageFns<Todo> = {
     message.optionalOid = (object.optionalOid !== undefined && object.optionalOid !== null)
       ? object.optionalOid as mongodb.ObjectId
       : undefined;
-    message.mapOfOids = Object.entries(object.mapOfOids ?? {}).reduce<{ [key: string]: mongodb.ObjectId }>(
-      (acc, [key, value]) => {
+    message.mapOfOids = (globalThis.Object.entries(object.mapOfOids ?? {}) as [string, mongodb.ObjectId][]).reduce(
+      (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, mongodb.ObjectId]) => {
         if (value !== undefined) {
           acc[key] = value as mongodb.ObjectId;
         }
@@ -188,7 +205,7 @@ export const Todo_MapOfOidsEntry: MessageFns<Todo_MapOfOidsEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo_MapOfOidsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfOidsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();

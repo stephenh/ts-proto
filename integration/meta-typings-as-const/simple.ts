@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
+import type { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 
 export const protobufPackage = "simple";
@@ -33,7 +33,7 @@ export const Test: MessageFns<Test> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Test {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -84,6 +84,7 @@ export const protoMetadata = {
     "dependency": ["google/protobuf/descriptor.proto"],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "Test",
       "field": [{
@@ -107,17 +108,35 @@ export const protoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [{
       "name": "TestEnum",
-      "value": [{ "name": "VALUE_A", "number": 0, "options": { "deprecated": false, "uninterpretedOption": [] } }, {
+      "value": [{
+        "name": "VALUE_A",
+        "number": 0,
+        "options": {
+          "deprecated": false,
+          "features": undefined,
+          "debugRedact": false,
+          "featureSupport": undefined,
+          "uninterpretedOption": [],
+        },
+      }, {
         "name": "VALUE_B",
         "number": 1,
-        "options": { "deprecated": false, "uninterpretedOption": [] },
+        "options": {
+          "deprecated": false,
+          "features": undefined,
+          "debugRedact": false,
+          "featureSupport": undefined,
+          "uninterpretedOption": [],
+        },
       }],
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "service": [],
     "extension": [{
@@ -144,6 +163,7 @@ export const protoMetadata = {
       }],
     },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: { ".simple.TestEnum": TestEnum, ".simple.Test": Test },
   dependencies: [protoMetadata1],

@@ -3,8 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { Metadata } from "@grpc/grpc-js";
-import type { handleBidiStreamingCall, handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
+import type { handleBidiStreamingCall, handleUnaryCall, Metadata, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -44,7 +43,7 @@ export const HeroById: MessageFns<HeroById> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): HeroById {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -81,7 +80,7 @@ export const VillainById: MessageFns<VillainById> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): VillainById {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -121,7 +120,7 @@ export const Hero: MessageFns<Hero> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Hero {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -169,7 +168,7 @@ export const Villain: MessageFns<Villain> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Villain {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -236,31 +235,31 @@ export const HERO_SERVICE_NAME = "HeroService";
 export type HeroServiceService = typeof HeroServiceService;
 export const HeroServiceService = {
   findOneHero: {
-    path: "/hero.HeroService/FindOneHero",
-    requestStream: false,
-    responseStream: false,
-    requestSerialize: (value: HeroById) => Buffer.from(HeroById.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => HeroById.decode(value),
-    responseSerialize: (value: Hero) => Buffer.from(Hero.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Hero.decode(value),
+    path: "/hero.HeroService/FindOneHero" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: HeroById): Buffer => Buffer.from(HeroById.encode(value).finish()),
+    requestDeserialize: (value: Buffer): HeroById => HeroById.decode(value),
+    responseSerialize: (value: Hero): Buffer => Buffer.from(Hero.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Hero => Hero.decode(value),
   },
   findOneVillain: {
-    path: "/hero.HeroService/FindOneVillain",
-    requestStream: false,
-    responseStream: false,
-    requestSerialize: (value: VillainById) => Buffer.from(VillainById.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => VillainById.decode(value),
-    responseSerialize: (value: Villain) => Buffer.from(Villain.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Villain.decode(value),
+    path: "/hero.HeroService/FindOneVillain" as const,
+    requestStream: false as const,
+    responseStream: false as const,
+    requestSerialize: (value: VillainById): Buffer => Buffer.from(VillainById.encode(value).finish()),
+    requestDeserialize: (value: Buffer): VillainById => VillainById.decode(value),
+    responseSerialize: (value: Villain): Buffer => Buffer.from(Villain.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Villain => Villain.decode(value),
   },
   findManyVillain: {
-    path: "/hero.HeroService/FindManyVillain",
-    requestStream: true,
-    responseStream: true,
-    requestSerialize: (value: VillainById) => Buffer.from(VillainById.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => VillainById.decode(value),
-    responseSerialize: (value: Villain) => Buffer.from(Villain.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Villain.decode(value),
+    path: "/hero.HeroService/FindManyVillain" as const,
+    requestStream: true as const,
+    responseStream: true as const,
+    requestSerialize: (value: VillainById): Buffer => Buffer.from(VillainById.encode(value).finish()),
+    requestDeserialize: (value: Buffer): VillainById => VillainById.decode(value),
+    responseSerialize: (value: Villain): Buffer => Buffer.from(Villain.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Villain => Villain.decode(value),
   },
 } as const;
 

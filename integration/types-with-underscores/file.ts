@@ -27,7 +27,7 @@ export const Baz: MessageFns<Baz> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Baz {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBaz();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -82,7 +82,7 @@ export const FooBar: MessageFns<FooBar> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FooBar {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooBar();
     while (reader.pos < end) {
       const tag = reader.uint32();

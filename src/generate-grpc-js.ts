@@ -7,7 +7,7 @@ import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePref
 import { generateDecoder, generateEncoder } from "./encode";
 
 const CallOptions = imp("t:CallOptions@@grpc/grpc-js");
-const ChannelCredentials = imp("ChannelCredentials@@grpc/grpc-js");
+const ChannelCredentials = imp("t:ChannelCredentials@@grpc/grpc-js");
 const ClientOptions = imp("t:ClientOptions@@grpc/grpc-js");
 const Client = imp("Client@@grpc/grpc-js");
 const ClientDuplexStream = imp("t:ClientDuplexStream@@grpc/grpc-js");
@@ -20,7 +20,7 @@ const handleServerStreamingCall = imp("t:handleServerStreamingCall@@grpc/grpc-js
 const handleUnaryCall = imp("t:handleUnaryCall@@grpc/grpc-js");
 const UntypedServiceImplementation = imp("t:UntypedServiceImplementation@@grpc/grpc-js");
 const makeGenericClientConstructor = imp("makeGenericClientConstructor@@grpc/grpc-js");
-const Metadata = imp("Metadata@@grpc/grpc-js");
+const Metadata = imp("t:Metadata@@grpc/grpc-js");
 const ServiceError = imp("t:ServiceError@@grpc/grpc-js");
 
 /**
@@ -84,15 +84,15 @@ function generateServiceDefinition(
 
     chunks.push(code`
       ${methodDesc.formattedName}: {
-        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
-        requestStream: ${methodDesc.clientStreaming},
-        responseStream: ${methodDesc.serverStreaming},
-        requestSerialize: (value: ${inputType}) =>
+        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}' as const,
+        requestStream: ${methodDesc.clientStreaming} as const,
+        responseStream: ${methodDesc.serverStreaming} as const,
+        requestSerialize: (value: ${inputType}): Buffer =>
           Buffer.from(${inputEncoder}),
-        requestDeserialize: (value: Buffer) => ${inputDecoder},
-        responseSerialize: (value: ${outputType}) =>
+        requestDeserialize: (value: Buffer): ${inputType} => ${inputDecoder},
+        responseSerialize: (value: ${outputType}): Buffer =>
           Buffer.from(${outputEncoder}),
-        responseDeserialize: (value: Buffer) => ${outputDecoder},
+        responseDeserialize: (value: Buffer): ${outputType} => ${outputDecoder},
       },
     `);
   }
@@ -121,8 +121,8 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
         ? handleBidiStreamingCall
         : handleClientStreamingCall
       : methodDesc.serverStreaming
-      ? handleServerStreamingCall
-      : handleUnaryCall;
+        ? handleServerStreamingCall
+        : handleUnaryCall;
 
     chunks.push(code`
       ${methodDesc.formattedName}: ${callType}<${inputType}, ${outputType}>;

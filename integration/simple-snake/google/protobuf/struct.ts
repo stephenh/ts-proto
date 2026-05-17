@@ -109,7 +109,7 @@ function createBaseStruct(): Struct {
 
 export const Struct: MessageFns<Struct> & StructWrapperFns = {
   encode(message: Struct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    globalThis.Object.entries(message.fields).forEach(([key, value]: [string, any | undefined]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
       }
@@ -119,7 +119,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Struct {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -147,10 +147,13 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   fromJSON(object: any): Struct {
     return {
       fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
+          (acc: { [key: string]: any | undefined }, [key, value]: [string, any]) => {
+            acc[key] = value as any | undefined;
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -158,7 +161,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   toJSON(message: Struct): unknown {
     const obj: any = {};
     if (message.fields) {
-      const entries = Object.entries(message.fields);
+      const entries = globalThis.Object.entries(message.fields) as [string, any | undefined][];
       if (entries.length > 0) {
         obj.fields = {};
         entries.forEach(([k, v]) => {
@@ -174,8 +177,8 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   },
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct();
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
+    message.fields = (globalThis.Object.entries(object.fields ?? {}) as [string, any | undefined][]).reduce(
+      (acc: { [key: string]: any | undefined }, [key, value]: [string, any | undefined]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -190,7 +193,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
-      for (const key of Object.keys(object)) {
+      for (const key of globalThis.Object.keys(object)) {
         struct.fields[key] = object[key];
       }
     }
@@ -200,7 +203,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     if (message.fields) {
-      for (const key of Object.keys(message.fields)) {
+      for (const key of globalThis.Object.keys(message.fields)) {
         object[key] = message.fields[key];
       }
     }
@@ -225,7 +228,7 @@ export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Struct_FieldsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -320,7 +323,7 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -384,34 +387,58 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
 
   fromJSON(object: any): Value {
     return {
-      null_value: isSet(object.null_value) ? nullValueFromJSON(object.null_value) : undefined,
-      number_value: isSet(object.number_value) ? globalThis.Number(object.number_value) : undefined,
-      string_value: isSet(object.string_value) ? globalThis.String(object.string_value) : undefined,
-      bool_value: isSet(object.bool_value) ? globalThis.Boolean(object.bool_value) : undefined,
-      struct_value: isObject(object.struct_value) ? object.struct_value : undefined,
-      list_value: globalThis.Array.isArray(object.list_value) ? [...object.list_value] : undefined,
+      null_value: isSet(object.nullValue)
+        ? nullValueFromJSON(object.nullValue)
+        : isSet(object.null_value)
+        ? nullValueFromJSON(object.null_value)
+        : undefined,
+      number_value: isSet(object.numberValue)
+        ? globalThis.Number(object.numberValue)
+        : isSet(object.number_value)
+        ? globalThis.Number(object.number_value)
+        : undefined,
+      string_value: isSet(object.stringValue)
+        ? globalThis.String(object.stringValue)
+        : isSet(object.string_value)
+        ? globalThis.String(object.string_value)
+        : undefined,
+      bool_value: isSet(object.boolValue)
+        ? globalThis.Boolean(object.boolValue)
+        : isSet(object.bool_value)
+        ? globalThis.Boolean(object.bool_value)
+        : undefined,
+      struct_value: isObject(object.structValue)
+        ? object.structValue
+        : isObject(object.struct_value)
+        ? object.struct_value
+        : undefined,
+      list_value: globalThis.Array.isArray(object.listValue)
+        ? [...object.listValue]
+        : globalThis.Array.isArray(object.list_value)
+        ? [...object.list_value]
+        : undefined,
     };
   },
 
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.null_value !== undefined) {
-      obj.null_value = nullValueToJSON(message.null_value);
+      obj.nullValue = nullValueToJSON(message.null_value);
     }
     if (message.number_value !== undefined) {
-      obj.number_value = message.number_value;
+      obj.numberValue = message.number_value;
     }
     if (message.string_value !== undefined) {
-      obj.string_value = message.string_value;
+      obj.stringValue = message.string_value;
     }
     if (message.bool_value !== undefined) {
-      obj.bool_value = message.bool_value;
+      obj.boolValue = message.bool_value;
     }
     if (message.struct_value !== undefined) {
-      obj.struct_value = message.struct_value;
+      obj.structValue = message.struct_value;
     }
     if (message.list_value !== undefined) {
-      obj.list_value = message.list_value;
+      obj.listValue = message.list_value;
     }
     return obj;
   },
@@ -482,7 +509,7 @@ export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ListValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue();
     while (reader.pos < end) {
       const tag = reader.uint32();

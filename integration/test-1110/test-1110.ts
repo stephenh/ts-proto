@@ -53,7 +53,7 @@ export const UserRule: MessageFns<UserRule> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): UserRule {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserRule();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -76,7 +76,13 @@ export const UserRule: MessageFns<UserRule> = {
   },
 
   fromJSON(object: any): UserRule {
-    return { UUID: isSet(object.uuid) ? globalThis.String(object.uuid) : "" };
+    return {
+      UUID: isSet(object.uuid)
+        ? globalThis.String(object.uuid)
+        : isSet(object.UUID)
+        ? globalThis.String(object.UUID)
+        : "",
+    };
   },
 
   toJSON(message: UserRule): unknown {
@@ -114,7 +120,7 @@ export const Object: MessageFns<Object> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Object {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseObject();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -190,7 +196,7 @@ export const Boolean: MessageFns<Boolean> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Boolean {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBoolean();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -266,7 +272,7 @@ export const Symbol: MessageFns<Symbol> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Symbol {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSymbol();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -342,7 +348,7 @@ export const FunctionMessage: MessageFns<FunctionMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FunctionMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFunctionMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -412,7 +418,7 @@ export const Nested: MessageFns<Nested> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -461,7 +467,7 @@ export const Nested_Function: MessageFns<Nested_Function> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested_Function {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_Function();
     while (reader.pos < end) {
       const tag = reader.uint32();

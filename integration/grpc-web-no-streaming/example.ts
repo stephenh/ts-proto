@@ -89,7 +89,7 @@ export const DashFlash: MessageFns<DashFlash> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashFlash {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashFlash();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -168,7 +168,7 @@ export const DashUserSettingsState: MessageFns<DashUserSettingsState> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashUserSettingsState {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -259,7 +259,7 @@ export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> 
 
   decode(input: BinaryReader | Uint8Array, length?: number): DashUserSettingsState_URLs {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -291,8 +291,16 @@ export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> 
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? globalThis.String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? globalThis.String(object.connectGithub) : "",
+      connectGoogle: isSet(object.connectGoogle)
+        ? globalThis.String(object.connectGoogle)
+        : isSet(object.connect_google)
+        ? globalThis.String(object.connect_google)
+        : "",
+      connectGithub: isSet(object.connectGithub)
+        ? globalThis.String(object.connectGithub)
+        : isSet(object.connect_github)
+        ? globalThis.String(object.connect_github)
+        : "",
     };
   },
 
@@ -329,7 +337,7 @@ export const Empty: MessageFns<Empty> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Empty {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();

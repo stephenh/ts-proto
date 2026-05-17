@@ -25,7 +25,7 @@ export const FieldMaskMessage: MessageFns<FieldMaskMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): FieldMaskMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldMaskMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -48,7 +48,13 @@ export const FieldMaskMessage: MessageFns<FieldMaskMessage> = {
   },
 
   fromJSON(object: any): FieldMaskMessage {
-    return { fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined };
+    return {
+      fieldMask: isSet(object.fieldMask)
+        ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask))
+        : isSet(object.field_mask)
+        ? FieldMask.unwrap(FieldMask.fromJSON(object.field_mask))
+        : undefined,
+    };
   },
 
   toJSON(message: FieldMaskMessage): unknown {

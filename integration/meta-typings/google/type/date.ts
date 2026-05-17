@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto } from "ts-proto-descriptors";
+import type { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.type";
 
@@ -58,7 +58,7 @@ export const DateMessage: MessageFns<DateMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DateMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDateMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -125,6 +125,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": [],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "Date",
       "field": [{
@@ -172,6 +173,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [],
     "service": [],
@@ -187,7 +189,6 @@ export const protoMetadata: ProtoMetadata = {
       "ccGenericServices": false,
       "javaGenericServices": false,
       "pyGenericServices": false,
-      "phpGenericServices": false,
       "deprecated": false,
       "ccEnableArenas": true,
       "objcClassPrefix": "GTP",
@@ -197,6 +198,7 @@ export const protoMetadata: ProtoMetadata = {
       "phpNamespace": "",
       "phpMetadataNamespace": "",
       "rubyPackage": "",
+      "features": undefined,
       "uninterpretedOption": [],
     },
     "sourceCodeInfo": {
@@ -230,6 +232,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: { ".google.type.DateMessage": DateMessage },
   dependencies: [],

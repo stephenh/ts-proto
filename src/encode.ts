@@ -17,7 +17,8 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
     if (
       ctx.options.useDate === DateOption.DATE ||
       ctx.options.useDate === DateOption.STRING ||
-      ctx.options.useDate === DateOption.STRING_NANO
+      ctx.options.useDate === DateOption.STRING_NANO ||
+      ctx.options.useDate === DateOption.TEMPORAL
     ) {
       value = code`${ctx.utils.toTimestamp}(${value})`;
     }
@@ -76,7 +77,8 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
     if (
       ctx.options.useDate === DateOption.DATE ||
       ctx.options.useDate === DateOption.STRING ||
-      ctx.options.useDate === DateOption.STRING_NANO
+      ctx.options.useDate === DateOption.STRING_NANO ||
+      ctx.options.useDate === DateOption.TEMPORAL
     ) {
       return code`${ctx.utils.fromTimestamp}(${decoder})`;
     }

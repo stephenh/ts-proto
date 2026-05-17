@@ -135,7 +135,7 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -240,16 +240,40 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
   fromJSON(object: any): PleaseChoose {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      aNumber: isSet(object.aNumber) ? globalThis.Number(object.aNumber) : undefined,
-      aString: isSet(object.aString) ? globalThis.String(object.aString) : undefined,
-      aMessage: isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined,
-      aBool: isSet(object.aBool) ? globalThis.Boolean(object.aBool) : undefined,
-      bunchaBytes: isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined,
+      aNumber: isSet(object.aNumber)
+        ? globalThis.Number(object.aNumber)
+        : isSet(object.a_number)
+        ? globalThis.Number(object.a_number)
+        : undefined,
+      aString: isSet(object.aString)
+        ? globalThis.String(object.aString)
+        : isSet(object.a_string)
+        ? globalThis.String(object.a_string)
+        : undefined,
+      aMessage: isSet(object.aMessage)
+        ? PleaseChoose_Submessage.fromJSON(object.aMessage)
+        : isSet(object.a_message)
+        ? PleaseChoose_Submessage.fromJSON(object.a_message)
+        : undefined,
+      aBool: isSet(object.aBool)
+        ? globalThis.Boolean(object.aBool)
+        : isSet(object.a_bool)
+        ? globalThis.Boolean(object.a_bool)
+        : undefined,
+      bunchaBytes: isSet(object.bunchaBytes)
+        ? bytesFromBase64(object.bunchaBytes)
+        : isSet(object.buncha_bytes)
+        ? bytesFromBase64(object.buncha_bytes)
+        : undefined,
       anEnum: isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined,
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       either: isSet(object.either) ? globalThis.String(object.either) : undefined,
       or: isSet(object.or) ? globalThis.String(object.or) : undefined,
-      thirdOption: isSet(object.thirdOption) ? globalThis.String(object.thirdOption) : undefined,
+      thirdOption: isSet(object.thirdOption)
+        ? globalThis.String(object.thirdOption)
+        : isSet(object.third_option)
+        ? globalThis.String(object.third_option)
+        : undefined,
     };
   },
 
@@ -327,7 +351,7 @@ export const PleaseChoose_Submessage: MessageFns<PleaseChoose_Submessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -373,7 +397,7 @@ export const PleaseChoose_Submessage: MessageFns<PleaseChoose_Submessage> = {
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -386,7 +410,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+    return (globalThis as any).Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {

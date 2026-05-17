@@ -68,7 +68,11 @@ describe("types", () => {
           options: defaultOptions(),
           utils: undefined as any as Utils,
           ...t,
-          currentFile: { isProto3Syntax: false },
+          currentFile: {
+            isProto3Syntax: false,
+            isEdition: false,
+            edition: undefined,
+          },
         };
         const got = messageToTypeName(ctx, t.protoType);
         expect(got.toString()).toEqual(t.expected.toString());

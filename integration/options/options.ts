@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
+import type { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 import { protoMetadata as protoMetadata2, Something } from "./something/something";
 
@@ -51,7 +51,7 @@ export const MyMessage: MessageFns<MyMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MyMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -109,7 +109,7 @@ export const RequestType: MessageFns<RequestType> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): RequestType {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -135,7 +135,7 @@ export const ResponseType: MessageFns<ResponseType> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): ResponseType {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -202,6 +202,7 @@ export const protoMetadata: ProtoMetadata = {
     "dependency": ["google/protobuf/descriptor.proto", "something/something.proto"],
     "publicDependency": [],
     "weakDependency": [],
+    "optionDependency": [],
     "messageType": [{
       "name": "MyMessage",
       "field": [{
@@ -219,8 +220,15 @@ export const protoMetadata: ProtoMetadata = {
           "packed": false,
           "jstype": 0,
           "lazy": false,
+          "unverifiedLazy": false,
           "deprecated": false,
           "weak": false,
+          "debugRedact": false,
+          "retention": 0,
+          "targets": [],
+          "editionDefaults": [],
+          "features": undefined,
+          "featureSupport": undefined,
           "uninterpretedOption": [],
         },
         "proto3Optional": true,
@@ -239,8 +247,15 @@ export const protoMetadata: ProtoMetadata = {
           "packed": false,
           "jstype": 0,
           "lazy": false,
+          "unverifiedLazy": false,
           "deprecated": false,
           "weak": false,
+          "debugRedact": false,
+          "retention": 0,
+          "targets": [],
+          "editionDefaults": [],
+          "features": undefined,
+          "featureSupport": undefined,
           "uninterpretedOption": [],
         },
         "proto3Optional": true,
@@ -274,7 +289,7 @@ export const protoMetadata: ProtoMetadata = {
       "enumType": [],
       "extensionRange": [],
       "oneofDecl": [
-        { "name": "qux", "options": { "uninterpretedOption": [] } },
+        { "name": "qux", "options": { "features": undefined, "uninterpretedOption": [] } },
         { "name": "_foo", "options": undefined },
         { "name": "_foo_2", "options": undefined },
         { "name": "_bar", "options": undefined },
@@ -284,10 +299,13 @@ export const protoMetadata: ProtoMetadata = {
         "noStandardDescriptorAccessor": false,
         "deprecated": false,
         "mapEntry": false,
+        "deprecatedLegacyJsonFieldConflicts": false,
+        "features": undefined,
         "uninterpretedOption": [],
       },
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "RequestType",
       "field": [],
@@ -299,6 +317,7 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }, {
       "name": "ResponseType",
       "field": [],
@@ -310,17 +329,31 @@ export const protoMetadata: ProtoMetadata = {
       "options": undefined,
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "enumType": [{
       "name": "MyEnum",
-      "value": [{ "name": "FOO", "number": 0, "options": { "deprecated": false, "uninterpretedOption": [] } }, {
-        "name": "BAR",
-        "number": 1,
-        "options": undefined,
-      }],
-      "options": { "allowAlias": false, "deprecated": false, "uninterpretedOption": [] },
+      "value": [{
+        "name": "FOO",
+        "number": 0,
+        "options": {
+          "deprecated": false,
+          "features": undefined,
+          "debugRedact": false,
+          "featureSupport": undefined,
+          "uninterpretedOption": [],
+        },
+      }, { "name": "BAR", "number": 1, "options": undefined }],
+      "options": {
+        "allowAlias": false,
+        "deprecated": false,
+        "deprecatedLegacyJsonFieldConflicts": false,
+        "features": undefined,
+        "uninterpretedOption": [],
+      },
       "reservedRange": [],
       "reservedName": [],
+      "visibility": 0,
     }],
     "service": [{
       "name": "MyService",
@@ -328,11 +361,11 @@ export const protoMetadata: ProtoMetadata = {
         "name": "MyMethod",
         "inputType": ".RequestType",
         "outputType": ".ResponseType",
-        "options": { "deprecated": false, "idempotencyLevel": 0, "uninterpretedOption": [] },
+        "options": { "deprecated": false, "idempotencyLevel": 0, "features": undefined, "uninterpretedOption": [] },
         "clientStreaming": false,
         "serverStreaming": false,
       }],
-      "options": { "deprecated": false, "uninterpretedOption": [] },
+      "options": { "features": undefined, "deprecated": false, "uninterpretedOption": [] },
     }],
     "extension": [{
       "name": "my_file_option",
@@ -442,7 +475,6 @@ export const protoMetadata: ProtoMetadata = {
       "ccGenericServices": false,
       "javaGenericServices": false,
       "pyGenericServices": false,
-      "phpGenericServices": false,
       "deprecated": false,
       "ccEnableArenas": true,
       "objcClassPrefix": "",
@@ -452,10 +484,12 @@ export const protoMetadata: ProtoMetadata = {
       "phpNamespace": "",
       "phpMetadataNamespace": "",
       "rubyPackage": "",
+      "features": undefined,
       "uninterpretedOption": [],
     },
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
+    "edition": 0,
   },
   references: {
     ".MyEnum": MyEnum,
@@ -493,7 +527,7 @@ export const protoMetadata: ProtoMetadata = {
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);

@@ -179,7 +179,7 @@ export const Version: MessageFns<Version> = {
       writer.uint32(34).string(message.suffix);
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -191,7 +191,7 @@ export const Version: MessageFns<Version> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Version {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -265,7 +265,7 @@ export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -277,7 +277,7 @@ export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -348,7 +348,7 @@ export const CodeGeneratorResponse: MessageFns<CodeGeneratorResponse> = {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -360,7 +360,7 @@ export const CodeGeneratorResponse: MessageFns<CodeGeneratorResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -426,7 +426,7 @@ export const CodeGeneratorResponse_File: MessageFns<CodeGeneratorResponse_File> 
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).join();
     }
     if (message._unknownFields !== undefined) {
-      for (const [key, values] of Object.entries(message._unknownFields)) {
+      for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag).raw(value);
@@ -438,7 +438,7 @@ export const CodeGeneratorResponse_File: MessageFns<CodeGeneratorResponse_File> 
 
   decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse_File {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
     while (reader.pos < end) {
       const tag = reader.uint32();

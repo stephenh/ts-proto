@@ -69,7 +69,7 @@ export const PrefixAwesomeMessageSuffix: MessageFns<PrefixAwesomeMessageSuffix> 
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixAwesomeMessageSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixAwesomeMessageSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -112,7 +112,7 @@ export const PrefixAwesomeMessage_InnerSuffix: MessageFns<PrefixAwesomeMessage_I
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixAwesomeMessage_InnerSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixAwesomeMessage_InnerSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -165,7 +165,7 @@ export const PrefixGoogleSuffix: MessageFns<PrefixGoogleSuffix> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PrefixGoogleSuffix {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrefixGoogleSuffix();
     while (reader.pos < end) {
       const tag = reader.uint32();

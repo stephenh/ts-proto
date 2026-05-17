@@ -55,7 +55,7 @@ describe("extensions-test", () => {
 
     expect(extension).toEqual(extensionData);
 
-    expect(Extendable.getExtension(result, repeated)).toEqual([1, 1, 2, 3, 5]);
+    expect(Extendable.getExtension(result, repeated)).toEqual([2, 3, 5, 1, 1]);
 
     const unsetExtension = Extendable.getExtension(result, Nested.message);
 

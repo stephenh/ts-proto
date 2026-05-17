@@ -296,7 +296,7 @@ export const Simple: MessageFns<Simple> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Simple {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -414,16 +414,24 @@ export const Simple: MessageFns<Simple> = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       age: isSet(object.age) ? globalThis.Number(object.age) : 0,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : isSet(object.created_at)
+        ? fromJsonTimestamp(object.created_at)
+        : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       grandChildren: globalThis.Array.isArray(object?.grandChildren)
         ? object.grandChildren.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.grand_children)
+        ? object.grand_children.map((e: any) => Child.fromJSON(e))
         : [],
       coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => globalThis.Number(e)) : [],
       snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => globalThis.String(e)) : [],
       oldStates: globalThis.Array.isArray(object?.oldStates)
         ? object.oldStates.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.old_states)
+        ? object.old_states.map((e: any) => stateEnumFromJSON(e))
         : [],
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
     };
@@ -502,7 +510,7 @@ export const Child: MessageFns<Child> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -581,7 +589,7 @@ export const Nested: MessageFns<Nested> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -672,7 +680,7 @@ export const Nested_InnerMessage: MessageFns<Nested_InnerMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested_InnerMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -747,7 +755,7 @@ export const Nested_InnerMessage_DeepMessage: MessageFns<Nested_InnerMessage_Dee
 
   decode(input: BinaryReader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage_DeepMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -810,7 +818,7 @@ export const OneOfMessage: MessageFns<OneOfMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): OneOfMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneOfMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -895,7 +903,7 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1007,7 +1015,7 @@ export const Entity: MessageFns<Entity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Entity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1057,13 +1065,13 @@ function createBaseSimpleWithMap(): SimpleWithMap {
 
 export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entitiesById).forEach(([key, value]: [string, Entity]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
-    Object.entries(message.nameLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.nameLookup).forEach(([key, value]: [string, string]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
-    Object.entries(message.intLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.intLookup).forEach(([key, value]: [string, number]) => {
       SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     return writer;
@@ -1071,7 +1079,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1121,22 +1129,31 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   fromJSON(object: any): SimpleWithMap {
     return {
       entitiesById: isObject(object.entitiesById)
-        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Entity.fromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       nameLookup: isObject(object.nameLookup)
-        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.nameLookup) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       intLookup: isObject(object.intLookup)
-        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Number(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.intLookup) as [string, any][]).reduce(
+          (acc: { [key: number]: number }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = globalThis.Number(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -1144,7 +1161,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
     if (message.entitiesById) {
-      const entries = Object.entries(message.entitiesById);
+      const entries = globalThis.Object.entries(message.entitiesById) as [string, Entity][];
       if (entries.length > 0) {
         obj.entitiesById = {};
         entries.forEach(([k, v]) => {
@@ -1153,7 +1170,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.nameLookup) {
-      const entries = Object.entries(message.nameLookup);
+      const entries = globalThis.Object.entries(message.nameLookup) as [string, string][];
       if (entries.length > 0) {
         obj.nameLookup = {};
         entries.forEach(([k, v]) => {
@@ -1162,7 +1179,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.intLookup) {
-      const entries = Object.entries(message.intLookup);
+      const entries = globalThis.Object.entries(message.intLookup) as [string, number][];
       if (entries.length > 0) {
         obj.intLookup = {};
         entries.forEach(([k, v]) => {
@@ -1178,8 +1195,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   },
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = createBaseSimpleWithMap();
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
-      (acc, [key, value]) => {
+    message.entitiesById = (globalThis.Object.entries(object.entitiesById ?? {}) as [string, Entity][]).reduce(
+      (acc: { [key: number]: Entity }, [key, value]: [string, Entity]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = Entity.fromPartial(value);
         }
@@ -1187,8 +1204,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.nameLookup = (globalThis.Object.entries(object.nameLookup ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = globalThis.String(value);
         }
@@ -1196,8 +1213,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
+    message.intLookup = (globalThis.Object.entries(object.intLookup ?? {}) as [string, number][]).reduce(
+      (acc: { [key: number]: number }, [key, value]: [string, number]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = globalThis.Number(value);
         }
@@ -1226,7 +1243,7 @@ export const SimpleWithMap_EntitiesByIdEntry: MessageFns<SimpleWithMap_EntitiesB
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1306,7 +1323,7 @@ export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1384,7 +1401,7 @@ export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEnt
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1449,7 +1466,7 @@ function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
 
 export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   encode(message: SimpleWithSnakeCaseMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    globalThis.Object.entries(message.entitiesById).forEach(([key, value]: [string, Entity]) => {
       SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
@@ -1457,7 +1474,7 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1485,10 +1502,21 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     return {
       entitiesById: isObject(object.entitiesById)
-        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Entity.fromJSON(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.entities_by_id)
+        ? (globalThis.Object.entries(object.entities_by_id) as [string, any][]).reduce(
+          (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -1496,7 +1524,7 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
     const obj: any = {};
     if (message.entitiesById) {
-      const entries = Object.entries(message.entitiesById);
+      const entries = globalThis.Object.entries(message.entitiesById) as [string, Entity][];
       if (entries.length > 0) {
         obj.entitiesById = {};
         entries.forEach(([k, v]) => {
@@ -1512,8 +1540,8 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   },
   fromPartial<I extends Exact<DeepPartial<SimpleWithSnakeCaseMap>, I>>(object: I): SimpleWithSnakeCaseMap {
     const message = createBaseSimpleWithSnakeCaseMap();
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
-      (acc, [key, value]) => {
+    message.entitiesById = (globalThis.Object.entries(object.entitiesById ?? {}) as [string, Entity][]).reduce(
+      (acc: { [key: number]: Entity }, [key, value]: [string, Entity]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = Entity.fromPartial(value);
         }
@@ -1542,7 +1570,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry: MessageFns<SimpleWithSnak
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1621,7 +1649,7 @@ export const PingRequest: MessageFns<PingRequest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PingRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1679,7 +1707,7 @@ export const PingResponse: MessageFns<PingResponse> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): PingResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1783,7 +1811,7 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();

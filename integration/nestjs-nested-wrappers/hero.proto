@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+package hero;
+
+service HeroService {
+    rpc FindOneHero (HeroById) returns (Hero) {}
+}
+
+message HeroById {
+    int32 id = 1;
+}
+
+message Hero {
+    int32 id = 1;
+    Metadata metadata = 2;
+
+    message Metadata {
+        google.protobuf.Timestamp birth_date = 1;
+        google.protobuf.Struct external_data = 2;
+    }
+}

@@ -39,7 +39,7 @@ export const Todo: MessageFns<Todo> = {
     if (message.optionalTimestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.optionalTimestamp), writer.uint32(34).fork()).join();
     }
-    Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
+    globalThis.Object.entries(message.mapOfTimestamps).forEach(([key, value]: [string, Date]) => {
       Todo_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
@@ -47,7 +47,7 @@ export const Todo: MessageFns<Todo> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -110,13 +110,30 @@ export const Todo: MessageFns<Todo> = {
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       repeatedTimestamp: globalThis.Array.isArray(object?.repeatedTimestamp)
         ? object.repeatedTimestamp.map((e: any) => fromJsonTimestamp(e))
+        : globalThis.Array.isArray(object?.repeated_timestamp)
+        ? object.repeated_timestamp.map((e: any) => fromJsonTimestamp(e))
         : [],
-      optionalTimestamp: isSet(object.optionalTimestamp) ? fromJsonTimestamp(object.optionalTimestamp) : undefined,
+      optionalTimestamp: isSet(object.optionalTimestamp)
+        ? fromJsonTimestamp(object.optionalTimestamp)
+        : isSet(object.optional_timestamp)
+        ? fromJsonTimestamp(object.optional_timestamp)
+        : undefined,
       mapOfTimestamps: isObject(object.mapOfTimestamps)
-        ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date }>((acc, [key, value]) => {
-          acc[key] = fromJsonTimestamp(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
+          (acc: { [key: string]: Date }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonTimestamp(value);
+            return acc;
+          },
+          {},
+        )
+        : isObject(object.map_of_timestamps)
+        ? (globalThis.Object.entries(object.map_of_timestamps) as [string, any][]).reduce(
+          (acc: { [key: string]: Date }, [key, value]: [string, any]) => {
+            acc[key] = fromJsonTimestamp(value);
+            return acc;
+          },
+          {},
+        )
         : {},
     };
   },
@@ -136,7 +153,7 @@ export const Todo: MessageFns<Todo> = {
       obj.optionalTimestamp = message.optionalTimestamp.toISOString();
     }
     if (message.mapOfTimestamps) {
-      const entries = Object.entries(message.mapOfTimestamps);
+      const entries = globalThis.Object.entries(message.mapOfTimestamps) as [string, Date][];
       if (entries.length > 0) {
         obj.mapOfTimestamps = {};
         entries.forEach(([k, v]) => {
@@ -156,8 +173,8 @@ export const Todo: MessageFns<Todo> = {
     message.timestamp = object.timestamp ?? undefined;
     message.repeatedTimestamp = object.repeatedTimestamp?.map((e) => e) || [];
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
-    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
-      (acc, [key, value]) => {
+    message.mapOfTimestamps = (globalThis.Object.entries(object.mapOfTimestamps ?? {}) as [string, Date][]).reduce(
+      (acc: { [key: string]: Date }, [key, value]: [string, Date]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
@@ -186,7 +203,7 @@ export const Todo_MapOfTimestampsEntry: MessageFns<Todo_MapOfTimestampsEntry> = 
 
   decode(input: BinaryReader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -272,9 +289,9 @@ export const ClockDefinition = {
   methods: {
     now: {
       name: "Now",
-      requestType: Empty,
+      requestType: Empty as typeof Empty,
       requestStream: false,
-      responseType: Timestamp,
+      responseType: Timestamp as typeof Timestamp,
       responseStream: false,
       options: {},
     },

@@ -44,8 +44,8 @@ export function generateEnum(
   if (options.unrecognizedEnum && !unrecognizedEnum.present) {
     chunks.push(code`
       ${options.unrecognizedEnumName} ${delimiter} ${
-      options.stringEnums ? `"${options.unrecognizedEnumName}"` : options.unrecognizedEnumValue.toString()
-    },`);
+        options.stringEnums ? `"${options.unrecognizedEnumName}"` : options.unrecognizedEnumValue.toString()
+      },`);
   }
 
   if (options.enumsAsLiterals) {
@@ -256,13 +256,23 @@ export function generateEnumToNumber(
   return joinCode(chunks, { on: "\n" });
 }
 
+const withoutEnumPrefix = (valueName: string, enumName: string) => valueName.replace(`${camelToSnake(enumName)}_`, "");
+
+const isNumeric = (str: string) => !isNaN(Number(str));
+
 export function getMemberName(
   ctx: Context,
   enumDesc: EnumDescriptorProto,
   valueDesc: EnumValueDescriptorProto,
 ): string {
-  if (ctx.options.removeEnumPrefix) {
-    return valueDesc.name.replace(`${camelToSnake(enumDesc.name)}_`, "");
+  const areAnyMembersNumericWithoutPrefix = enumDesc.value.some((v) => {
+    const withoutPrefix = withoutEnumPrefix(v.name, enumDesc.name);
+    return isNumeric(withoutPrefix) || isNumeric(withoutPrefix[0]);
+  });
+
+  const nameWithoutPrefix = withoutEnumPrefix(valueDesc.name, enumDesc.name);
+  if (ctx.options.removeEnumPrefix && !areAnyMembersNumericWithoutPrefix) {
+    return nameWithoutPrefix;
   }
   return valueDesc.name;
 }

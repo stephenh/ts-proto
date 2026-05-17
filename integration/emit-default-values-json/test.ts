@@ -181,7 +181,7 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
     if (message.optData !== undefined) {
       writer.uint32(218).bytes(message.optData);
     }
-    Object.entries(message.translations).forEach(([key, value]) => {
+    globalThis.Object.entries(message.translations).forEach(([key, value]: [string, string]) => {
       DefaultValuesTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).join();
     });
     if (message.timestamp !== undefined) {
@@ -192,7 +192,7 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DefaultValuesTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDefaultValuesTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -442,29 +442,84 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
       truth: isSet(object.truth) ? globalThis.Boolean(object.truth) : false,
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
-      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => globalThis.Number(e)) : [],
-      repChild: globalThis.Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
-      repState: globalThis.Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
-      repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => globalThis.Number(e)) : [],
+      repId: globalThis.Array.isArray(object?.repId)
+        ? object.repId.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_id)
+        ? object.rep_id.map((e: any) => globalThis.Number(e))
+        : [],
+      repChild: globalThis.Array.isArray(object?.repChild)
+        ? object.repChild.map((e: any) => Child.fromJSON(e))
+        : globalThis.Array.isArray(object?.rep_child)
+        ? object.rep_child.map((e: any) => Child.fromJSON(e))
+        : [],
+      repState: globalThis.Array.isArray(object?.repState)
+        ? object.repState.map((e: any) => stateEnumFromJSON(e))
+        : globalThis.Array.isArray(object?.rep_state)
+        ? object.rep_state.map((e: any) => stateEnumFromJSON(e))
+        : [],
+      repLong: globalThis.Array.isArray(object?.repLong)
+        ? object.repLong.map((e: any) => globalThis.Number(e))
+        : globalThis.Array.isArray(object?.rep_long)
+        ? object.rep_long.map((e: any) => globalThis.Number(e))
+        : [],
       repTruth: globalThis.Array.isArray(object?.repTruth)
         ? object.repTruth.map((e: any) => globalThis.Boolean(e))
+        : globalThis.Array.isArray(object?.rep_truth)
+        ? object.rep_truth.map((e: any) => globalThis.Boolean(e))
         : [],
       repDescription: globalThis.Array.isArray(object?.repDescription)
         ? object.repDescription.map((e: any) => globalThis.String(e))
+        : globalThis.Array.isArray(object?.rep_description)
+        ? object.rep_description.map((e: any) => globalThis.String(e))
         : [],
-      repData: globalThis.Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
-      optId: isSet(object.optId) ? globalThis.Number(object.optId) : undefined,
-      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
-      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
-      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : undefined,
-      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : undefined,
-      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : undefined,
-      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
+      repData: globalThis.Array.isArray(object?.repData)
+        ? object.repData.map((e: any) => bytesFromBase64(e))
+        : globalThis.Array.isArray(object?.rep_data)
+        ? object.rep_data.map((e: any) => bytesFromBase64(e))
+        : [],
+      optId: isSet(object.optId)
+        ? globalThis.Number(object.optId)
+        : isSet(object.opt_id)
+        ? globalThis.Number(object.opt_id)
+        : undefined,
+      optChild: isSet(object.optChild)
+        ? Child.fromJSON(object.optChild)
+        : isSet(object.opt_child)
+        ? Child.fromJSON(object.opt_child)
+        : undefined,
+      optState: isSet(object.optState)
+        ? stateEnumFromJSON(object.optState)
+        : isSet(object.opt_state)
+        ? stateEnumFromJSON(object.opt_state)
+        : undefined,
+      optLong: isSet(object.optLong)
+        ? globalThis.Number(object.optLong)
+        : isSet(object.opt_long)
+        ? globalThis.Number(object.opt_long)
+        : undefined,
+      optTruth: isSet(object.optTruth)
+        ? globalThis.Boolean(object.optTruth)
+        : isSet(object.opt_truth)
+        ? globalThis.Boolean(object.opt_truth)
+        : undefined,
+      optDescription: isSet(object.optDescription)
+        ? globalThis.String(object.optDescription)
+        : isSet(object.opt_description)
+        ? globalThis.String(object.opt_description)
+        : undefined,
+      optData: isSet(object.optData)
+        ? bytesFromBase64(object.optData)
+        : isSet(object.opt_data)
+        ? bytesFromBase64(object.opt_data)
+        : undefined,
       translations: isObject(object.translations)
-        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.translations) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
     };
@@ -536,7 +591,7 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
       obj.optData = base64FromBytes(message.optData);
     }
     if (message.translations) {
-      const entries = Object.entries(message.translations);
+      const entries = globalThis.Object.entries(message.translations) as [string, string][];
       if (entries.length > 0) {
         obj.translations = {};
         entries.forEach(([k, v]) => {
@@ -578,8 +633,8 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
     message.optTruth = object.optTruth ?? undefined;
     message.optDescription = object.optDescription ?? undefined;
     message.optData = object.optData ?? undefined;
-    message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.translations = (globalThis.Object.entries(object.translations ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = globalThis.String(value);
         }
@@ -609,7 +664,7 @@ export const DefaultValuesTest_TranslationsEntry: MessageFns<DefaultValuesTest_T
 
   decode(input: BinaryReader | Uint8Array, length?: number): DefaultValuesTest_TranslationsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDefaultValuesTest_TranslationsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -683,7 +738,7 @@ export const Child: MessageFns<Child> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -717,7 +772,7 @@ export const Child: MessageFns<Child> = {
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -730,7 +785,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+    return (globalThis as any).Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {

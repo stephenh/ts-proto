@@ -60,7 +60,7 @@ export const Entity: MessageFns<Entity> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Entity {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -140,7 +140,7 @@ export const Maps: MessageFns<Maps> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -220,34 +220,89 @@ export const Maps: MessageFns<Maps> = {
   fromJSON(object: any): Maps {
     return {
       strToEntity: isObject(object.strToEntity)
-        ? Object.entries(object.strToEntity).reduce<Map<string, Entity>>((acc, [key, value]) => {
-          acc.set(key, Entity.fromJSON(value));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.strToEntity) as [string, any][]).reduce(
+          (acc: Map<string, Entity>, [key, value]: [string, any]) => {
+            acc.set(key, Entity.fromJSON(value));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.str_to_entity)
+        ? (globalThis.Object.entries(object.str_to_entity) as [string, any][]).reduce(
+          (acc: Map<string, Entity>, [key, value]: [string, any]) => {
+            acc.set(key, Entity.fromJSON(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       int32ToInt32: isObject(object.int32ToInt32)
-        ? Object.entries(object.int32ToInt32).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(globalThis.Number(key), Number(value));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.int32ToInt32) as [string, any][]).reduce(
+          (acc: Map<number, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Number(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.int32_to_int32)
+        ? (globalThis.Object.entries(object.int32_to_int32) as [string, any][]).reduce(
+          (acc: Map<number, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Number(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       stringToBytes: isObject(object.stringToBytes)
-        ? Object.entries(object.stringToBytes).reduce<Map<string, Uint8Array>>((acc, [key, value]) => {
-          acc.set(key, bytesFromBase64(value as string));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.stringToBytes) as [string, any][]).reduce(
+          (acc: Map<string, Uint8Array>, [key, value]: [string, any]) => {
+            acc.set(key, bytesFromBase64(value as string));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.string_to_bytes)
+        ? (globalThis.Object.entries(object.string_to_bytes) as [string, any][]).reduce(
+          (acc: Map<string, Uint8Array>, [key, value]: [string, any]) => {
+            acc.set(key, bytesFromBase64(value as string));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       int64ToInt64: isObject(object.int64ToInt64)
-        ? Object.entries(object.int64ToInt64).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(globalThis.Number(key), Number(value));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.int64ToInt64) as [string, any][]).reduce(
+          (acc: Map<number, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Number(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.int64_to_int64)
+        ? (globalThis.Object.entries(object.int64_to_int64) as [string, any][]).reduce(
+          (acc: Map<number, number>, [key, value]: [string, any]) => {
+            acc.set(globalThis.Number(key), globalThis.Number(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       mapOfTimestamps: isObject(object.mapOfTimestamps)
-        ? Object.entries(object.mapOfTimestamps).reduce<Map<string, Date>>((acc, [key, value]) => {
-          acc.set(key, fromJsonTimestamp(value));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
+          (acc: Map<string, Date>, [key, value]: [string, any]) => {
+            acc.set(key, fromJsonTimestamp(value));
+            return acc;
+          },
+          new Map(),
+        )
+        : isObject(object.map_of_timestamps)
+        ? (globalThis.Object.entries(object.map_of_timestamps) as [string, any][]).reduce(
+          (acc: Map<string, Date>, [key, value]: [string, any]) => {
+            acc.set(key, fromJsonTimestamp(value));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
       struct: isObject(object.struct) ? object.struct : undefined,
     };
@@ -363,7 +418,7 @@ export const Maps_StrToEntityEntry: MessageFns<Maps_StrToEntityEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_StrToEntityEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_StrToEntityEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -441,7 +496,7 @@ export const Maps_Int32ToInt32Entry: MessageFns<Maps_Int32ToInt32Entry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_Int32ToInt32Entry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_Int32ToInt32Entry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -517,7 +572,7 @@ export const Maps_StringToBytesEntry: MessageFns<Maps_StringToBytesEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_StringToBytesEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_StringToBytesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -593,7 +648,7 @@ export const Maps_Int64ToInt64Entry: MessageFns<Maps_Int64ToInt64Entry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_Int64ToInt64Entry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_Int64ToInt64Entry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -669,7 +724,7 @@ export const Maps_MapOfTimestampsEntry: MessageFns<Maps_MapOfTimestampsEntry> = 
 
   decode(input: BinaryReader | Uint8Array, length?: number): Maps_MapOfTimestampsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -730,7 +785,7 @@ export const Maps_MapOfTimestampsEntry: MessageFns<Maps_MapOfTimestampsEntry> = 
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -743,7 +798,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+    return (globalThis as any).Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {

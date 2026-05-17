@@ -41,7 +41,7 @@ export const HeroById: MessageFns<HeroById> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): HeroById {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -99,7 +99,7 @@ export const VillainById: MessageFns<VillainById> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): VillainById {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -160,7 +160,7 @@ export const Hero: MessageFns<Hero> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Hero {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -236,7 +236,7 @@ export const Villain: MessageFns<Villain> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Villain {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -338,25 +338,25 @@ export const HeroServiceDefinition = {
   methods: {
     findOneHero: {
       name: "FindOneHero",
-      requestType: HeroById,
+      requestType: HeroById as typeof HeroById,
       requestStream: false,
-      responseType: Hero,
+      responseType: Hero as typeof Hero,
       responseStream: false,
       options: {},
     },
     findOneVillain: {
       name: "FindOneVillain",
-      requestType: VillainById,
+      requestType: VillainById as typeof VillainById,
       requestStream: false,
-      responseType: Villain,
+      responseType: Villain as typeof Villain,
       responseStream: false,
       options: {},
     },
     findManyVillain: {
       name: "FindManyVillain",
-      requestType: VillainById,
+      requestType: VillainById as typeof VillainById,
       requestStream: true,
-      responseType: Villain,
+      responseType: Villain as typeof Villain,
       responseStream: true,
       options: {},
     },

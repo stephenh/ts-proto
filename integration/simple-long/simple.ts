@@ -84,7 +84,7 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -203,10 +203,10 @@ function createBaseSimpleWithMap(): SimpleWithMap {
 
 export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    Object.entries(message.nameLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.nameLookup).forEach(([key, value]: [string, string]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
-    Object.entries(message.intLookup).forEach(([key, value]) => {
+    globalThis.Object.entries(message.intLookup).forEach(([key, value]: [string, number]) => {
       SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     message.longLookup.forEach((value, key) => {
@@ -217,7 +217,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -267,22 +267,31 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   fromJSON(object: any): SimpleWithMap {
     return {
       nameLookup: isObject(object.nameLookup)
-        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.nameLookup) as [string, any][]).reduce(
+          (acc: { [key: string]: string }, [key, value]: [string, any]) => {
+            acc[key] = globalThis.String(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       intLookup: isObject(object.intLookup)
-        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Number(value);
-          return acc;
-        }, {})
+        ? (globalThis.Object.entries(object.intLookup) as [string, any][]).reduce(
+          (acc: { [key: number]: number }, [key, value]: [string, any]) => {
+            acc[globalThis.Number(key)] = globalThis.Number(value);
+            return acc;
+          },
+          {},
+        )
         : {},
       longLookup: isObject(object.longLookup)
-        ? Object.entries(object.longLookup).reduce<Map<Long, Long>>((acc, [key, value]) => {
-          acc.set(Long.fromValue(key), Long.fromValue(value as Long | string));
-          return acc;
-        }, new Map())
+        ? (globalThis.Object.entries(object.longLookup) as [string, any][]).reduce(
+          (acc: Map<Long, Long>, [key, value]: [string, any]) => {
+            acc.set(Long.fromValue(key), Long.fromValue(value as Long | string));
+            return acc;
+          },
+          new Map(),
+        )
         : new Map(),
     };
   },
@@ -290,7 +299,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
     if (message.nameLookup) {
-      const entries = Object.entries(message.nameLookup);
+      const entries = globalThis.Object.entries(message.nameLookup) as [string, string][];
       if (entries.length > 0) {
         obj.nameLookup = {};
         entries.forEach(([k, v]) => {
@@ -299,7 +308,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       }
     }
     if (message.intLookup) {
-      const entries = Object.entries(message.intLookup);
+      const entries = globalThis.Object.entries(message.intLookup) as [string, number][];
       if (entries.length > 0) {
         obj.intLookup = {};
         entries.forEach(([k, v]) => {
@@ -321,8 +330,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   },
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = createBaseSimpleWithMap();
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.nameLookup = (globalThis.Object.entries(object.nameLookup ?? {}) as [string, string][]).reduce(
+      (acc: { [key: string]: string }, [key, value]: [string, string]) => {
         if (value !== undefined) {
           acc[key] = globalThis.String(value);
         }
@@ -330,8 +339,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       },
       {},
     );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
+    message.intLookup = (globalThis.Object.entries(object.intLookup ?? {}) as [string, number][]).reduce(
+      (acc: { [key: number]: number }, [key, value]: [string, number]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = globalThis.Number(value);
         }
@@ -369,7 +378,7 @@ export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -447,7 +456,7 @@ export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEnt
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -523,7 +532,7 @@ export const SimpleWithMap_LongLookupEntry: MessageFns<SimpleWithMap_LongLookupE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_LongLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -650,7 +659,7 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
+    const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
