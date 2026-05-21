@@ -8,6 +8,7 @@ import {
   responsePromiseOrObservable,
   responseType,
   observableType,
+  valueTypeName,
 } from "./types";
 import {
   arrowFunction,
@@ -58,8 +59,9 @@ export function generateService(
 
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
+    const isValueType = valueTypeName(ctx, methodDesc.inputType) !== undefined;
     const partialInput = options.outputClientImpl === "grpc-web";
-    const inputType = requestType(ctx, methodDesc, partialInput);
+    const inputType = requestType(ctx, methodDesc, partialInput && !isValueType, !isValueType || methodDesc.clientStreaming);
     params.push(code`request: ${inputType}`);
 
     // Use metadata as last argument for interface only configuration
@@ -111,7 +113,8 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const { options } = ctx;
   const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
-  const inputType = requestType(ctx, methodDesc);
+  const isValueType = valueTypeName(ctx, methodDesc.inputType) !== undefined;
+  const inputType = requestType(ctx, methodDesc, false, !isValueType || methodDesc.clientStreaming);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
   const metadataType = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
 
@@ -135,7 +138,9 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     `;
   }
 
-  let encode = code`${rawInputType}.encode(request).finish()`;
+  let encode = isValueType && !methodDesc.clientStreaming
+    ? code`${rawInputType}.encode(${rawInputType}.fromPartial({ value: request })).finish()`
+    : code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
   if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
     beforeRequest = generateBeforeRequest(methodDesc.name);

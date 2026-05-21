@@ -865,7 +865,7 @@ export interface DashAPICreds {
   Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
-  Uppercase(request: DeepPartial<StringValue>, metadata?: grpc.Metadata): Promise<StringValue>;
+  Uppercase(request: string | undefined, metadata?: grpc.Metadata): Promise<StringValue>;
 }
 
 export class DashAPICredsClientImpl implements DashAPICreds {
@@ -891,8 +891,8 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata);
   }
 
-  Uppercase(request: DeepPartial<StringValue>, metadata?: grpc.Metadata): Promise<StringValue> {
-    return this.rpc.unary(DashAPICredsUppercaseDesc, StringValue.fromPartial(request), metadata);
+  Uppercase(request: string | undefined, metadata?: grpc.Metadata): Promise<StringValue> {
+    return this.rpc.unary(DashAPICredsUppercaseDesc, StringValue.fromPartial({ value: request }), metadata);
   }
 }
 
