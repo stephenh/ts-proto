@@ -1,3 +1,10 @@
+## [2.11.9](https://github.com/stephenh/ts-proto/compare/v2.11.8...v2.11.9) (2026-06-27)
+
+
+### Bug Fixes
+
+* prevent code injection via string option/extension values in out… ([#1261](https://github.com/stephenh/ts-proto/issues/1261)) ([af15aff](https://github.com/stephenh/ts-proto/commit/af15aff685ade82ce5ef7a5c65c7448a36efc967))
+
 ## [2.11.8](https://github.com/stephenh/ts-proto/compare/v2.11.7...v2.11.8) (2026-05-07)
 
 
