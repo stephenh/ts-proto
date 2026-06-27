@@ -225,7 +225,7 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
     const reader = new BinaryReader(data[0]);
     let value = (reader as any)[toReaderCall(extension)]();
     if (typeof value === "string") {
-      value = code`"${value}"`;
+      value = JSON.stringify(value);
     }
     return code`'${extension.name}': ${value}`;
   }
