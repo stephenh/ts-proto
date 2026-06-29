@@ -701,6 +701,12 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   if (options.useDate === DateOption.TEMPORAL) {
     optionalBuiltins.push("Temporal.Instant");
   }
+  if (options.useNullAsOptional === true) {
+    optionalBuiltins.push("null");
+  }
+  if (options.forceLong === LongOption.BIGINT) {
+    optionalBuiltins.push("bigint");
+  }
 
   const Builtin = conditionalOutput(
     "Builtin",
