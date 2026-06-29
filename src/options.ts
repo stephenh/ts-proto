@@ -53,6 +53,7 @@ export enum OutputSchemaOption {
 
 export type Options = {
   context: boolean;
+  useContextDataloaders: boolean;
   snakeToCamel: Array<"json" | "keys">;
   protoJsonFormat: boolean;
   forceLong: LongOption;
@@ -127,6 +128,7 @@ export type Options = {
 export function defaultOptions(): Options {
   return {
     context: false,
+    useContextDataloaders: true,
     snakeToCamel: ["json", "keys"],
     protoJsonFormat: true,
     emitDefaultValues: [],
