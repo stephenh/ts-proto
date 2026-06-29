@@ -24,6 +24,12 @@ export interface Numbers {
   guint64: bigint | undefined;
   timestamp: Date | undefined;
   uint64s: bigint[];
+  longLookup: Map<bigint, bigint>;
+}
+
+export interface Numbers_LongLookupEntry {
+  key: bigint;
+  value: bigint;
 }
 
 function createBaseNumbers(): Numbers {
@@ -43,6 +49,7 @@ function createBaseNumbers(): Numbers {
     guint64: undefined,
     timestamp: undefined,
     uint64s: [],
+    longLookup: new Map(),
   };
 }
 
@@ -113,6 +120,9 @@ export const Numbers: MessageFns<Numbers> = {
       writer.uint64(v);
     }
     writer.join();
+    message.longLookup.forEach((value, key) => {
+      Numbers_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(130).fork()).join();
+    });
     return writer;
   },
 
@@ -253,6 +263,17 @@ export const Numbers: MessageFns<Numbers> = {
 
           break;
         }
+        case 16: {
+          if (tag !== 130) {
+            break;
+          }
+
+          const entry16 = Numbers_LongLookupEntry.decode(reader, reader.uint32());
+          if (entry16.value !== undefined) {
+            message.longLookup.set(entry16.key, entry16.value);
+          }
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -279,6 +300,15 @@ export const Numbers: MessageFns<Numbers> = {
       guint64: isSet(object.guint64) ? BigInt(object.guint64) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       uint64s: globalThis.Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
+      longLookup: isObject(object.longLookup)
+        ? (globalThis.Object.entries(object.longLookup) as [string, any][]).reduce(
+          (acc: Map<bigint, bigint>, [key, value]: [string, any]) => {
+            acc.set(BigInt(key), BigInt(value as string | number | bigint | boolean));
+            return acc;
+          },
+          new Map(),
+        )
+        : new Map(),
     };
   },
 
@@ -329,6 +359,12 @@ export const Numbers: MessageFns<Numbers> = {
     if (message.uint64s?.length) {
       obj.uint64s = message.uint64s.map((e) => e.toString());
     }
+    if (message.longLookup?.size) {
+      obj.longLookup = {};
+      message.longLookup.forEach((v, k) => {
+        obj.longLookup[k.toString()] = v.toString();
+      });
+    }
     return obj;
   },
 
@@ -352,6 +388,94 @@ export const Numbers: MessageFns<Numbers> = {
     message.guint64 = object.guint64 ?? undefined;
     message.timestamp = object.timestamp ?? undefined;
     message.uint64s = object.uint64s?.map((e) => e) || [];
+    message.longLookup = (() => {
+      const m = new Map();
+      (object.longLookup as Map<bigint, bigint> ?? new Map()).forEach((value, key) => {
+        if (value !== undefined) {
+          m.set(key, BigInt(value as string | number | bigint | boolean));
+        }
+      });
+      return m;
+    })();
+    return message;
+  },
+};
+
+function createBaseNumbers_LongLookupEntry(): Numbers_LongLookupEntry {
+  return { key: 0n, value: 0n };
+}
+
+export const Numbers_LongLookupEntry: MessageFns<Numbers_LongLookupEntry> = {
+  encode(message: Numbers_LongLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.key !== 0n) {
+      if (BigInt.asIntN(64, message.key) !== message.key) {
+        throw new globalThis.Error("value provided for field message.key of type int64 too large");
+      }
+      writer.uint32(8).int64(message.key);
+    }
+    if (message.value !== 0n) {
+      if (BigInt.asIntN(64, message.value) !== message.value) {
+        throw new globalThis.Error("value provided for field message.value of type int64 too large");
+      }
+      writer.uint32(16).int64(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers_LongLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNumbers_LongLookupEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.key = reader.int64() as bigint;
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.value = reader.int64() as bigint;
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Numbers_LongLookupEntry {
+    return { key: isSet(object.key) ? BigInt(object.key) : 0n, value: isSet(object.value) ? BigInt(object.value) : 0n };
+  },
+
+  toJSON(message: Numbers_LongLookupEntry): unknown {
+    const obj: any = {};
+    if (message.key !== 0n) {
+      obj.key = message.key.toString();
+    }
+    if (message.value !== 0n) {
+      obj.value = message.value.toString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Numbers_LongLookupEntry>, I>>(base?: I): Numbers_LongLookupEntry {
+    return Numbers_LongLookupEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Numbers_LongLookupEntry>, I>>(object: I): Numbers_LongLookupEntry {
+    const message = createBaseNumbers_LongLookupEntry();
+    message.key = object.key ?? 0n;
+    message.value = object.value ?? 0n;
     return message;
   },
 };
@@ -388,6 +512,10 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
+}
+
+function isObject(value: any): boolean {
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

@@ -20,4 +20,5 @@ message Numbers {
   google.protobuf.UInt64Value guint64 = 13;
   google.protobuf.Timestamp timestamp = 14;
   repeated uint64 uint64s = 15;
+  map<int64, int64> longLookup = 16;
 }
