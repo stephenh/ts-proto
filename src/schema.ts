@@ -11,7 +11,7 @@ import SourceInfo from "./sourceInfo";
 import { impFile, maybePrefixPackage } from "./utils";
 import { basicTypeName, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
-import { EnvOption, OutputSchemaOption } from "./options";
+import { EnvOption, OutputSchemaOption, ServiceOption } from "./options";
 
 const fileDescriptorProto = imp("t:FileDescriptorProto@ts-proto-descriptors");
 
@@ -86,7 +86,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   visitServices(fileDesc, sourceInfo, (serviceDesc) => {
     if (options.outputClientImpl) {
-      addReference(serviceDesc.name, `${serviceDesc.name}ClientImpl`);
+      const suffix = options.outputServices.includes(ServiceOption.GRPC) ? "Client" : "ClientImpl";
+      addReference(serviceDesc.name, `${serviceDesc.name}${suffix}`);
     }
   });
 

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package simple;
+
+service Test {
+    rpc Unary (TestMessage) returns (TestMessage) {}
+}
+
+message TestMessage {
+    string value = 1;
+}
