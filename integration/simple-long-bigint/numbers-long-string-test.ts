@@ -31,11 +31,14 @@ describe("number", () => {
       guint64: BigInt("13"),
       timestamp: new Date("1970-02-03T04:05:06.0071Z"),
       uint64s: [BigInt("14"), BigInt("15"), BigInt("16")],
+      longLookup: new Map([[BigInt("1"), BigInt("2")], [BigInt("2"), BigInt("1")]]),
     };
     expect(simple.int64).toEqual(BigInt("4"));
     expect(simple.uint64).toEqual(BigInt("6"));
     expect(simple.guint64).toEqual(BigInt("13"));
     expect(simple.timestamp).toEqual(new Date("1970-02-03T04:05:06.0071Z"));
+    expect(simple.longLookup.get(BigInt("1"))).toEqual(BigInt("2"));
+    expect(simple.longLookup.get(BigInt("2"))).toEqual(BigInt("1"));
   });
 
   it("can decode", () => {
@@ -58,6 +61,7 @@ describe("number", () => {
         seconds: Long.fromNumber(1),
       }),
       uint64s: [Long.fromNumber(14), Long.fromNumber(15), Long.fromNumber(16)],
+      longLookup: { "1": Long.fromNumber(2), "2": Long.fromNumber(1) },
     };
     const expected: Numbers = {
       double: 1,
@@ -75,6 +79,7 @@ describe("number", () => {
       guint64: BigInt("13"),
       timestamp: new Date("1970-01-01T00:00:01.007000001Z"),
       uint64s: [BigInt("14"), BigInt("15"), BigInt("16")],
+      longLookup: new Map([[BigInt("1"), BigInt("2")], [BigInt("2"), BigInt("1")]]),
     };
     const s2 = Numbers.decode(new BinaryReader(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(expected);
@@ -97,6 +102,7 @@ describe("number", () => {
       guint64: BigInt("13"),
       timestamp: new Date("1980-01-01T00:00:01.123Z"),
       uint64s: [BigInt("14"), BigInt("15"), BigInt("16")],
+      longLookup: new Map(),
     };
     const expected: INumbers = {
       double: 1,
@@ -152,6 +158,31 @@ describe("number", () => {
     expect(s2.double).toEqual(0);
   });
 
+  it("generates a Map for long-keyed maps with forceLong=bigint", () => {
+    const s1 = Numbers.fromPartial({
+      longLookup: new Map<bigint, bigint>([
+        [BigInt("1"), BigInt("2")],
+        [BigInt("2"), BigInt("1")],
+      ]),
+    });
+    expect(s1.longLookup).toBeInstanceOf(Map);
+    expect(s1.longLookup.get(BigInt("1"))).toEqual(BigInt("2"));
+    expect(s1.longLookup.get(BigInt("2"))).toEqual(BigInt("1"));
+
+    const decoded = Numbers.decode(new BinaryReader(Numbers.encode(s1).finish()));
+    expect(decoded.longLookup).toBeInstanceOf(Map);
+    expect(decoded.longLookup.get(BigInt("1"))).toEqual(BigInt("2"));
+    expect(decoded.longLookup.get(BigInt("2"))).toEqual(BigInt("1"));
+
+    const json = Numbers.toJSON(s1) as any;
+    expect(json.longLookup).toEqual({ "1": "2", "2": "1" });
+
+    const fromJson = Numbers.fromJSON(JSON.parse(JSON.stringify(json)));
+    expect(fromJson.longLookup).toBeInstanceOf(Map);
+    expect(fromJson.longLookup.get(BigInt("1"))).toEqual(BigInt("2"));
+    expect(fromJson.longLookup.get(BigInt("2"))).toEqual(BigInt("1"));
+  });
+
   it("has fromPartial", () => {
     const s1 = Numbers.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
@@ -163,6 +194,7 @@ describe("number", () => {
         "guint64": undefined,
         "int32": 0,
         "int64": 0n,
+        "longLookup": Map {},
         "sfixed32": 0,
         "sfixed64": 0n,
         "sint32": 0,

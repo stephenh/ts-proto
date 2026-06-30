@@ -777,7 +777,8 @@ export function shouldGenerateJSMapType(ctx: Context, message: DescriptorProto, 
   }
   return (
     mapType.keyField.type === FieldDescriptorProto_Type.TYPE_BOOL ||
-    (isLong(mapType.keyField) && ctx.options.forceLong === LongOption.LONG)
+    (isLong(mapType.keyField) &&
+      (ctx.options.forceLong === LongOption.LONG || ctx.options.forceLong === LongOption.BIGINT))
   );
 }
 
