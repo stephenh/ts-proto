@@ -1,3 +1,11 @@
+## [2.11.10](https://github.com/stephenh/ts-proto/compare/v2.11.9...v2.11.10) (2026-06-30)
+
+
+### Bug Fixes
+
+* incorrect codegen when grpc-js & outputSchema is used ([#1262](https://github.com/stephenh/ts-proto/issues/1262)) ([6ae3e40](https://github.com/stephenh/ts-proto/commit/6ae3e40bd1ce590dee7c17622c0d16476b23c0ce)), closes [#609](https://github.com/stephenh/ts-proto/issues/609)
+* Update js map check to include forceLong=bigInt as well ([#1263](https://github.com/stephenh/ts-proto/issues/1263)) ([1799765](https://github.com/stephenh/ts-proto/commit/1799765531204947886c44c9ec40617a2c1ba482)), closes [#905](https://github.com/stephenh/ts-proto/issues/905) [#940](https://github.com/stephenh/ts-proto/issues/940)
+
 ## [2.11.9](https://github.com/stephenh/ts-proto/compare/v2.11.8...v2.11.9) (2026-06-27)
 
 
