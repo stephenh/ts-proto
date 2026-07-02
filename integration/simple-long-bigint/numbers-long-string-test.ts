@@ -207,6 +207,43 @@ describe("number", () => {
     `);
   });
 
+  it("coerces string | number | bigint inputs to bigint in fromPartial", () => {
+    // scalar 64-bit fields accept strings...
+    expect(Numbers.fromPartial({ int64: "5" }).int64).toBe(5n);
+    expect(Numbers.fromPartial({ uint64: "6" }).uint64).toBe(6n);
+    expect(Numbers.fromPartial({ sint64: "7" }).sint64).toBe(7n);
+    expect(Numbers.fromPartial({ fixed64: "8" }).fixed64).toBe(8n);
+    expect(Numbers.fromPartial({ sfixed64: "9" }).sfixed64).toBe(9n);
+    // ...numbers...
+    expect(Numbers.fromPartial({ int64: 5 }).int64).toBe(5n);
+    // ...and bigints unchanged.
+    expect(Numbers.fromPartial({ int64: 5n }).int64).toBe(5n);
+
+    // the default/missing path must yield 0n, never throw.
+    expect(Numbers.fromPartial({}).int64).toBe(0n);
+    expect(Numbers.fromPartial({ int64: undefined }).int64).toBe(0n);
+
+    // 64-bit wrapper type (google.protobuf.UInt64Value) coerces too, defaulting to undefined.
+    expect(Numbers.fromPartial({ guint64: "13" }).guint64).toBe(13n);
+    expect(Numbers.fromPartial({ guint64: 13 }).guint64).toBe(13n);
+    expect(Numbers.fromPartial({}).guint64).toBeUndefined();
+
+    // repeated 64-bit field: each element is coerced.
+    expect(Numbers.fromPartial({ uint64s: ["1", 2, 3n] }).uint64s).toEqual([1n, 2n, 3n]);
+    expect(Numbers.fromPartial({}).uint64s).toEqual([]);
+
+    // map with int64 values: the bigint side is coerced during map population.
+    const withMap = Numbers.fromPartial({
+      longLookup: new Map<bigint, bigint>([[1n, "2" as unknown as bigint]]),
+    });
+    expect(withMap.longLookup.get(1n)).toBe(2n);
+  });
+
+  it("throws on non-numeric bigint input, matching fromJSON/native BigInt()", () => {
+    expect(() => Numbers.fromPartial({ int64: "not-a-number" })).toThrow();
+    expect(() => Numbers.fromPartial({ uint64s: ["oops"] })).toThrow();
+  });
+
   it('throws error on too large bigints', () => {
     const testCases = [
       {

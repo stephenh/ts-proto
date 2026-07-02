@@ -376,18 +376,18 @@ export const Numbers: MessageFns<Numbers> = {
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;
-    message.int64 = object.int64 ?? 0n;
+    message.int64 = (object.int64 !== undefined && object.int64 !== null) ? BigInt(object.int64) : 0n;
     message.uint32 = object.uint32 ?? 0;
-    message.uint64 = object.uint64 ?? 0n;
+    message.uint64 = (object.uint64 !== undefined && object.uint64 !== null) ? BigInt(object.uint64) : 0n;
     message.sint32 = object.sint32 ?? 0;
-    message.sint64 = object.sint64 ?? 0n;
+    message.sint64 = (object.sint64 !== undefined && object.sint64 !== null) ? BigInt(object.sint64) : 0n;
     message.fixed32 = object.fixed32 ?? 0;
-    message.fixed64 = object.fixed64 ?? 0n;
+    message.fixed64 = (object.fixed64 !== undefined && object.fixed64 !== null) ? BigInt(object.fixed64) : 0n;
     message.sfixed32 = object.sfixed32 ?? 0;
-    message.sfixed64 = object.sfixed64 ?? 0n;
-    message.guint64 = object.guint64 ?? undefined;
+    message.sfixed64 = (object.sfixed64 !== undefined && object.sfixed64 !== null) ? BigInt(object.sfixed64) : 0n;
+    message.guint64 = (object.guint64 !== undefined && object.guint64 !== null) ? BigInt(object.guint64) : undefined;
     message.timestamp = object.timestamp ?? undefined;
-    message.uint64s = object.uint64s?.map((e) => e) || [];
+    message.uint64s = object.uint64s?.map((e) => BigInt(e)) || [];
     message.longLookup = (() => {
       const m = new Map();
       (object.longLookup as Map<bigint, bigint> ?? new Map()).forEach((value, key) => {
@@ -474,16 +474,16 @@ export const Numbers_LongLookupEntry: MessageFns<Numbers_LongLookupEntry> = {
   },
   fromPartial<I extends Exact<DeepPartial<Numbers_LongLookupEntry>, I>>(object: I): Numbers_LongLookupEntry {
     const message = createBaseNumbers_LongLookupEntry();
-    message.key = object.key ?? 0n;
-    message.value = object.value ?? 0n;
+    message.key = (object.key !== undefined && object.key !== null) ? BigInt(object.key) : 0n;
+    message.value = (object.value !== undefined && object.value !== null) ? BigInt(object.value) : 0n;
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

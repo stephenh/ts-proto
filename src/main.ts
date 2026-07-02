@@ -693,6 +693,9 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   // Allow passing longs as numbers or strings, nad we'll convert them
   const maybeLong =
     options.forceLong === LongOption.LONG ? code` : T extends ${longs.Long} ? string | number | Long ` : "";
+  // Allow passing bigints as numbers or strings; fromPartial coerces them via BigInt()
+  const maybeBigInt =
+    options.forceLong === LongOption.BIGINT ? code`T extends bigint ? string | number | bigint : ` : "";
 
   const optionalBuiltins: string[] = [];
   if (options.forceLong === LongOption.BIGINT) {
@@ -727,7 +730,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   const DeepPartial = conditionalOutput(
     "DeepPartial",
     code`
-      ${maybeExport} type DeepPartial<T> =  T extends ${Builtin}
+      ${maybeExport} type DeepPartial<T> = ${maybeBigInt} T extends ${Builtin}
         ? T
         ${maybeLong}
         : T extends globalThis.Array<infer U>
@@ -1007,7 +1010,7 @@ function makeTimestampMethods(
               const seconds = ${seconds};
               const remainder = instant.round({ smallestUnit: "seconds",  roundingMode: "floor" }).until(instant);
               const nanos = (remainder.milliseconds * 1_000_000) + (remainder.microseconds * 1_000) + remainder.nanoseconds;
-            
+
               return { ${maybeTypeField} seconds, nanos };
             }
           `
@@ -2896,6 +2899,12 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         !isJsTypeFieldOption(options, field)
       ) {
         return code`Long.fromValue(${from})`;
+      } else if (
+        (isLong(field) || isLongValueType(field)) &&
+        options.forceLong === LongOption.BIGINT &&
+        !isJsTypeFieldOption(options, field)
+      ) {
+        return code`BigInt(${from})`;
       } else if (isObjectId(field) && options.useMongoObjectId) {
         return code`${from} as mongodb.ObjectId`;
       } else if (
