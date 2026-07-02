@@ -7,7 +7,7 @@
 
 ## ts-proto 2.x Release Notes
 
-The 2.x release of ts-proto migrated the low-level Protobuf serializing that its `encode` and `decode` method use from the venerable, but aging & stagnant, `protobufjs` package to `@bufbuild/protobuf`.
+The 2.x release of ts-proto migrated the low-level Protobuf serializing that its `encode` and `decode` method use from the venerable `protobufjs` package to `@bufbuild/protobuf`.
 
 If you only used the `encode` and `decode` methods, this should largely be a non-breaking change.
 
