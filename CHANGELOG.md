@@ -1,3 +1,10 @@
+# [2.12.0](https://github.com/stephenh/ts-proto/compare/v2.11.10...v2.12.0) (2026-07-03)
+
+
+### Features
+
+* coerces bigint inputs inside fromPartial to bigint ([#1266](https://github.com/stephenh/ts-proto/issues/1266)) ([a89ddec](https://github.com/stephenh/ts-proto/commit/a89ddec25f40eab5069673ea56ea50efd2506778)), closes [#1264](https://github.com/stephenh/ts-proto/issues/1264)
+
 ## [2.11.10](https://github.com/stephenh/ts-proto/compare/v2.11.9...v2.11.10) (2026-06-30)
 
 
