@@ -340,26 +340,28 @@ export const Numbers: MessageFns<Numbers> = {
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;
-    message.int64 = object.int64 ?? BigInt("0");
+    message.int64 = (object.int64 !== undefined && object.int64 !== null) ? BigInt(object.int64) : BigInt("0");
     message.uint32 = object.uint32 ?? 0;
-    message.uint64 = object.uint64 ?? BigInt("0");
+    message.uint64 = (object.uint64 !== undefined && object.uint64 !== null) ? BigInt(object.uint64) : BigInt("0");
     message.sint32 = object.sint32 ?? 0;
-    message.sint64 = object.sint64 ?? BigInt("0");
+    message.sint64 = (object.sint64 !== undefined && object.sint64 !== null) ? BigInt(object.sint64) : BigInt("0");
     message.fixed32 = object.fixed32 ?? 0;
-    message.fixed64 = object.fixed64 ?? BigInt("0");
+    message.fixed64 = (object.fixed64 !== undefined && object.fixed64 !== null) ? BigInt(object.fixed64) : BigInt("0");
     message.sfixed32 = object.sfixed32 ?? 0;
-    message.sfixed64 = object.sfixed64 ?? BigInt("0");
-    message.guint64 = object.guint64 ?? undefined;
+    message.sfixed64 = (object.sfixed64 !== undefined && object.sfixed64 !== null)
+      ? BigInt(object.sfixed64)
+      : BigInt("0");
+    message.guint64 = (object.guint64 !== undefined && object.guint64 !== null) ? BigInt(object.guint64) : undefined;
     message.timestamp = object.timestamp ?? undefined;
-    message.uint64s = object.uint64s?.map((e) => e) || [];
+    message.uint64s = object.uint64s?.map((e) => BigInt(e)) || [];
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

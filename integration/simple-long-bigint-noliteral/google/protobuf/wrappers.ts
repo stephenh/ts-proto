@@ -268,7 +268,7 @@ export const Int64Value: MessageFns<Int64Value> = {
   },
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = createBaseInt64Value();
-    message.value = object.value ?? BigInt("0");
+    message.value = (object.value !== undefined && object.value !== null) ? BigInt(object.value) : BigInt("0");
     return message;
   },
 };
@@ -329,7 +329,7 @@ export const UInt64Value: MessageFns<UInt64Value> = {
   },
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = createBaseUInt64Value();
-    message.value = object.value ?? BigInt("0");
+    message.value = (object.value !== undefined && object.value !== null) ? BigInt(object.value) : BigInt("0");
     return message;
   },
 };
@@ -651,8 +651,8 @@ function base64FromBytes(arr: Uint8Array): string {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

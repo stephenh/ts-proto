@@ -215,16 +215,16 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   },
   fromPartial<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(object: I): MapBigInt_MapEntry {
     const message = createBaseMapBigInt_MapEntry();
-    message.key = object.key ?? 0n;
-    message.value = object.value ?? 0n;
+    message.key = (object.key !== undefined && object.key !== null) ? BigInt(object.key) : 0n;
+    message.value = (object.value !== undefined && object.value !== null) ? BigInt(object.value) : 0n;
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

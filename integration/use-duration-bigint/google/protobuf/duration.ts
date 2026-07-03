@@ -171,7 +171,7 @@ export const Duration: MessageFns<Duration> = {
   },
   fromPartial<I extends Exact<DeepPartial<Duration>, I>>(object: I): Duration {
     const message = createBaseDuration();
-    message.seconds = object.seconds ?? 0n;
+    message.seconds = (object.seconds !== undefined && object.seconds !== null) ? BigInt(object.seconds) : 0n;
     message.nanos = object.nanos ?? 0;
     return message;
   },
@@ -179,8 +179,8 @@ export const Duration: MessageFns<Duration> = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

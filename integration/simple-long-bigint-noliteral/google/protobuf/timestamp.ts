@@ -186,7 +186,7 @@ export const Timestamp: MessageFns<Timestamp> = {
   },
   fromPartial<I extends Exact<DeepPartial<Timestamp>, I>>(object: I): Timestamp {
     const message = createBaseTimestamp();
-    message.seconds = object.seconds ?? BigInt("0");
+    message.seconds = (object.seconds !== undefined && object.seconds !== null) ? BigInt(object.seconds) : BigInt("0");
     message.nanos = object.nanos ?? 0;
     return message;
   },
@@ -194,8 +194,8 @@ export const Timestamp: MessageFns<Timestamp> = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

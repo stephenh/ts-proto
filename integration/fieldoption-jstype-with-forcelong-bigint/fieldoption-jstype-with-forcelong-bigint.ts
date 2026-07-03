@@ -106,7 +106,9 @@ export const FieldOption: MessageFns<FieldOption> = {
   },
   fromPartial<I extends Exact<DeepPartial<FieldOption>, I>>(object: I): FieldOption {
     const message = createBaseFieldOption();
-    message.normalField = object.normalField ?? 0n;
+    message.normalField = (object.normalField !== undefined && object.normalField !== null)
+      ? BigInt(object.normalField)
+      : 0n;
     message.numberField = object.numberField ?? 0;
     message.stringField = object.stringField ?? "0";
     return message;
@@ -115,8 +117,8 @@ export const FieldOption: MessageFns<FieldOption> = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+export type DeepPartial<T> = T extends bigint ? string | number | bigint
+  : T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
