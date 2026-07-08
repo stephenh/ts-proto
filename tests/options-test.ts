@@ -62,6 +62,7 @@ describe("options", () => {
         "unrecognizedEnumValue": -1,
         "useAbortSignal": false,
         "useAsyncIterable": false,
+        "useContextDataloaders": true,
         "useDate": "timestamp",
         "useDuration": "duration",
         "useExactTypes": true,

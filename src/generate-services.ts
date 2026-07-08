@@ -43,7 +43,7 @@ export function generateService(
   const chunks: Code[] = [];
 
   maybeAddComment(options, sourceInfo, chunks, serviceDesc.options?.deprecated);
-  const maybeTypeVar = options.context ? `<${contextTypeVar}>` : "";
+  const maybeTypeVar = options.context ? `<${contextTypeVar(options)}>` : "";
   chunks.push(code`export interface ${def(serviceDesc.name)}${maybeTypeVar} {`);
 
   serviceDesc.method.forEach((methodDesc, index) => {
@@ -90,7 +90,7 @@ export function generateService(
     );
 
     // If this is a batch method, auto-generate the singular version of it
-    if (options.context) {
+    if (options.context && options.useContextDataloaders) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         chunks.push(code`${batchMethod.singleMethodName}(
@@ -265,7 +265,7 @@ export function generateServiceClientImpl(
 
   // Define the FooServiceImpl class
   const i = options.context ? `${name}<Context>` : name;
-  const t = options.context ? `<${contextTypeVar}>` : "";
+  const t = options.context ? `<${contextTypeVar(options)}>` : "";
   chunks.push(code`export class ${name}ClientImpl${t} implements ${def(i)} {`);
 
   // Create the constructor(rpc: Rpc)
@@ -286,7 +286,7 @@ export function generateServiceClientImpl(
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
     // See if this fuzzy matches to a batchable method
-    if (options.context) {
+    if (options.context && options.useContextDataloaders) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         chunks.push(generateBatchingRpcMethod(ctx, batchMethod));
@@ -295,6 +295,7 @@ export function generateServiceClientImpl(
 
     if (
       options.context &&
+      options.useContextDataloaders &&
       methodDesc.name.match(/^Get[A-Z]/) &&
       !methodDesc.serverStreaming &&
       !methodDesc.clientStreaming
