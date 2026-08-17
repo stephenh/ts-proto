@@ -39,44 +39,53 @@ export const MapBigInt: MessageFns<MapBigInt> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMapBigInt();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const entry1 = MapBigInt_MapEntry.decode(reader, reader.uint32());
-          if (entry1.value !== undefined) {
-            if (message.map === undefined) {
-              message.map = new Map();
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseMapBigInt();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
             }
-            message.map!.set(entry1.key, entry1.value);
+
+            const entry1 = MapBigInt_MapEntry.decode(reader, reader.uint32());
+            if (entry1.value !== undefined) {
+              if (message.map === undefined) {
+                message.map = new Map();
+              }
+              message.map!.set(entry1.key, entry1.value);
+            }
+            continue;
           }
-          continue;
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
         }
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): MapBigInt {
@@ -153,46 +162,55 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt_MapEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMapBigInt_MapEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.key = reader.fixed64() as bigint;
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.value = reader.int64() as bigint;
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseMapBigInt_MapEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 9) {
+              break;
+            }
+
+            message.key = reader.fixed64() as bigint;
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
+
+            message.value = reader.int64() as bigint;
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
+        }
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): MapBigInt_MapEntry {

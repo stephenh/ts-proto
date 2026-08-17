@@ -39,26 +39,35 @@ export const TPartialMessage: MessageFns<TPartialMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartialMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTPartialMessage();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.field = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseTPartialMessage();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.field = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): TPartialMessage {
@@ -121,108 +130,117 @@ export const TPartial: MessageFns<TPartial> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartial {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTPartial();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.number = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.string = reader.string();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          const entry3 = TPartial_MapEntry.decode(reader, reader.uint32());
-          if (entry3.value !== undefined) {
-            if (message.map === undefined) {
-              message.map = {};
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseTPartial();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
             }
-            message.map![entry3.key] = entry3.value;
-          }
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
 
-          message.message = TPartialMessage.decode(reader, reader.uint32());
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          if (message.repeatedMessage === undefined) {
-            message.repeatedMessage = [];
-          }
-          const el = TPartialMessage.decode(reader, reader.uint32());
-          if (el !== undefined) {
-            message.repeatedMessage!.push(el);
-          }
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          if (message.repeatedString === undefined) {
-            message.repeatedString = [];
-          }
-          const el = reader.string();
-          if (el !== undefined) {
-            message.repeatedString!.push(el);
-          }
-          continue;
-        }
-        case 7: {
-          if (tag === 56) {
-            if (message.repeatedNumber === undefined) {
-              message.repeatedNumber = [];
-            }
-            message.repeatedNumber!.push(reader.int32());
-
+            message.number = reader.int32();
             continue;
           }
-
-          if (tag === 58) {
-            if (message.repeatedNumber === undefined) {
-              message.repeatedNumber = [];
+          case 2: {
+            if (tag !== 18) {
+              break;
             }
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+
+            message.string = reader.string();
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            const entry3 = TPartial_MapEntry.decode(reader, reader.uint32());
+            if (entry3.value !== undefined) {
+              if (message.map === undefined) {
+                message.map = {};
+              }
+              message.map![entry3.key] = entry3.value;
+            }
+            continue;
+          }
+          case 4: {
+            if (tag !== 34) {
+              break;
+            }
+
+            message.message = TPartialMessage.decode(reader, reader.uint32());
+            continue;
+          }
+          case 5: {
+            if (tag !== 42) {
+              break;
+            }
+
+            if (message.repeatedMessage === undefined) {
+              message.repeatedMessage = [];
+            }
+            const el = TPartialMessage.decode(reader, reader.uint32());
+            if (el !== undefined) {
+              message.repeatedMessage!.push(el);
+            }
+            continue;
+          }
+          case 6: {
+            if (tag !== 50) {
+              break;
+            }
+
+            if (message.repeatedString === undefined) {
+              message.repeatedString = [];
+            }
+            const el = reader.string();
+            if (el !== undefined) {
+              message.repeatedString!.push(el);
+            }
+            continue;
+          }
+          case 7: {
+            if (tag === 56) {
+              if (message.repeatedNumber === undefined) {
+                message.repeatedNumber = [];
+              }
               message.repeatedNumber!.push(reader.int32());
+
+              continue;
             }
 
-            continue;
-          }
+            if (tag === 58) {
+              if (message.repeatedNumber === undefined) {
+                message.repeatedNumber = [];
+              }
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.repeatedNumber!.push(reader.int32());
+              }
 
+              continue;
+            }
+
+            break;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
           break;
         }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): TPartial {
@@ -334,34 +352,43 @@ export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): TPartial_MapEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTPartial_MapEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseTPartial_MapEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): TPartial_MapEntry {

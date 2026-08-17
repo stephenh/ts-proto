@@ -119,29 +119,38 @@ export const GRPCPStructGRPCS: MessageFns<GRPCPStructGRPCS> & StructWrapperFns =
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPStructGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGRPCPStructGRPCS();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          const entry1 = GRPCPStruct_FieldsEntryGRPCS.decode(reader, reader.uint32());
-          if (entry1.value !== undefined) {
-            message.fields[entry1.key] = entry1.value;
-          }
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGRPCPStructGRPCS();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            const entry1 = GRPCPStruct_FieldsEntryGRPCS.decode(reader, reader.uint32());
+            if (entry1.value !== undefined) {
+              message.fields[entry1.key] = entry1.value;
+            }
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GRPCPStructGRPCS {
@@ -228,34 +237,43 @@ export const GRPCPStruct_FieldsEntryGRPCS: MessageFns<GRPCPStruct_FieldsEntryGRP
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPStruct_FieldsEntryGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGRPCPStruct_FieldsEntryGRPCS();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = GRPCPValueGRPCS.unwrap(GRPCPValueGRPCS.decode(reader, reader.uint32()));
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGRPCPStruct_FieldsEntryGRPCS();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = GRPCPValueGRPCS.unwrap(GRPCPValueGRPCS.decode(reader, reader.uint32()));
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GRPCPStruct_FieldsEntryGRPCS {
@@ -323,66 +341,75 @@ export const GRPCPValueGRPCS: MessageFns<GRPCPValueGRPCS> & AnyValueWrapperFns =
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPValueGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGRPCPValueGRPCS();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.nullValue = reader.int32() as any;
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.numberValue = reader.double();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.stringValue = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.boolValue = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 42) {
-            break;
-          }
-
-          message.structValue = GRPCPStructGRPCS.unwrap(GRPCPStructGRPCS.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.listValue = GRPCPListValueGRPCS.unwrap(GRPCPListValueGRPCS.decode(reader, reader.uint32()));
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGRPCPValueGRPCS();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.nullValue = reader.int32() as any;
+            continue;
+          }
+          case 2: {
+            if (tag !== 17) {
+              break;
+            }
+
+            message.numberValue = reader.double();
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            message.stringValue = reader.string();
+            continue;
+          }
+          case 4: {
+            if (tag !== 32) {
+              break;
+            }
+
+            message.boolValue = reader.bool();
+            continue;
+          }
+          case 5: {
+            if (tag !== 42) {
+              break;
+            }
+
+            message.structValue = GRPCPStructGRPCS.unwrap(GRPCPStructGRPCS.decode(reader, reader.uint32()));
+            continue;
+          }
+          case 6: {
+            if (tag !== 50) {
+              break;
+            }
+
+            message.listValue = GRPCPListValueGRPCS.unwrap(GRPCPListValueGRPCS.decode(reader, reader.uint32()));
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GRPCPValueGRPCS {
@@ -509,26 +536,35 @@ export const GRPCPListValueGRPCS: MessageFns<GRPCPListValueGRPCS> & ListValueWra
 
   decode(input: BinaryReader | Uint8Array, length?: number): GRPCPListValueGRPCS {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGRPCPListValueGRPCS();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.values.push(GRPCPValueGRPCS.unwrap(GRPCPValueGRPCS.decode(reader, reader.uint32())));
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGRPCPListValueGRPCS();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.values.push(GRPCPValueGRPCS.unwrap(GRPCPValueGRPCS.decode(reader, reader.uint32())));
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GRPCPListValueGRPCS {

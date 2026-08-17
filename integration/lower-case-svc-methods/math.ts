@@ -38,34 +38,43 @@ export const NumPair: MessageFns<NumPair> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): NumPair {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNumPair();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.num1 = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 17) {
-            break;
-          }
-
-          message.num2 = reader.double();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseNumPair();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 9) {
+              break;
+            }
+
+            message.num1 = reader.double();
+            continue;
+          }
+          case 2: {
+            if (tag !== 17) {
+              break;
+            }
+
+            message.num2 = reader.double();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): NumPair {
@@ -111,26 +120,35 @@ export const NumSingle: MessageFns<NumSingle> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): NumSingle {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNumSingle();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.num = reader.double();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseNumSingle();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 9) {
+              break;
+            }
+
+            message.num = reader.double();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): NumSingle {
@@ -171,36 +189,45 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNumbers();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag === 9) {
-            message.num.push(reader.double());
-
-            continue;
-          }
-
-          if (tag === 10) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseNumbers();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag === 9) {
               message.num.push(reader.double());
+
+              continue;
             }
 
-            continue;
-          }
+            if (tag === 10) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.num.push(reader.double());
+              }
 
+              continue;
+            }
+
+            break;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
           break;
         }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): Numbers {

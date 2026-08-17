@@ -1464,7 +1464,13 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       length?: number,
     ): ${fullName} {
       const reader = input instanceof ${BinaryReader} ? input : new ${BinaryReader}(input);
-      const end = length === undefined ? reader.len : reader.pos + length;
+      const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+      if (previousRecursionDepth >= 100) {
+        throw new ${ctx.utils.globalThis}.Error("protobuf decode recursion limit exceeded");
+      }
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+      try {
+        const end = length === undefined ? reader.len : reader.pos + length;
   `);
 
   chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
@@ -1647,8 +1653,12 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   // and then wrap up the while/return
   chunks.push(code`}`);
   chunks.push(code`return message;`);
-
-  chunks.push(code`}`);
+  chunks.push(code`
+      } finally {
+        (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+      }
+    }
+  `);
   return joinCode(chunks, { on: "\n" });
 }
 

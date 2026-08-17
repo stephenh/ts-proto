@@ -82,54 +82,63 @@ export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsOptionalTest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.int1 = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 19) {
-            break;
-          }
-
-          message.group = GroupsOptionalTest_Group.decode(reader);
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.int3 = reader.int32();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsOptionalTest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.int1 = reader.int32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 19) {
+              break;
+            }
+
+            message.group = GroupsOptionalTest_Group.decode(reader);
+            continue;
+          }
+          case 3: {
+            if (tag !== 24) {
+              break;
+            }
+
+            message.int3 = reader.int32();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
+        }
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GroupsOptionalTest {
@@ -193,46 +202,55 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsOptionalTest_Group();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsOptionalTest_Group();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
+        }
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GroupsOptionalTest_Group {
@@ -298,92 +316,101 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsRepeatedTest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag === 8) {
-            if (message.int1 === undefined) {
-              message.int1 = [];
-            }
-            message.int1!.push(reader.int32());
-
-            continue;
-          }
-
-          if (tag === 10) {
-            if (message.int1 === undefined) {
-              message.int1 = [];
-            }
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsRepeatedTest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag === 8) {
+              if (message.int1 === undefined) {
+                message.int1 = [];
+              }
               message.int1!.push(reader.int32());
+
+              continue;
             }
 
-            continue;
-          }
+            if (tag === 10) {
+              if (message.int1 === undefined) {
+                message.int1 = [];
+              }
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.int1!.push(reader.int32());
+              }
 
-          break;
-        }
-        case 2: {
-          if (tag !== 19) {
+              continue;
+            }
+
             break;
           }
-
-          if (message.group === undefined) {
-            message.group = [];
-          }
-          const el = GroupsRepeatedTest_Group.decode(reader);
-          if (el !== undefined) {
-            message.group!.push(el);
-          }
-          continue;
-        }
-        case 3: {
-          if (tag === 24) {
-            if (message.int3 === undefined) {
-              message.int3 = [];
+          case 2: {
+            if (tag !== 19) {
+              break;
             }
-            message.int3!.push(reader.int32());
 
+            if (message.group === undefined) {
+              message.group = [];
+            }
+            const el = GroupsRepeatedTest_Group.decode(reader);
+            if (el !== undefined) {
+              message.group!.push(el);
+            }
             continue;
           }
-
-          if (tag === 26) {
-            if (message.int3 === undefined) {
-              message.int3 = [];
-            }
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+          case 3: {
+            if (tag === 24) {
+              if (message.int3 === undefined) {
+                message.int3 = [];
+              }
               message.int3!.push(reader.int32());
+
+              continue;
             }
 
-            continue;
-          }
+            if (tag === 26) {
+              if (message.int3 === undefined) {
+                message.int3 = [];
+              }
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.int3!.push(reader.int32());
+              }
 
+              continue;
+            }
+
+            break;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
           break;
         }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
+        const buf = reader.skip(tag & 7);
 
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
 
-      const list = message._unknownFields[tag];
+        const list = message._unknownFields[tag];
 
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
+        }
       }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): GroupsRepeatedTest {
@@ -451,58 +478,67 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsRepeatedTest_Group();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          if (message.key === undefined) {
-            message.key = [];
-          }
-          const el = reader.string();
-          if (el !== undefined) {
-            message.key!.push(el);
-          }
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          if (message.value === undefined) {
-            message.value = [];
-          }
-          const el = reader.string();
-          if (el !== undefined) {
-            message.value!.push(el);
-          }
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsRepeatedTest_Group();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            if (message.key === undefined) {
+              message.key = [];
+            }
+            const el = reader.string();
+            if (el !== undefined) {
+              message.key!.push(el);
+            }
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            if (message.value === undefined) {
+              message.value = [];
+            }
+            const el = reader.string();
+            if (el !== undefined) {
+              message.value!.push(el);
+            }
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
+        }
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): GroupsRepeatedTest_Group {
@@ -568,92 +604,101 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsNestedTest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag === 8) {
-            if (message.int1 === undefined) {
-              message.int1 = [];
-            }
-            message.int1!.push(reader.int32());
-
-            continue;
-          }
-
-          if (tag === 10) {
-            if (message.int1 === undefined) {
-              message.int1 = [];
-            }
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsNestedTest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag === 8) {
+              if (message.int1 === undefined) {
+                message.int1 = [];
+              }
               message.int1!.push(reader.int32());
+
+              continue;
             }
 
-            continue;
-          }
+            if (tag === 10) {
+              if (message.int1 === undefined) {
+                message.int1 = [];
+              }
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.int1!.push(reader.int32());
+              }
 
-          break;
-        }
-        case 2: {
-          if (tag !== 19) {
+              continue;
+            }
+
             break;
           }
-
-          if (message.group === undefined) {
-            message.group = [];
-          }
-          const el = GroupsNestedTest_Group.decode(reader);
-          if (el !== undefined) {
-            message.group!.push(el);
-          }
-          continue;
-        }
-        case 3: {
-          if (tag === 24) {
-            if (message.int3 === undefined) {
-              message.int3 = [];
+          case 2: {
+            if (tag !== 19) {
+              break;
             }
-            message.int3!.push(reader.int32());
 
+            if (message.group === undefined) {
+              message.group = [];
+            }
+            const el = GroupsNestedTest_Group.decode(reader);
+            if (el !== undefined) {
+              message.group!.push(el);
+            }
             continue;
           }
-
-          if (tag === 26) {
-            if (message.int3 === undefined) {
-              message.int3 = [];
-            }
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+          case 3: {
+            if (tag === 24) {
+              if (message.int3 === undefined) {
+                message.int3 = [];
+              }
               message.int3!.push(reader.int32());
+
+              continue;
             }
 
-            continue;
-          }
+            if (tag === 26) {
+              if (message.int3 === undefined) {
+                message.int3 = [];
+              }
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.int3!.push(reader.int32());
+              }
 
+              continue;
+            }
+
+            break;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
           break;
         }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
+        const buf = reader.skip(tag & 7);
 
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
 
-      const list = message._unknownFields[tag];
+        const list = message._unknownFields[tag];
 
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
+        }
       }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): GroupsNestedTest {
@@ -716,44 +761,53 @@ export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsNestedTest_Group();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 11) {
-            break;
-          }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsNestedTest_Group();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 11) {
+              break;
+            }
 
-          if (message.nested === undefined) {
-            message.nested = [];
+            if (message.nested === undefined) {
+              message.nested = [];
+            }
+            const el = GroupsNestedTest_Group_Nested.decode(reader);
+            if (el !== undefined) {
+              message.nested!.push(el);
+            }
+            continue;
           }
-          const el = GroupsNestedTest_Group_Nested.decode(reader);
-          if (el !== undefined) {
-            message.nested!.push(el);
-          }
-          continue;
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
         }
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): GroupsNestedTest_Group {
@@ -806,44 +860,53 @@ export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Ne
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsNestedTest_Group_Nested();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 2: {
-          if (tag !== 19) {
-            break;
-          }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsNestedTest_Group_Nested();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 2: {
+            if (tag !== 19) {
+              break;
+            }
 
-          if (message.nested2 === undefined) {
-            message.nested2 = [];
+            if (message.nested2 === undefined) {
+              message.nested2 = [];
+            }
+            const el = GroupsNestedTest_Group_Nested_Nested2.decode(reader);
+            if (el !== undefined) {
+              message.nested2!.push(el);
+            }
+            continue;
           }
-          const el = GroupsNestedTest_Group_Nested_Nested2.decode(reader);
-          if (el !== undefined) {
-            message.nested2!.push(el);
-          }
-          continue;
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
         }
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested {
@@ -896,38 +959,47 @@ export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_
 
   decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested_Nested2 {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
 
-          message.string1 = reader.string();
-          continue;
+            message.string1 = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        const buf = reader.skip(tag & 7);
+
+        if (message._unknownFields === undefined) {
+          message._unknownFields = {};
+        }
+
+        const list = message._unknownFields[tag];
+
+        if (list === undefined) {
+          message._unknownFields[tag] = [buf];
+        } else {
+          list.push(buf);
         }
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      const buf = reader.skip(tag & 7);
-
-      if (message._unknownFields === undefined) {
-        message._unknownFields = {};
-      }
-
-      const list = message._unknownFields[tag];
-
-      if (list === undefined) {
-        message._unknownFields[tag] = [buf];
-      } else {
-        list.push(buf);
-      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested_Nested2 {

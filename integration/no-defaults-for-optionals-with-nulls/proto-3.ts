@@ -61,77 +61,88 @@ export const Proto3TestMessage: MessageFns<Proto3TestMessage> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Proto3TestMessage {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseProto3TestMessage();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.boolValue = reader.bool();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.intValue = reader.int32();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.stringValue = reader.string();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.optionalBoolValue = reader.bool();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.optionalIntValue = reader.int32();
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.optionalStringValue = reader.string();
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          const entry7 = Proto3TestMessage_MapValueEntry.decode(reader, reader.uint32());
-          if (entry7.value !== undefined && entry7.value !== null && entry7.key !== undefined && entry7.key !== null) {
-            message.mapValue[entry7.key] = entry7.value;
-          }
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseProto3TestMessage();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.boolValue = reader.bool();
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
+
+            message.intValue = reader.int32();
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            message.stringValue = reader.string();
+            continue;
+          }
+          case 4: {
+            if (tag !== 32) {
+              break;
+            }
+
+            message.optionalBoolValue = reader.bool();
+            continue;
+          }
+          case 5: {
+            if (tag !== 40) {
+              break;
+            }
+
+            message.optionalIntValue = reader.int32();
+            continue;
+          }
+          case 6: {
+            if (tag !== 50) {
+              break;
+            }
+
+            message.optionalStringValue = reader.string();
+            continue;
+          }
+          case 7: {
+            if (tag !== 58) {
+              break;
+            }
+
+            const entry7 = Proto3TestMessage_MapValueEntry.decode(reader, reader.uint32());
+            if (
+              entry7.value !== undefined && entry7.value !== null && entry7.key !== undefined && entry7.key !== null
+            ) {
+              message.mapValue[entry7.key] = entry7.value;
+            }
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): Proto3TestMessage {
@@ -227,34 +238,43 @@ export const Proto3TestMessage_MapValueEntry: MessageFns<Proto3TestMessage_MapVa
 
   decode(input: BinaryReader | Uint8Array, length?: number): Proto3TestMessage_MapValueEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseProto3TestMessage_MapValueEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseProto3TestMessage_MapValueEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): Proto3TestMessage_MapValueEntry {
