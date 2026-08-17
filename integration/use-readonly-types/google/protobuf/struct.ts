@@ -148,7 +148,12 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
       fields: isObject(object.fields)
         ? (globalThis.Object.entries(object.fields) as [string, any][]).reduce(
           (acc: { [key: string]: any | undefined }, [key, value]: [string, any]) => {
-            acc[key] = value as any | undefined;
+            globalThis.Object.defineProperty(acc, key, {
+              value: value as any | undefined,
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

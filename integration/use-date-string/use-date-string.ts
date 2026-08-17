@@ -120,7 +120,12 @@ export const Todo: MessageFns<Todo> = {
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = globalThis.String(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: globalThis.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -128,7 +133,12 @@ export const Todo: MessageFns<Todo> = {
         : isObject(object.map_of_timestamps)
         ? (globalThis.Object.entries(object.map_of_timestamps) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = globalThis.String(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: globalThis.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

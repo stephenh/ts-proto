@@ -515,7 +515,12 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
       translations: isObject(object.translations)
         ? (globalThis.Object.entries(object.translations) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = globalThis.String(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: globalThis.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

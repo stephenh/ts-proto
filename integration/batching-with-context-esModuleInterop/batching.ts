@@ -269,7 +269,12 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
       entities: isObject(object.entities)
         ? (globalThis.Object.entries(object.entities) as [string, any][]).reduce(
           (acc: { [key: string]: Entity }, [key, value]: [string, any]) => {
-            acc[key] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
