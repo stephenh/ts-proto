@@ -2683,6 +2683,10 @@ function generateToJson(
     const jsonName = getFieldJsonName(field, options);
     const jsonProperty = getPropertyAccessor("obj", jsonName);
     const messageProperty = getPropertyAccessor("message", fieldName);
+    const setJsonProperty = (value: Code | string): Code =>
+      jsonName === "__proto__"
+        ? code`${utils.globalThis}.Object.defineProperty(obj, "__proto__", { value: ${value}, enumerable: true });`
+        : code`${jsonProperty} = ${value};`;
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
@@ -2777,7 +2781,7 @@ function generateToJson(
       if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
         chunks.push(code`
           if (${messageProperty}?.size) {
-            ${jsonProperty} = {};
+            ${setJsonProperty("{}")}
             ${messageProperty}.forEach((v, k) => {
               ${jsonProperty}[${i}] = ${readSnippet("v")};
             });
@@ -2789,7 +2793,7 @@ function generateToJson(
         if (${messageProperty}) {
             const entries = ${utils.globalThis}.Object.entries(${messageProperty}) as [string, ${mapInfo.valueType}][];
             if (entries.length > 0) {
-              ${jsonProperty} = {};
+              ${setJsonProperty("{}")}
               entries.forEach(([k, v]) => {
                 ${jsonProperty}[${i}] = ${readSnippet("v")};
               });
@@ -2803,7 +2807,7 @@ function generateToJson(
       const maybeMap = needMap ? code`.map(e => ${readSnippet("e")})` : "";
       chunks.push(code`
         if (${messageProperty}?.length) {
-          ${jsonProperty} = ${messageProperty}${maybeMap};
+          ${setJsonProperty(code`${messageProperty}${maybeMap}`)}
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -2816,7 +2820,7 @@ function generateToJson(
         ${
           currentIfTarget === oneofNameWithMessage ? "else " : ""
         }if (${oneofNameWithMessage}?.$case === '${fieldName}') {
-          ${jsonProperty} = ${readSnippet(`${oneofNameWithMessage}.${valueName}`)};
+          ${setJsonProperty(readSnippet(`${oneofNameWithMessage}.${valueName}`))}
         }
       `);
       currentIfTarget = oneofNameWithMessage;
@@ -2829,7 +2833,7 @@ function generateToJson(
 
       chunks.push(code`
         if (${check}) {
-          ${jsonProperty} = ${readSnippet(`${messageProperty}`)};
+          ${setJsonProperty(readSnippet(`${messageProperty}`))}
         }
       `);
     }
