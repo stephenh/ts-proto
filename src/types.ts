@@ -284,7 +284,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
     case FieldDescriptorProto_Type.TYPE_BOOL:
       return useDefaultValue ? field.defaultValue : false;
     case FieldDescriptorProto_Type.TYPE_STRING:
-      return useDefaultValue ? `"${field.defaultValue}"` : '""';
+      return useDefaultValue ? JSON.stringify(field.defaultValue) : '""';
     case FieldDescriptorProto_Type.TYPE_BYTES:
       // todo(proto2): need to look into all the possible default values for the bytes type, and handle each one
       if (options.env === EnvOption.NODE) {
