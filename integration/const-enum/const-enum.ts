@@ -133,7 +133,12 @@ export const DividerData: MessageFns<DividerData> = {
       typeMap: isObject(object.typeMap)
         ? (globalThis.Object.entries(object.typeMap) as [string, any][]).reduce(
           (acc: { [key: string]: DividerData_DividerType }, [key, value]: [string, any]) => {
-            acc[key] = dividerData_DividerTypeFromJSON(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: dividerData_DividerTypeFromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

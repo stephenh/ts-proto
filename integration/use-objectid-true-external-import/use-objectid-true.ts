@@ -121,7 +121,12 @@ export const Todo: MessageFns<Todo> = {
       mapOfOids: isObject(object.mapOfOids)
         ? (globalThis.Object.entries(object.mapOfOids) as [string, any][]).reduce(
           (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
-            acc[key] = fromJsonObjectId(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: fromJsonObjectId(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -129,7 +134,12 @@ export const Todo: MessageFns<Todo> = {
         : isObject(object.map_of_oids)
         ? (globalThis.Object.entries(object.map_of_oids) as [string, any][]).reduce(
           (acc: { [key: string]: mongodb.ObjectId }, [key, value]: [string, any]) => {
-            acc[key] = fromJsonObjectId(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: fromJsonObjectId(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

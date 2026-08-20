@@ -2467,7 +2467,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
                  ? (${
                    ctx.utils.globalThis
                  }.Object.entries(${protoJsonProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
-                     acc[${i}] = ${readSnippet("value")};
+                     ${ctx.utils.globalThis}.Object.defineProperty(acc, ${i}, {
+                       value: ${readSnippet("value")},
+                       enumerable: true, configurable: true, writable: true,
+                     });
                      return acc;
                    }, {})
                `;
@@ -2477,7 +2480,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               ? (${
                 ctx.utils.globalThis
               }.Object.entries(${jsonProperty}) as [string, any][]).reduce((acc: ${fieldType}, [key, value]: [string, any]) => {
-                  acc[${i}] = ${readSnippet("value")};
+                  ${ctx.utils.globalThis}.Object.defineProperty(acc, ${i}, {
+                    value: ${readSnippet("value")},
+                    enumerable: true, configurable: true, writable: true,
+                  });
                   return acc;
                 }, {})
               ${protoJsonComparison}

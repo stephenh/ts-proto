@@ -163,7 +163,12 @@ export const Simple: MessageFns<Simple> = {
       stateMap: isObject(object.stateMap)
         ? (globalThis.Object.entries(object.stateMap) as [string, any][]).reduce(
           (acc: { [key: string]: StateEnum }, [key, value]: [string, any]) => {
-            acc[key] = stateEnumFromJSON(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: stateEnumFromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

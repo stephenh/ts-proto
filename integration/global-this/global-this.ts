@@ -92,7 +92,12 @@ export const Object: MessageFns<Object> = {
       metadata: isObject(object.metadata)
         ? (gt.Object.entries(object.metadata) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = gt.String(value);
+            gt.Object.defineProperty(acc, key, {
+              value: gt.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

@@ -1131,7 +1131,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       entitiesById: isObject(object.entitiesById)
         ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1140,7 +1145,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       nameLookup: isObject(object.nameLookup)
         ? (globalThis.Object.entries(object.nameLookup) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = globalThis.String(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: globalThis.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1149,7 +1159,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       intLookup: isObject(object.intLookup)
         ? (globalThis.Object.entries(object.intLookup) as [string, any][]).reduce(
           (acc: { [key: number]: number }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = globalThis.Number(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: globalThis.Number(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1504,7 +1519,12 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
       entitiesById: isObject(object.entitiesById)
         ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1512,7 +1532,12 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
         : isObject(object.entities_by_id)
         ? (globalThis.Object.entries(object.entities_by_id) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

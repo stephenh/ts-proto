@@ -1330,7 +1330,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       entitiesById: isObject(object.entitiesById)
         ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1339,7 +1344,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       nameLookup: isObject(object.nameLookup)
         ? (globalThis.Object.entries(object.nameLookup) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = globalThis.String(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: globalThis.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1348,7 +1358,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       intLookup: isObject(object.intLookup)
         ? (globalThis.Object.entries(object.intLookup) as [string, any][]).reduce(
           (acc: { [key: number]: number }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = globalThis.Number(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: globalThis.Number(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1357,7 +1372,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? (globalThis.Object.entries(object.mapOfTimestamps) as [string, any][]).reduce(
           (acc: { [key: string]: Date }, [key, value]: [string, any]) => {
-            acc[key] = fromJsonTimestamp(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: fromJsonTimestamp(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1366,7 +1386,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       mapOfBytes: isObject(object.mapOfBytes)
         ? (globalThis.Object.entries(object.mapOfBytes) as [string, any][]).reduce(
           (acc: { [key: string]: Uint8Array }, [key, value]: [string, any]) => {
-            acc[key] = bytesFromBase64(value as string);
+            globalThis.Object.defineProperty(acc, key, {
+              value: bytesFromBase64(value as string),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1375,7 +1400,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       mapOfStringValues: isObject(object.mapOfStringValues)
         ? (globalThis.Object.entries(object.mapOfStringValues) as [string, any][]).reduce(
           (acc: { [key: string]: string | undefined }, [key, value]: [string, any]) => {
-            acc[key] = value as string | undefined;
+            globalThis.Object.defineProperty(acc, key, {
+              value: value as string | undefined,
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -1384,7 +1414,12 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       longLookup: isObject(object.longLookup)
         ? (globalThis.Object.entries(object.longLookup) as [string, any][]).reduce(
           (acc: { [key: number]: number }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = globalThis.Number(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: globalThis.Number(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -2132,7 +2167,12 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
       entitiesById: isObject(object.entitiesById)
         ? (globalThis.Object.entries(object.entitiesById) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -2140,7 +2180,12 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
         : isObject(object.entities_by_id)
         ? (globalThis.Object.entries(object.entities_by_id) as [string, any][]).reduce(
           (acc: { [key: number]: Entity }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = Entity.fromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: Entity.fromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -2311,7 +2356,12 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
       enumsById: isObject(object.enumsById)
         ? (globalThis.Object.entries(object.enumsById) as [string, any][]).reduce(
           (acc: { [key: number]: StateEnum }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = stateEnumFromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: stateEnumFromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
@@ -2319,7 +2369,12 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
         : isObject(object.enums_by_id)
         ? (globalThis.Object.entries(object.enums_by_id) as [string, any][]).reduce(
           (acc: { [key: number]: StateEnum }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = stateEnumFromJSON(value);
+            globalThis.Object.defineProperty(acc, globalThis.Number(key), {
+              value: stateEnumFromJSON(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},

@@ -232,7 +232,12 @@ export const TPartial: MessageFns<TPartial> = {
       map: isObject(object.map)
         ? (globalThis.Object.entries(object.map) as [string, any][]).reduce(
           (acc: { [key: string]: string }, [key, value]: [string, any]) => {
-            acc[key] = globalThis.String(value);
+            globalThis.Object.defineProperty(acc, key, {
+              value: globalThis.String(value),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
             return acc;
           },
           {},
