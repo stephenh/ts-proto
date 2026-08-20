@@ -84,66 +84,75 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSimpleWithWrappers();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.name = StringValue.decode(reader, reader.uint32()).value;
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.age = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.enabled = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.bananas = Int64Value.decode(reader, reader.uint32()).value;
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSimpleWithWrappers();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.name = StringValue.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.age = Int32Value.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            message.enabled = BoolValue.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 4: {
+            if (tag !== 34) {
+              break;
+            }
+
+            message.bananas = Int64Value.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 6: {
+            if (tag !== 50) {
+              break;
+            }
+
+            message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
+            continue;
+          }
+          case 7: {
+            if (tag !== 58) {
+              break;
+            }
+
+            message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): SimpleWithWrappers {
@@ -217,51 +226,60 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSimpleWithMap();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
-          if (entry2.value !== undefined) {
-            message.nameLookup[entry2.key] = entry2.value;
-          }
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
-          if (entry3.value !== undefined) {
-            message.intLookup[entry3.key] = entry3.value;
-          }
-          continue;
-        }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          const entry4 = SimpleWithMap_LongLookupEntry.decode(reader, reader.uint32());
-          if (entry4.value !== undefined) {
-            message.longLookup.set(entry4.key, entry4.value);
-          }
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSimpleWithMap();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
+            if (entry2.value !== undefined) {
+              message.nameLookup[entry2.key] = entry2.value;
+            }
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
+            if (entry3.value !== undefined) {
+              message.intLookup[entry3.key] = entry3.value;
+            }
+            continue;
+          }
+          case 4: {
+            if (tag !== 34) {
+              break;
+            }
+
+            const entry4 = SimpleWithMap_LongLookupEntry.decode(reader, reader.uint32());
+            if (entry4.value !== undefined) {
+              message.longLookup.set(entry4.key, entry4.value);
+            }
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): SimpleWithMap {
@@ -388,34 +406,43 @@ export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSimpleWithMap_NameLookupEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSimpleWithMap_NameLookupEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
@@ -466,34 +493,43 @@ export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEnt
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSimpleWithMap_IntLookupEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.value = reader.int32();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSimpleWithMap_IntLookupEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.key = reader.int32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
+
+            message.value = reader.int32();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
@@ -542,34 +578,43 @@ export const SimpleWithMap_LongLookupEntry: MessageFns<SimpleWithMap_LongLookupE
 
   decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSimpleWithMap_LongLookupEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = Long.fromString(reader.int64().toString());
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.value = Long.fromString(reader.int64().toString());
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSimpleWithMap_LongLookupEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.key = Long.fromString(reader.int64().toString());
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
+
+            message.value = Long.fromString(reader.int64().toString());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): SimpleWithMap_LongLookupEntry {
@@ -669,132 +714,141 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNumbers();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.double = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 21) {
-            break;
-          }
-
-          message.float = reader.float();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.int32 = reader.int32();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.int64 = Long.fromString(reader.int64().toString());
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.uint32 = reader.uint32();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.uint64 = Long.fromString(reader.uint64().toString(), true);
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.sint32 = reader.sint32();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.sint64 = Long.fromString(reader.sint64().toString());
-          continue;
-        }
-        case 9: {
-          if (tag !== 77) {
-            break;
-          }
-
-          message.fixed32 = reader.fixed32();
-          continue;
-        }
-        case 10: {
-          if (tag !== 81) {
-            break;
-          }
-
-          message.fixed64 = Long.fromString(reader.fixed64().toString(), true);
-          continue;
-        }
-        case 11: {
-          if (tag !== 93) {
-            break;
-          }
-
-          message.sfixed32 = reader.sfixed32();
-          continue;
-        }
-        case 12: {
-          if (tag !== 97) {
-            break;
-          }
-
-          message.sfixed64 = Long.fromString(reader.sfixed64().toString());
-          continue;
-        }
-        case 13: {
-          if (tag === 104) {
-            message.manyUint64.push(Long.fromString(reader.uint64().toString(), true));
-
-            continue;
-          }
-
-          if (tag === 106) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.manyUint64.push(Long.fromString(reader.uint64().toString(), true));
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseNumbers();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 9) {
+              break;
             }
 
+            message.double = reader.double();
             continue;
           }
+          case 2: {
+            if (tag !== 21) {
+              break;
+            }
 
+            message.float = reader.float();
+            continue;
+          }
+          case 3: {
+            if (tag !== 24) {
+              break;
+            }
+
+            message.int32 = reader.int32();
+            continue;
+          }
+          case 4: {
+            if (tag !== 32) {
+              break;
+            }
+
+            message.int64 = Long.fromString(reader.int64().toString());
+            continue;
+          }
+          case 5: {
+            if (tag !== 40) {
+              break;
+            }
+
+            message.uint32 = reader.uint32();
+            continue;
+          }
+          case 6: {
+            if (tag !== 48) {
+              break;
+            }
+
+            message.uint64 = Long.fromString(reader.uint64().toString(), true);
+            continue;
+          }
+          case 7: {
+            if (tag !== 56) {
+              break;
+            }
+
+            message.sint32 = reader.sint32();
+            continue;
+          }
+          case 8: {
+            if (tag !== 64) {
+              break;
+            }
+
+            message.sint64 = Long.fromString(reader.sint64().toString());
+            continue;
+          }
+          case 9: {
+            if (tag !== 77) {
+              break;
+            }
+
+            message.fixed32 = reader.fixed32();
+            continue;
+          }
+          case 10: {
+            if (tag !== 81) {
+              break;
+            }
+
+            message.fixed64 = Long.fromString(reader.fixed64().toString(), true);
+            continue;
+          }
+          case 11: {
+            if (tag !== 93) {
+              break;
+            }
+
+            message.sfixed32 = reader.sfixed32();
+            continue;
+          }
+          case 12: {
+            if (tag !== 97) {
+              break;
+            }
+
+            message.sfixed64 = Long.fromString(reader.sfixed64().toString());
+            continue;
+          }
+          case 13: {
+            if (tag === 104) {
+              message.manyUint64.push(Long.fromString(reader.uint64().toString(), true));
+
+              continue;
+            }
+
+            if (tag === 106) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.manyUint64.push(Long.fromString(reader.uint64().toString(), true));
+              }
+
+              continue;
+            }
+
+            break;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
           break;
         }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
     }
-    return message;
   },
 
   fromJSON(object: any): Numbers {

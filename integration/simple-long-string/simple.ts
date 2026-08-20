@@ -93,130 +93,139 @@ export const Numbers: MessageFns<Numbers> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNumbers();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 9) {
-            break;
-          }
-
-          message.double = reader.double();
-          continue;
-        }
-        case 2: {
-          if (tag !== 21) {
-            break;
-          }
-
-          message.float = reader.float();
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.int32 = reader.int32();
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.int64 = reader.int64().toString();
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.uint32 = reader.uint32();
-          continue;
-        }
-        case 6: {
-          if (tag !== 48) {
-            break;
-          }
-
-          message.uint64 = reader.uint64().toString();
-          continue;
-        }
-        case 7: {
-          if (tag !== 56) {
-            break;
-          }
-
-          message.sint32 = reader.sint32();
-          continue;
-        }
-        case 8: {
-          if (tag !== 64) {
-            break;
-          }
-
-          message.sint64 = reader.sint64().toString();
-          continue;
-        }
-        case 9: {
-          if (tag !== 77) {
-            break;
-          }
-
-          message.fixed32 = reader.fixed32();
-          continue;
-        }
-        case 10: {
-          if (tag !== 81) {
-            break;
-          }
-
-          message.fixed64 = reader.fixed64().toString();
-          continue;
-        }
-        case 11: {
-          if (tag !== 93) {
-            break;
-          }
-
-          message.sfixed32 = reader.sfixed32();
-          continue;
-        }
-        case 12: {
-          if (tag !== 97) {
-            break;
-          }
-
-          message.sfixed64 = reader.sfixed64().toString();
-          continue;
-        }
-        case 13: {
-          if (tag !== 106) {
-            break;
-          }
-
-          message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
-          continue;
-        }
-        case 14: {
-          if (tag !== 114) {
-            break;
-          }
-
-          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseNumbers();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 9) {
+              break;
+            }
+
+            message.double = reader.double();
+            continue;
+          }
+          case 2: {
+            if (tag !== 21) {
+              break;
+            }
+
+            message.float = reader.float();
+            continue;
+          }
+          case 3: {
+            if (tag !== 24) {
+              break;
+            }
+
+            message.int32 = reader.int32();
+            continue;
+          }
+          case 4: {
+            if (tag !== 32) {
+              break;
+            }
+
+            message.int64 = reader.int64().toString();
+            continue;
+          }
+          case 5: {
+            if (tag !== 40) {
+              break;
+            }
+
+            message.uint32 = reader.uint32();
+            continue;
+          }
+          case 6: {
+            if (tag !== 48) {
+              break;
+            }
+
+            message.uint64 = reader.uint64().toString();
+            continue;
+          }
+          case 7: {
+            if (tag !== 56) {
+              break;
+            }
+
+            message.sint32 = reader.sint32();
+            continue;
+          }
+          case 8: {
+            if (tag !== 64) {
+              break;
+            }
+
+            message.sint64 = reader.sint64().toString();
+            continue;
+          }
+          case 9: {
+            if (tag !== 77) {
+              break;
+            }
+
+            message.fixed32 = reader.fixed32();
+            continue;
+          }
+          case 10: {
+            if (tag !== 81) {
+              break;
+            }
+
+            message.fixed64 = reader.fixed64().toString();
+            continue;
+          }
+          case 11: {
+            if (tag !== 93) {
+              break;
+            }
+
+            message.sfixed32 = reader.sfixed32();
+            continue;
+          }
+          case 12: {
+            if (tag !== 97) {
+              break;
+            }
+
+            message.sfixed64 = reader.sfixed64().toString();
+            continue;
+          }
+          case 13: {
+            if (tag !== 106) {
+              break;
+            }
+
+            message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 14: {
+            if (tag !== 114) {
+              break;
+            }
+
+            message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): Numbers {

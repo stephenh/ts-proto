@@ -192,245 +192,254 @@ export const DefaultValuesTest: MessageFns<DefaultValuesTest> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): DefaultValuesTest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDefaultValuesTest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.id = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.child = Child.decode(reader, reader.uint32());
-          continue;
-        }
-        case 3: {
-          if (tag !== 24) {
-            break;
-          }
-
-          message.state = reader.int32() as any;
-          continue;
-        }
-        case 4: {
-          if (tag !== 32) {
-            break;
-          }
-
-          message.long = longToNumber(reader.int64());
-          continue;
-        }
-        case 5: {
-          if (tag !== 40) {
-            break;
-          }
-
-          message.truth = reader.bool();
-          continue;
-        }
-        case 6: {
-          if (tag !== 50) {
-            break;
-          }
-
-          message.description = reader.string();
-          continue;
-        }
-        case 7: {
-          if (tag !== 58) {
-            break;
-          }
-
-          message.data = reader.bytes();
-          continue;
-        }
-        case 11: {
-          if (tag === 88) {
-            message.repId.push(reader.int32());
-
-            continue;
-          }
-
-          if (tag === 90) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.repId.push(reader.int32());
-            }
-
-            continue;
-          }
-
-          break;
-        }
-        case 12: {
-          if (tag !== 98) {
-            break;
-          }
-
-          message.repChild.push(Child.decode(reader, reader.uint32()));
-          continue;
-        }
-        case 13: {
-          if (tag === 104) {
-            message.repState.push(reader.int32() as any);
-
-            continue;
-          }
-
-          if (tag === 106) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.repState.push(reader.int32() as any);
-            }
-
-            continue;
-          }
-
-          break;
-        }
-        case 14: {
-          if (tag === 112) {
-            message.repLong.push(longToNumber(reader.int64()));
-
-            continue;
-          }
-
-          if (tag === 114) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.repLong.push(longToNumber(reader.int64()));
-            }
-
-            continue;
-          }
-
-          break;
-        }
-        case 15: {
-          if (tag === 120) {
-            message.repTruth.push(reader.bool());
-
-            continue;
-          }
-
-          if (tag === 122) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.repTruth.push(reader.bool());
-            }
-
-            continue;
-          }
-
-          break;
-        }
-        case 16: {
-          if (tag !== 130) {
-            break;
-          }
-
-          message.repDescription.push(reader.string());
-          continue;
-        }
-        case 17: {
-          if (tag !== 138) {
-            break;
-          }
-
-          message.repData.push(reader.bytes());
-          continue;
-        }
-        case 21: {
-          if (tag !== 168) {
-            break;
-          }
-
-          message.optId = reader.int32();
-          continue;
-        }
-        case 22: {
-          if (tag !== 178) {
-            break;
-          }
-
-          message.optChild = Child.decode(reader, reader.uint32());
-          continue;
-        }
-        case 23: {
-          if (tag !== 184) {
-            break;
-          }
-
-          message.optState = reader.int32() as any;
-          continue;
-        }
-        case 24: {
-          if (tag !== 192) {
-            break;
-          }
-
-          message.optLong = longToNumber(reader.int64());
-          continue;
-        }
-        case 25: {
-          if (tag !== 200) {
-            break;
-          }
-
-          message.optTruth = reader.bool();
-          continue;
-        }
-        case 26: {
-          if (tag !== 210) {
-            break;
-          }
-
-          message.optDescription = reader.string();
-          continue;
-        }
-        case 27: {
-          if (tag !== 218) {
-            break;
-          }
-
-          message.optData = reader.bytes();
-          continue;
-        }
-        case 30: {
-          if (tag !== 242) {
-            break;
-          }
-
-          const entry30 = DefaultValuesTest_TranslationsEntry.decode(reader, reader.uint32());
-          if (entry30.value !== undefined) {
-            message.translations[entry30.key] = entry30.value;
-          }
-          continue;
-        }
-        case 31: {
-          if (tag !== 250) {
-            break;
-          }
-
-          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseDefaultValuesTest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.id = reader.int32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.child = Child.decode(reader, reader.uint32());
+            continue;
+          }
+          case 3: {
+            if (tag !== 24) {
+              break;
+            }
+
+            message.state = reader.int32() as any;
+            continue;
+          }
+          case 4: {
+            if (tag !== 32) {
+              break;
+            }
+
+            message.long = longToNumber(reader.int64());
+            continue;
+          }
+          case 5: {
+            if (tag !== 40) {
+              break;
+            }
+
+            message.truth = reader.bool();
+            continue;
+          }
+          case 6: {
+            if (tag !== 50) {
+              break;
+            }
+
+            message.description = reader.string();
+            continue;
+          }
+          case 7: {
+            if (tag !== 58) {
+              break;
+            }
+
+            message.data = reader.bytes();
+            continue;
+          }
+          case 11: {
+            if (tag === 88) {
+              message.repId.push(reader.int32());
+
+              continue;
+            }
+
+            if (tag === 90) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.repId.push(reader.int32());
+              }
+
+              continue;
+            }
+
+            break;
+          }
+          case 12: {
+            if (tag !== 98) {
+              break;
+            }
+
+            message.repChild.push(Child.decode(reader, reader.uint32()));
+            continue;
+          }
+          case 13: {
+            if (tag === 104) {
+              message.repState.push(reader.int32() as any);
+
+              continue;
+            }
+
+            if (tag === 106) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.repState.push(reader.int32() as any);
+              }
+
+              continue;
+            }
+
+            break;
+          }
+          case 14: {
+            if (tag === 112) {
+              message.repLong.push(longToNumber(reader.int64()));
+
+              continue;
+            }
+
+            if (tag === 114) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.repLong.push(longToNumber(reader.int64()));
+              }
+
+              continue;
+            }
+
+            break;
+          }
+          case 15: {
+            if (tag === 120) {
+              message.repTruth.push(reader.bool());
+
+              continue;
+            }
+
+            if (tag === 122) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.repTruth.push(reader.bool());
+              }
+
+              continue;
+            }
+
+            break;
+          }
+          case 16: {
+            if (tag !== 130) {
+              break;
+            }
+
+            message.repDescription.push(reader.string());
+            continue;
+          }
+          case 17: {
+            if (tag !== 138) {
+              break;
+            }
+
+            message.repData.push(reader.bytes());
+            continue;
+          }
+          case 21: {
+            if (tag !== 168) {
+              break;
+            }
+
+            message.optId = reader.int32();
+            continue;
+          }
+          case 22: {
+            if (tag !== 178) {
+              break;
+            }
+
+            message.optChild = Child.decode(reader, reader.uint32());
+            continue;
+          }
+          case 23: {
+            if (tag !== 184) {
+              break;
+            }
+
+            message.optState = reader.int32() as any;
+            continue;
+          }
+          case 24: {
+            if (tag !== 192) {
+              break;
+            }
+
+            message.optLong = longToNumber(reader.int64());
+            continue;
+          }
+          case 25: {
+            if (tag !== 200) {
+              break;
+            }
+
+            message.optTruth = reader.bool();
+            continue;
+          }
+          case 26: {
+            if (tag !== 210) {
+              break;
+            }
+
+            message.optDescription = reader.string();
+            continue;
+          }
+          case 27: {
+            if (tag !== 218) {
+              break;
+            }
+
+            message.optData = reader.bytes();
+            continue;
+          }
+          case 30: {
+            if (tag !== 242) {
+              break;
+            }
+
+            const entry30 = DefaultValuesTest_TranslationsEntry.decode(reader, reader.uint32());
+            if (entry30.value !== undefined) {
+              message.translations[entry30.key] = entry30.value;
+            }
+            continue;
+          }
+          case 31: {
+            if (tag !== 250) {
+              break;
+            }
+
+            message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): DefaultValuesTest {
@@ -669,34 +678,43 @@ export const DefaultValuesTest_TranslationsEntry: MessageFns<DefaultValuesTest_T
 
   decode(input: BinaryReader | Uint8Array, length?: number): DefaultValuesTest_TranslationsEntry {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDefaultValuesTest_TranslationsEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseDefaultValuesTest_TranslationsEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = reader.string();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(object: any): DefaultValuesTest_TranslationsEntry {
@@ -743,18 +761,27 @@ export const Child: MessageFns<Child> = {
 
   decode(input: BinaryReader | Uint8Array, length?: number): Child {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChild();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
     }
-    return message;
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseChild();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
   },
 
   fromJSON(_: any): Child {
