@@ -1,3 +1,13 @@
+## [2.12.1](https://github.com/stephenh/ts-proto/compare/v2.12.0...v2.12.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* avoid prototype pollution in generated toJSON for __proto__ json… ([#1268](https://github.com/stephenh/ts-proto/issues/1268)) ([d0ac4c4](https://github.com/stephenh/ts-proto/commit/d0ac4c45840c5ec21e048aa86760869f836755ef))
+* avoid prototype pollution when decoding JSON maps ([#1267](https://github.com/stephenh/ts-proto/issues/1267)) ([2b387b7](https://github.com/stephenh/ts-proto/commit/2b387b740080faa3131d1a827aecfc687f8a1417))
+* bound recursion depth in generated message decode ([#1269](https://github.com/stephenh/ts-proto/issues/1269)) ([18071eb](https://github.com/stephenh/ts-proto/commit/18071ebb07cf4686be079419bc07c6d789e10bbe))
+* escape proto2 string field defaults in generated code ([#1270](https://github.com/stephenh/ts-proto/issues/1270)) ([bd34278](https://github.com/stephenh/ts-proto/commit/bd34278230ceeba3fb7d00be3f01d7d8c4624689))
+
 # [2.12.0](https://github.com/stephenh/ts-proto/compare/v2.11.10...v2.12.0) (2026-07-03)
 
 
