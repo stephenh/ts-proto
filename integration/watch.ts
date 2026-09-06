@@ -24,9 +24,13 @@ function main() {
   if (process.argv.includes("-h") || process.argv.includes("--help")) showHelp();
   showSettings(tests);
 
-  chokidar.watch("integration/*/*.proto", watchOptions).on("all", integrationHandler(yarn, "proto2ts"));
-  chokidar.watch("integration/*/*.proto", watchOptions).on("all", integrationHandler(yarn, "proto2pbjs"));
-  chokidar.watch("src/**/*.ts", watchOptions).on("change", srcHandler(yarn, "proto2ts", tests));
+  // chokidar 4 dropped glob support, so watch the directories and filter by file extension instead.
+  // Depth 1 covers integration/<test>/*.proto without descending into nested node_modules.
+  const protoWatchOptions = { ...watchOptions, depth: 1, ignored: onlyFilesWithExtension(".proto") };
+  const srcWatchOptions = { ...watchOptions, ignored: onlyFilesWithExtension(".ts") };
+  chokidar.watch("integration", protoWatchOptions).on("all", integrationHandler(yarn, "proto2ts"));
+  chokidar.watch("integration", protoWatchOptions).on("all", integrationHandler(yarn, "proto2pbjs"));
+  chokidar.watch("src", srcWatchOptions).on("change", srcHandler(yarn, "proto2ts", tests));
 
   setupKeys({
     [""]: () => yarnRun(yarn, "proto2ts", "enter"),
@@ -130,4 +134,9 @@ function formatLog(color: string, triggerPath: string, category: string, message
       .map((line) => `${colors.reset}${triggerPath} ${colors.cyan}[${category}]${colors.reset} ${color}` + line)
       .join("\n") + colors.reset
   );
+}
+
+/** Returns a chokidar `ignored` predicate that skips files other than `*${extension}` but keeps directories. */
+function onlyFilesWithExtension(extension: string) {
+  return (path: string, stats?: { isFile(): boolean }) => stats?.isFile() === true && !path.endsWith(extension);
 }
