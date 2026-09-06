@@ -30,8 +30,8 @@
   "devDependencies": {
     "@grpc/grpc-js": "^1.14.4",
     "@grpc/proto-loader": "^0.8.1",
-    "@improbable-eng/grpc-web": "^0.14.1",
-    "@improbable-eng/grpc-web-node-http-transport": "^0.14.1",
+    "@improbable-eng/grpc-web": "^0.15.0",
+    "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "@nestjs/common": "^10.4.22",
     "@nestjs/core": "^10.4.22",
     "@nestjs/microservices": "^10.4.22",

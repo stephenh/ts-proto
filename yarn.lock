@@ -781,23 +781,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@improbable-eng/grpc-web-node-http-transport@npm:^0.14.1":
-  version: 0.14.1
-  resolution: "@improbable-eng/grpc-web-node-http-transport@npm:0.14.1"
+"@improbable-eng/grpc-web-node-http-transport@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@improbable-eng/grpc-web-node-http-transport@npm:0.15.0"
   peerDependencies:
     "@improbable-eng/grpc-web": ">=0.13.0"
-  checksum: 10/4056f75ed1eaf2d63b7dab5af2fe684e2ede783004f793410b11d879a2c850fa4295be53a6d8cbee9c5258c8325149a89b414237c0b173df5a7dda571c4a49fe
+  checksum: 10/03040326dc41a613c0439a57786480d186897ef332e615909b64df6586218d0b7f191fbacaa9a4b280d093292f641321c4e89da43ba790c34c0d05a7ce7f405d
   languageName: node
   linkType: hard
 
-"@improbable-eng/grpc-web@npm:^0.14.1":
-  version: 0.14.1
-  resolution: "@improbable-eng/grpc-web@npm:0.14.1"
+"@improbable-eng/grpc-web@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@improbable-eng/grpc-web@npm:0.15.0"
   dependencies:
     browser-headers: "npm:^0.4.1"
   peerDependencies:
     google-protobuf: ^3.14.0
-  checksum: 10/81dc3121d56d05d050f479356250426bcd4163c3c0ce0c0f6e60c81f7d8ae93c66b34473a6fd893921bb26b1e17db2d4969f4a20695c9dac2c072cfdc7371e86
+  checksum: 10/de9e79945c6f5efc41492ae2197c13e5ed4a266c8e17732ac06b792393576c01c97293dd67a3435316481db7ddd377c6d84e83638a2639723acdce371c6e1e6b
   languageName: node
   linkType: hard
 
@@ -8640,8 +8640,8 @@ __metadata:
     "@bufbuild/protobuf": "npm:^2.14.1"
     "@grpc/grpc-js": "npm:^1.14.4"
     "@grpc/proto-loader": "npm:^0.8.1"
-    "@improbable-eng/grpc-web": "npm:^0.14.1"
-    "@improbable-eng/grpc-web-node-http-transport": "npm:^0.14.1"
+    "@improbable-eng/grpc-web": "npm:^0.15.0"
+    "@improbable-eng/grpc-web-node-http-transport": "npm:^0.15.0"
     "@nestjs/common": "npm:^10.4.22"
     "@nestjs/core": "npm:^10.4.22"
     "@nestjs/microservices": "npm:^10.4.22"
