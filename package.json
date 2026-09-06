@@ -52,7 +52,7 @@
     "jest": "^30.5.1",
     "jest-ts-webcompat-resolver": "^1.0.1",
     "long": "^5.3.2",
-    "mongodb": "^5.7.0",
+    "mongodb": "^6.21.0",
     "nano-date": "^4.1.0",
     "nice-grpc": "^2.1.17",
     "object-hash": "^3.0.0",
