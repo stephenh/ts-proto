@@ -1,4 +1,4 @@
-import * as Long from "long";
+import Long = require("long");
 import { SimpleWithMap } from "./simple";
 
 describe("simple", () => {
