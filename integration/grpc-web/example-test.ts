@@ -29,7 +29,7 @@ describe('grpc-web', () => {
     };
     const client = new DashStateClientImpl(rpc);
     const call = () => client.ChangeUserSettingsStream(EMPTY);
-    expect(call).toThrowError('ts-proto does not yet support client streaming!');
+    expect(call).toThrow('ts-proto does not yet support client streaming!');
   });
 
   it('throws error of type GrpcWebError', async () => {

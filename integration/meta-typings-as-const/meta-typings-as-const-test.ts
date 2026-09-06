@@ -39,6 +39,6 @@ describe("meta-typings-as-const", () => {
       // it also throws a type error at runtime, because VALUE_C isn't a valid
       // value of protoMetadata.options.enums.TestEnum.values
       getTestEnumStringValue("VALUE_C");
-    }).toThrowError("Cannot read properties of undefined (reading 'string_value')");
+    }).toThrow("Cannot read properties of undefined (reading 'string_value')");
   });
 });

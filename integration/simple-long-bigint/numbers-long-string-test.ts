@@ -287,7 +287,7 @@ describe("number", () => {
       const failValue = Numbers.fromPartial(testCase.failValue);
       expect(() => { Numbers.encode(failValue) }).toThrow(testCase.failMsg);
       const passValue = Numbers.fromPartial(testCase.passValue);
-      expect(() => Numbers.encode(passValue).finish()).not.toThrowError();
+      expect(() => Numbers.encode(passValue).finish()).not.toThrow();
     }
   });
 });
