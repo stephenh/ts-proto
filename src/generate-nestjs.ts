@@ -178,11 +178,13 @@ export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceD
         for (const method of grpcMethods) {
           const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
           ${GrpcMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
+          Object.defineProperty(constructor.prototype, method, descriptor);
         }
         const grpcStreamMethods: string[] = [${grpcStreamMethods.join(", ")}];
         for (const method of grpcStreamMethods) {
           const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
           ${GrpcStreamMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
+          Object.defineProperty(constructor.prototype, method, descriptor);
         }
       };
     }
