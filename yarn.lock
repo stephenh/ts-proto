@@ -442,10 +442,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bufbuild/protobuf@npm:^2.10.2":
-  version: 2.10.2
-  resolution: "@bufbuild/protobuf@npm:2.10.2"
-  checksum: 10/1e31a696153ef4e0b466792b298aaeec044ec5d9d84846db870ca18abdc06672323c0aa47c5df7e9492829f5aa7f9f2bb8028b48dc944cf1d75367c4d769967a
+"@bufbuild/protobuf@npm:^2.14.1":
+  version: 2.14.1
+  resolution: "@bufbuild/protobuf@npm:2.14.1"
+  checksum: 10/259de604ba2f98f9afdf95d76edae601e0f9d50efa0ca4c44ba827f42ed292ff021be57be264f29cb3edab3acb98cb1f9c07d5a88c630bc993df11be7cfb97f9
   languageName: node
   linkType: hard
 
@@ -7828,7 +7828,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts-proto@workspace:."
   dependencies:
-    "@bufbuild/protobuf": "npm:^2.10.2"
+    "@bufbuild/protobuf": "npm:^2.14.1"
     "@grpc/grpc-js": "npm:^1.8.17"
     "@grpc/proto-loader": "npm:^0.7.8"
     "@improbable-eng/grpc-web": "npm:^0.14.1"
