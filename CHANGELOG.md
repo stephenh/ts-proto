@@ -1,3 +1,10 @@
+## [2.12.2](https://github.com/stephenh/ts-proto/compare/v2.12.1...v2.12.2) (2026-09-06)
+
+
+### Bug Fixes
+
+* Bump bufbuild/protobuf with perf fix. ([#1272](https://github.com/stephenh/ts-proto/issues/1272)) ([c769a3f](https://github.com/stephenh/ts-proto/commit/c769a3f4708671305611de15c28b992a8d24571f)), closes [#1098](https://github.com/stephenh/ts-proto/issues/1098)
+
 ## [2.12.1](https://github.com/stephenh/ts-proto/compare/v2.12.0...v2.12.1) (2026-08-20)
 
 
