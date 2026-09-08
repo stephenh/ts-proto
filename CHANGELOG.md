@@ -1,3 +1,10 @@
+## [2.12.3](https://github.com/stephenh/ts-proto/compare/v2.12.2...v2.12.3) (2026-09-08)
+
+
+### Bug Fixes
+
+* apply decorated descriptors in generated NestJS ControllerMethods ([fa4919f](https://github.com/stephenh/ts-proto/commit/fa4919f9ee022aa689429fdbff9d79ce4db99534))
+
 ## [2.12.2](https://github.com/stephenh/ts-proto/compare/v2.12.1...v2.12.2) (2026-09-06)
 
 
