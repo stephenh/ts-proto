@@ -1,5 +1,5 @@
 # Docker image for protoc
-FROM node:20-bullseye-slim
+FROM node:26-trixie-slim
 ARG PROTOC_VERSION="3.19.1"
 ARG ARCH="x86_64"
 
