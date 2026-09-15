@@ -287,12 +287,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
 
         const structFieldNames = {
-          nullValue: maybeSnakeToCamel("null_value", ctx.options),
-          numberValue: maybeSnakeToCamel("number_value", ctx.options),
-          stringValue: maybeSnakeToCamel("string_value", ctx.options),
-          boolValue: maybeSnakeToCamel("bool_value", ctx.options),
-          structValue: maybeSnakeToCamel("struct_value", ctx.options),
-          listValue: maybeSnakeToCamel("list_value", ctx.options),
+          nullValue: getFieldName({ name: "null_value", jsonName: snakeToCamel("null_value") }, ctx.options),
+          numberValue: getFieldName({ name: "number_value", jsonName: snakeToCamel("number_value") }, ctx.options),
+          stringValue: getFieldName({ name: "string_value", jsonName: snakeToCamel("string_value") }, ctx.options),
+          boolValue: getFieldName({ name: "bool_value", jsonName: snakeToCamel("bool_value") }, ctx.options),
+          structValue: getFieldName({ name: "struct_value", jsonName: snakeToCamel("struct_value") }, ctx.options),
+          listValue: getFieldName({ name: "list_value", jsonName: snakeToCamel("list_value") }, ctx.options),
         };
         if (options.nestJs) {
           staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames));
