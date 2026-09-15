@@ -1,6 +1,6 @@
 import { maybeSnakeToCamel, camelCaseGrpc, camelToSnake } from "../src/case";
 import { Options, optionsFromParameter } from "../src/options";
-import { getFieldJsonName } from "../src/utils";
+import { getFieldJsonName, getFieldName } from "../src/utils";
 
 const keys = optionsFromParameter("snakeToCamel=keys");
 
@@ -79,6 +79,26 @@ describe("case", () => {
     it('uses jsonName when "useJsonName" is explicitly set', () => {
       expect(getFieldJsonName({ name: "foo_bar", jsonName: "foo" }, { snakeToCamel: [], useJsonName: true })).toBe(
         "foo",
+      );
+    });
+  });
+
+  describe("getFieldName", () => {
+    it("keeps snake case when snakeToCamel and useJsonName are off", () => {
+      expect(
+        getFieldName({ name: "null_value", jsonName: "nullValue" }, { snakeToCamel: [], useJsonName: false }),
+      ).toBe("null_value");
+    });
+
+    it('camelCases keys when "snakeToCamel" includes keys', () => {
+      expect(
+        getFieldName({ name: "null_value", jsonName: "nullValue" }, { snakeToCamel: ["keys"], useJsonName: false }),
+      ).toBe("nullValue");
+    });
+
+    it('uses jsonName when "useJsonName" is set, even if snakeToCamel is off', () => {
+      expect(getFieldName({ name: "null_value", jsonName: "nullValue" }, { snakeToCamel: [], useJsonName: true })).toBe(
+        "nullValue",
       );
     });
   });

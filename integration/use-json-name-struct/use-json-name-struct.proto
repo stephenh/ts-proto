@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package json_name_struct;
+
+message Holder {
+  google.protobuf.Value value = 1;
+  google.protobuf.Struct struct = 2;
+  google.protobuf.ListValue list = 3;
+}
