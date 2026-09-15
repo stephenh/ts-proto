@@ -1,3 +1,10 @@
+## [2.12.4](https://github.com/stephenh/ts-proto/compare/v2.12.3...v2.12.4) (2026-09-15)
+
+
+### Bug Fixes
+
+* use jsonName for struct wrapper field names when useJsonName is set ([#1274](https://github.com/stephenh/ts-proto/issues/1274)) ([7ef23e5](https://github.com/stephenh/ts-proto/commit/7ef23e5d6252f4af961342a295adcbd070ed84ad)), closes [#1125](https://github.com/stephenh/ts-proto/issues/1125)
+
 ## [2.12.3](https://github.com/stephenh/ts-proto/compare/v2.12.2...v2.12.3) (2026-09-08)
 
 
