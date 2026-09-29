@@ -107,8 +107,10 @@ import {
   impFile,
   impProto,
   impProtoMethod,
+  localMessageMethod,
   maybeAddComment,
   maybePrefixPackage,
+  messageMethodHead,
   nullOrUndefined,
   oneofValueName,
   safeAccessor,
@@ -257,7 +259,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
                 staticMembers.push(generateSetExtension(ctx, fullName));
               }
             } else if (options.outputEncodeMethods === true) {
-              staticMembers.push(generateEmptyEncode(fullName));
+              staticMembers.push(generateEmptyEncode(ctx, fullName));
             }
           }
 
@@ -272,14 +274,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
                 staticMembers.push(generateGetExtension(ctx, fullName));
               }
             } else if (options.outputEncodeMethods === true) {
-              staticMembers.push(generateEmptyDecode(fullName));
+              staticMembers.push(generateEmptyDecode(ctx, fullName));
             }
           }
         }
 
         if (options.useAsyncIterable) {
-          staticMembers.push(generateEncodeTransform(ctx.utils, fullName));
-          staticMembers.push(generateDecodeTransform(ctx.utils, fullName));
+          staticMembers.push(generateEncodeTransform(ctx, fullName));
+          staticMembers.push(generateDecodeTransform(ctx, fullName));
         }
         if (options.outputJsonMethods) {
           if (options.outputJsonMethods === true || options.outputJsonMethods === "from-only") {
@@ -1562,11 +1564,11 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
   return readSnippet;
 }
 
-function generateEmptyDecode(fullName: string): Code {
+function generateEmptyDecode(ctx: Context, fullName: string): Code {
   const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
 
   return code`
-    decode(
+    ${messageMethodHead(ctx.options, fullName, "decode")}(
       _: ${BinaryReader} | Uint8Array,
       length?: number,
     ): ${fullName} {
@@ -1589,7 +1591,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // create the basic function declaration
   chunks.push(code`
-    decode(
+    ${messageMethodHead(options, fullName, "decode")}(
       input: ${BinaryReader} | Uint8Array,
       length?: number,
     ): ${fullName} {
@@ -1869,11 +1871,11 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
   }
 }
 
-function generateEmptyEncode(fullName: string): Code {
+function generateEmptyEncode(ctx: Context, fullName: string): Code {
   const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
 
   return code`
-  encode(
+  ${messageMethodHead(ctx.options, fullName, "encode")}(
     _: ${fullName},
     writer: ${BinaryWriter} = new ${BinaryWriter}(),
   ): ${BinaryWriter} {
@@ -1891,7 +1893,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // create the basic function declaration
   chunks.push(code`
-    encode(
+    ${messageMethodHead(options, fullName, "encode")}(
       ${messageDesc.field.length > 0 || options.unknownFields ? "message" : "_"}: ${fullName},
       writer: ${BinaryWriter} = new ${BinaryWriter}(),
     ): ${BinaryWriter} {
@@ -2119,7 +2121,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
 function generateSetExtension(ctx: Context, fullName: string) {
   return code`
-    setExtension <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>, value: T): void {
+    ${messageMethodHead(ctx.options, fullName, "setExtension")} <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>, value: T): void {
       const encoded = extension.encode!(value);
 
       if (message._unknownFields !== undefined) {
@@ -2146,7 +2148,7 @@ function generateSetExtension(ctx: Context, fullName: string) {
 
 function generateGetExtension(ctx: Context, fullName: string) {
   return code`
-    getExtension <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>): T | undefined {
+    ${messageMethodHead(ctx.options, fullName, "getExtension")} <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>): T | undefined {
       let results: T | undefined = undefined;
 
       if (message._unknownFields === undefined) {
@@ -2430,7 +2432,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         break;
     }
     return code`
-      fromJSON(object: string): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromJSON")}(object: string): ${fullName} {
         if (!object.endsWith("s")) throw new Error("Invalid duration string");
         const body = object.slice(0, -1);
         const negative = body.startsWith("-");
@@ -2451,15 +2453,15 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   if (fullTypeName === "google.protobuf.Timestamp") {
     // The canonical JSON of a Timestamp is an RFC 3339 string; the object form is still accepted.
     chunks.push(code`
-      fromJSON(object: any): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromJSON")}(object: any): ${fullName} {
         if (typeof object === "string") {
-          return ${fullName}.fromJSON(${utils.timestampFromJson}(object));
+          return ${localMessageMethod(options, fullName, "fromJSON")}(${utils.timestampFromJson}(object));
         }
         return {
     `);
   } else {
     chunks.push(code`
-      fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromJSON")}(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
         return {
     `);
   }
@@ -2789,15 +2791,16 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong }: Options,
+  options: Options,
   utils: Utils,
 ): Code | undefined {
+  const { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong } = options;
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
     const pathModifier = useOptionals === "all" ? "?" : "";
 
     return code`
-    toJSON(message: ${fullName}): ${returnType} {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): ${returnType} {
       return message.paths${pathModifier}.join(',');
     }
   `;
@@ -2826,7 +2829,7 @@ function generateCanonicalToJson(
         break;
     }
     return code`
-    toJSON(message: ${fullName}): string {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): string {
       const negative = ${isNegSeconds} || message.nanos < 0;
       const sign = negative ? "-" : "";
       const absSeconds = ${absSeconds};
@@ -2844,7 +2847,7 @@ function generateCanonicalToJson(
         ? code`message.seconds?.toNumber() ?? 0`
         : code`${utils.globalThis}.Number(message.seconds ?? 0)`;
     return code`
-    toJSON(message: ${fullName}): string {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): string {
       return ${utils.timestampToJson}(${seconds}, message.nanos ?? 0);
     }
     `;
@@ -2879,7 +2882,7 @@ function generateCanonicalAnyToJson(ctx: Context, fullName: string, messageDesc:
   const typeUrl = getPropertyAccessor("message", getFieldName(typeUrlField, options));
   const value = getPropertyAccessor("message", getFieldName(valueField, options));
   return code`
-    toJSON(message: ${fullName}): unknown {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): unknown {
       const typeUrl = ${typeUrl} ?? "";
       if (typeUrl === "") {
         return {};
@@ -2907,7 +2910,7 @@ function generateCanonicalAnyFromJson(ctx: Context, fullName: string, messageDes
   const typeField = addTypeToMessages(options) ? code`$type: ${fullName}.$type,` : "";
   const bytes = options.env === EnvOption.NODE ? code`Buffer.from(bytes)` : code`bytes`;
   return code`
-    fromJSON(object: any): ${fullName} {
+    ${messageMethodHead(options, fullName, "fromJSON")}(object: any): ${fullName} {
       const typeUrl = ${utils.isSet}(object?.["@type"]) ? ${utils.globalThis}.String(object["@type"]) : "";
       if (typeUrl === "") {
         return { ${typeField} ${typeUrlKey}: ${defaultValue(ctx, typeUrlField)}, ${valueKey}: ${defaultValue(ctx, valueField)} };
@@ -2950,7 +2953,7 @@ function generateToJson(
 
   // create the basic function declaration
   chunks.push(code`
-    toJSON(${messageDesc.field.length > 0 ? "message" : "_"}: ${fullName}): unknown {
+    ${messageMethodHead(options, fullName, "toJSON")}(${messageDesc.field.length > 0 ? "message" : "_"}: ${fullName}): unknown {
       const obj: any = {};
   `);
 
@@ -3138,14 +3141,14 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   // create the create function definition
   if (ctx.options.useExactTypes) {
     chunks.push(code`
-      create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
-        return ${fullName}.fromPartial(base ?? ({} as any));
+      ${messageMethodHead(options, fullName, "create")}<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
+        return ${localMessageMethod(options, fullName, "fromPartial")}(base ?? ({} as any));
       },
     `);
   } else {
     chunks.push(code`
-      create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
-        return ${fullName}.fromPartial(base ?? {});
+      ${messageMethodHead(options, fullName, "create")}(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+        return ${localMessageMethod(options, fullName, "fromPartial")}(base ?? {});
       },
     `);
   }
@@ -3155,11 +3158,11 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
   if (ctx.options.useExactTypes) {
     chunks.push(code`
-      fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromPartial")}<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
     `);
   } else {
     chunks.push(code`
-      fromPartial(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromPartial")}(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
     `);
   }
 

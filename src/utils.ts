@@ -286,6 +286,14 @@ export function impProtoMethod(options: Options, module: string, type: string, m
   return code`${impProto(options, module, type)}.${method}`;
 }
 
+export function localMessageMethod(options: Options, type: string, method: string): string {
+  return `${type}.${method}`;
+}
+
+export function messageMethodHead(options: Options, type: string, method: string, isAsyncGenerator = false): Code {
+  return code`${isAsyncGenerator ? "async *" : ""}${method}`;
+}
+
 export function tryCatchBlock(tryBlock: Code | string, handleErrorBlock: Code | string): Code {
   return code`try {
     ${tryBlock}
