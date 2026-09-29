@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package standalone;
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "other.proto";
+
+message Parent {
+  message Child {
+    string name = 1;
+  }
+
+  map<string, Child> children = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.FieldMask mask = 3;
+}
+
+service Converter {
+  rpc Convert(Parent) returns (Other);
+}
