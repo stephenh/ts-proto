@@ -46,6 +46,7 @@ describe("options", () => {
         "outputPartialMethods": false,
         "outputSchema": false,
         "outputServices": [],
+        "outputStandaloneFunctions": false,
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
         "protoJsonFormat": true,
@@ -235,5 +236,19 @@ describe("options", () => {
       useNullAsOptional: true,
       // outputServices: [ServiceOption.DEFAULT, ServiceOption.GENERIC],
     });
+  });
+
+  it("outputStandaloneFunctions rejects the options it doesn't support", () => {
+    for (const param of [
+      "outputTypeRegistry=true",
+      "outputTypeAnnotations=static-only",
+      "outputServices=generic-definitions",
+      "nestJs=true",
+      "useMongoObjectId=true",
+    ]) {
+      expect(() => optionsFromParameter(`outputStandaloneFunctions=true,${param}`)).toThrow(
+        "outputStandaloneFunctions=true can't be used with",
+      );
+    }
   });
 });

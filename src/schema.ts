@@ -78,7 +78,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     fileDesc,
     sourceInfo,
     (fullName) => {
-      if (options.outputEncodeMethods) {
+      if (options.outputEncodeMethods && !options.outputStandaloneFunctions) {
         addReference(fullName, fullName);
       }
     },

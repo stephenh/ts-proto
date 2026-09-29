@@ -110,6 +110,7 @@ import {
   localMessageMethod,
   maybeAddComment,
   maybePrefixPackage,
+  messageFunctionName,
   messageMethodHead,
   nullOrUndefined,
   oneofValueName,
@@ -231,7 +232,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         const staticMembers: Code[] = [];
 
         const hasTypeMember = options.outputTypeAnnotations || options.outputTypeRegistry;
-        if (hasTypeMember) {
+        if (hasTypeMember && !options.outputStandaloneFunctions) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
 
@@ -239,7 +240,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           for (const extension of message.extension) {
             const { name, type, extensionInfo } = generateExtension(ctx, message, extension);
 
-            staticMembers.push(code`${name}: <${ctx.utils.Extension}<${type}>> ${extensionInfo}`);
+            if (options.outputStandaloneFunctions) {
+              staticMembers.push(
+                code`export const ${def(messageFunctionName(fullName, name))}: ${ctx.utils.Extension}<${type}> = ${extensionInfo};`,
+              );
+            } else {
+              staticMembers.push(code`${name}: <${ctx.utils.Extension}<${type}>> ${extensionInfo}`);
+            }
           }
         }
 
@@ -311,7 +318,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
         }
 
-        if (staticMembers.length > 0) {
+        if (options.outputStandaloneFunctions) {
+          chunks.push(...staticMembers);
+        } else if (staticMembers.length > 0) {
           const messageFnsTypeParameters = [fullName, hasTypeMember && `'${fullTypeName}'`]
             .filter((p) => !!p)
             .join(", ");
@@ -2467,7 +2476,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   }
 
   if (addTypeToMessages(options)) {
-    chunks.push(code`$type: ${fullName}.$type,`);
+    chunks.push(options.outputStandaloneFunctions ? code`$type: '${fullTypeName}',` : code`$type: ${fullName}.$type,`);
   }
 
   const oneofFieldsCases = messageDesc.oneofDecl.map((oneof, oneofIndex) =>
@@ -3138,18 +3147,20 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   const { options, utils } = ctx;
   const chunks: Code[] = [];
 
+  const maybeComma = options.outputStandaloneFunctions ? "" : ",";
+
   // create the create function definition
   if (ctx.options.useExactTypes) {
     chunks.push(code`
       ${messageMethodHead(options, fullName, "create")}<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
         return ${localMessageMethod(options, fullName, "fromPartial")}(base ?? ({} as any));
-      },
+      }${maybeComma}
     `);
   } else {
     chunks.push(code`
       ${messageMethodHead(options, fullName, "create")}(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
         return ${localMessageMethod(options, fullName, "fromPartial")}(base ?? {});
-      },
+      }${maybeComma}
     `);
   }
 
