@@ -699,8 +699,8 @@ export function messageToTypeName(
   if (!typeOptions.keepValueType && options.useMongoObjectId && protoType.endsWith(".ObjectId")) {
     return code`mongodb.ObjectId`;
   }
-  const [module, type] = toModuleAndType(typeMap, protoType);
-  return code`${impProto(options, module, type)}`;
+  const [module, type, descriptor] = toModuleAndType(typeMap, protoType);
+  return code`${impProto(options, module, type, options.outputStandaloneFunctions && "field" in descriptor)}`;
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */

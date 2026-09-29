@@ -995,7 +995,12 @@ function makeTimestampMethods(
   longs: ReturnType<typeof makeLongUtils>,
   bytes: ReturnType<typeof makeByteUtils>,
 ) {
-  const Timestamp = impProto(options, "google/protobuf/timestamp", wrapTypeName(options, "Timestamp"));
+  const Timestamp = impProto(
+    options,
+    "google/protobuf/timestamp",
+    wrapTypeName(options, "Timestamp"),
+    options.outputStandaloneFunctions,
+  );
   const NanoDate = imp("NanoDate=nano-date");
 
   let seconds: string | Code = "Math.trunc(date.getTime() / 1_000)";

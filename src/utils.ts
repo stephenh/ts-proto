@@ -273,8 +273,8 @@ export function impFile(options: Options, spec: string) {
   return imp(`${spec}${options.importSuffix}`);
 }
 
-export function impProto(options: Options, module: string, type: string): Import {
-  const prefix = options.onlyTypes ? "t:" : "";
+export function impProto(options: Options, module: string, type: string, typeOnly = false): Import {
+  const prefix = options.onlyTypes || typeOnly ? "t:" : "";
   const protoFile = `${module}.proto`;
   if (options.M[protoFile]) {
     return imp(`${prefix}${type}@${options.M[protoFile]}`);
