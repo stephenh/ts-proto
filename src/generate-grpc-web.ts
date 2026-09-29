@@ -1,5 +1,5 @@
 import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
-import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType } from "./types";
+import { getMessageMethod, rawRequestType, requestType, responsePromiseOrObservable, observableType } from "./types";
 import { Code, code, imp, joinCode } from "ts-poet";
 import { Context } from "./context";
 import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from "./utils";
@@ -50,7 +50,6 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
   const { useAbortSignal } = options;
-  const requestMessage = requestType(ctx, methodDesc, false);
   const inputType = requestType(ctx, methodDesc, true);
   const returns = responsePromiseOrObservable(ctx, methodDesc);
 
@@ -75,7 +74,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
     ): ${returns} {
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
-        ${requestMessage}.fromPartial(request),
+        ${getMessageMethod(ctx, methodDesc.inputType, "fromPartial")}(request),
         metadata,
         ${useAbortSignal ? "abortSignal," : ""}
       );
@@ -104,9 +103,6 @@ export function generateGrpcMethodDesc(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto,
 ): Code {
-  const inputType = requestType(ctx, methodDesc);
-  const outputType = responseType(ctx, methodDesc);
-
   // grpc-web expects this to be a class, but the ts-proto messages are just interfaces.
   //
   // That said, grpc-web's runtime doesn't really use this (at least so far for what ts-proto
@@ -120,7 +116,7 @@ export function generateGrpcMethodDesc(
   // This makes our data look enough like an object/class that grpc-web works just fine.
   const requestFn = code`{
     serializeBinary() {
-      return ${inputType}.encode(this).finish();
+      return ${getMessageMethod(ctx, methodDesc.inputType, "encode")}(this).finish();
     },
   }`;
 
@@ -130,7 +126,7 @@ export function generateGrpcMethodDesc(
   // we want/what grpc-web's runtime needs.
   const responseFn = code`{
     deserializeBinary(data: Uint8Array) {
-      const value = ${outputType}.decode(data);
+      const value = ${getMessageMethod(ctx, methodDesc.outputType, "decode")}(data);
       return {
         ...value,
         toObject() { return value; },

@@ -282,6 +282,10 @@ export function impProto(options: Options, module: string, type: string): Import
   return imp(`${prefix}${type}@./${module}${options.fileSuffix}${options.importSuffix}`);
 }
 
+export function impProtoMethod(options: Options, module: string, type: string, method: string): Code {
+  return code`${impProto(options, module, type)}.${method}`;
+}
+
 export function tryCatchBlock(tryBlock: Code | string, handleErrorBlock: Code | string): Code {
   return code`try {
     ${tryBlock}

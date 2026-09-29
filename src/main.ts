@@ -62,6 +62,7 @@ import {
   detectMapType,
   getEnumMethod,
   getFieldOptionsJsType,
+  getMessageMethod,
   isAnyValueType,
   isAnyValueTypeName,
   isBytes,
@@ -105,6 +106,7 @@ import {
   getPropertyAccessor,
   impFile,
   impProto,
+  impProtoMethod,
   maybeAddComment,
   maybePrefixPackage,
   nullOrUndefined,
@@ -1103,6 +1105,13 @@ function makeTimestampMethods(
     code`const timestampFractionRegex = /:\\d{2}\\.\\d+/;`,
   );
 
+  const timestampMessageFromJson = impProtoMethod(
+    options,
+    "google/protobuf/timestamp",
+    wrapTypeName(options, "Timestamp"),
+    "fromJSON",
+  );
+
   const fromJsonTimestamp = conditionalOutput(
     "fromJsonTimestamp",
     options.useDate === DateOption.DATE
@@ -1113,7 +1122,7 @@ function makeTimestampMethods(
           } else if (typeof o === "string") {
             return new ${bytes.globalThis}.Date(o);
           } else {
-            return ${fromTimestamp}(${wrapTypeName(options, "Timestamp")}.fromJSON(o));
+            return ${fromTimestamp}(${timestampMessageFromJson}(o));
           }
         }
       `
@@ -1125,7 +1134,7 @@ function makeTimestampMethods(
             } else if (typeof o === "string") {
               return ${bytes.globalThis}.Temporal.Instant.from(o);
             } else {
-              return ${fromTimestamp}(${wrapTypeName(options, "Timestamp")}.fromJSON(o));
+              return ${fromTimestamp}(${timestampMessageFromJson}(o));
             }
           }
         `
@@ -1147,7 +1156,7 @@ function makeTimestampMethods(
             );
             return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
           } else {
-            return ${wrapTypeName(options, "Timestamp")}.fromJSON(o);
+            return ${timestampMessageFromJson}(o);
           }
         }
       `,
@@ -1518,14 +1527,13 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       }
     }
   } else if (isValueType(ctx, field)) {
-    const type = basicTypeName(ctx, field, { keepValueType: true });
     const unwrap = (decodedValue: any): Code => {
       if (isListValueType(field) || isStructType(field) || isAnyValueType(field) || isFieldMaskType(field)) {
-        return code`${type}.unwrap(${decodedValue})`;
+        return code`${getMessageMethod(ctx, field.typeName, "unwrap")}(${decodedValue})`;
       }
       return code`${decodedValue}.value`;
     };
-    const decoder = code`${type}.decode(reader, reader.uint32())`;
+    const decoder = code`${getMessageMethod(ctx, field.typeName, "decode")}(reader, reader.uint32())`;
     readSnippet = code`${unwrap(decoder)}`;
   } else if (
     isTimestamp(field) &&
@@ -1534,18 +1542,18 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       options.useDate === DateOption.STRING_NANO ||
       options.useDate === DateOption.TEMPORAL)
   ) {
-    const type = basicTypeName(ctx, field, { keepValueType: true });
-    readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
+    const decode = getMessageMethod(ctx, field.typeName, "decode");
+    readSnippet = code`${utils.fromTimestamp}(${decode}(reader, reader.uint32()))`;
   } else if (isObjectId(field) && options.useMongoObjectId) {
     const type = basicTypeName(ctx, field, { keepValueType: true });
     readSnippet = code`${utils.fromProtoObjectId}(${type}.decode(reader, reader.uint32()))`;
   } else if (isMessage(field)) {
-    const type = basicTypeName(ctx, field);
+    const decode = getMessageMethod(ctx, field.typeName, "decode");
 
     if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
-      readSnippet = code`${type}.decode(reader)`;
+      readSnippet = code`${decode}(reader)`;
     } else {
-      readSnippet = code`${type}.decode(reader, reader.uint32())`;
+      readSnippet = code`${decode}(reader, reader.uint32())`;
     }
   } else {
     throw new Error(`Unhandled field ${field}`);
@@ -1830,32 +1838,32 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
       options.useDate === DateOption.TEMPORAL)
   ) {
     const tag = ((field.number << 3) | 2) >>> 0;
-    const type = basicTypeName(ctx, field, { keepValueType: true });
-    return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).join()`;
+    const encode = getMessageMethod(ctx, field.typeName, "encode");
+    return (place) => code`${encode}(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).join()`;
   } else if (isValueType(ctx, field)) {
     const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
 
-    const type = basicTypeName(ctx, field, { keepValueType: true });
+    const encode = getMessageMethod(ctx, field.typeName, "encode");
     const wrappedValue = (place: string): Code => {
       if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
-        return code`${type}.wrap(${place})`;
+        return code`${getMessageMethod(ctx, field.typeName, "wrap")}(${place})`;
       }
       return code`{${maybeTypeField} value: ${place}!}`;
     };
 
     const tag = ((field.number << 3) | 2) >>> 0;
-    return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).join()`;
+    return (place) => code`${encode}(${wrappedValue(place)}, writer.uint32(${tag}).fork()).join()`;
   } else if (isMessage(field)) {
-    const type = basicTypeName(ctx, field);
+    const encode = getMessageMethod(ctx, field.typeName, "encode");
 
     if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
       const startTag = ((field.number << 3) | 3) >>> 0,
         endTag = ((field.number << 3) | 4) >>> 0;
-      return (place) => code`${type}.encode(${place}, writer.uint32(${startTag})).uint32(${endTag})`;
+      return (place) => code`${encode}(${place}, writer.uint32(${startTag})).uint32(${endTag})`;
     }
 
     const tag = ((field.number << 3) | 2) >>> 0;
-    return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).join()`;
+    return (place) => code`${encode}(${place}, writer.uint32(${tag}).fork()).join()`;
   } else {
     throw new Error(`Unhandled field ${field}`);
   }
@@ -2236,29 +2244,29 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           options.useDate === DateOption.STRING_NANO ||
           options.useDate === DateOption.TEMPORAL)
       ) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).join()`;
+        const encode = getMessageMethod(ctx, field.typeName, "encode");
+        return (place) => code`${encode}(${utils.toTimestamp}(${place}), writer.fork()).join()`;
       } else if (isValueType(ctx, field)) {
         const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
 
-        const type = basicTypeName(ctx, field, { keepValueType: true });
+        const encode = getMessageMethod(ctx, field.typeName, "encode");
         const wrappedValue = (place: string): Code => {
           if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
-            return code`${type}.wrap(${place})`;
+            return code`${getMessageMethod(ctx, field.typeName, "wrap")}(${place})`;
           }
           return code`{${maybeTypeField} value: ${place}!}`;
         };
 
-        return (place) => code`${type}.encode(${wrappedValue(place)}, writer.fork()).join()`;
+        return (place) => code`${encode}(${wrappedValue(place)}, writer.fork()).join()`;
       } else if (isMessage(field)) {
-        const type = basicTypeName(ctx, field);
+        const encode = getMessageMethod(ctx, field.typeName, "encode");
 
         if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
           const endTag = ((field.number << 3) | 4) >>> 0;
-          return (place) => code`${type}.encode(${place}, writer).uint32(${endTag})`;
+          return (place) => code`${encode}(${place}, writer).uint32(${endTag})`;
         }
 
-        return (place) => code`${type}.encode(${place}, writer.fork()).join()`;
+        return (place) => code`${encode}(${place}, writer.fork()).join()`;
       } else {
         throw new Error(`Unhandled field ${field}`);
       }
@@ -2527,8 +2535,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.unwrap(${type}.fromJSON(${from}))`;
+        const unwrap = getMessageMethod(ctx, field.typeName, "unwrap");
+        const fromJson = getMessageMethod(ctx, field.typeName, "fromJSON");
+        return code`${unwrap}(${fromJson}(${from}))`;
       } else if (isListValueType(field)) {
         return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
@@ -2576,11 +2585,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           } else if (isAnyValueType(valueField)) {
             return code`${from}`;
           } else {
-            return code`${valueType}.fromJSON(${from})`;
+            return code`${getMessageMethod(ctx, valueField.typeName, "fromJSON")}(${from})`;
           }
         } else {
-          const type = basicTypeName(ctx, field);
-          return code`${type}.fromJSON(${from})`;
+          return code`${getMessageMethod(ctx, field.typeName, "fromJSON")}(${from})`;
         }
       } else {
         throw new Error(`Unhandled field ${field}`);
@@ -3016,17 +3024,16 @@ function generateToJson(
         } else if (isAnyValueType(valueType)) {
           return code`${from}`;
         } else {
-          const type = basicTypeName(ctx, valueType);
-          return code`${type}.toJSON(${from})`;
+          return code`${getMessageMethod(ctx, valueType.typeName, "toJSON")}(${from})`;
         }
       } else if (isAnyValueType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.toJSON(${type}.wrap(${from}))`;
+        const toJson = getMessageMethod(ctx, field.typeName, "toJSON");
+        const wrap = getMessageMethod(ctx, field.typeName, "wrap");
+        return code`${toJson}(${wrap}(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.toJSON(${from})`;
+        return code`${getMessageMethod(ctx, field.typeName, "toJSON")}(${from})`;
       } else if (isBytes(field)) {
         return code`${utils.base64FromBytes}(${from})`;
       } else if (isLongValueTypeAsObject(options, field)) {
@@ -3233,14 +3240,12 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           } else if (isValueType(ctx, valueField)) {
             return code`${from}`;
           } else {
-            const type = basicTypeName(ctx, valueField);
-            return code`${type}.fromPartial(${from})`;
+            return code`${getMessageMethod(ctx, valueField.typeName, "fromPartial")}(${from})`;
           }
         } else if (isAnyValueType(field)) {
           return code`${from}`;
         } else {
-          const type = basicTypeName(ctx, field);
-          return code`${type}.fromPartial(${from})`;
+          return code`${getMessageMethod(ctx, field.typeName, "fromPartial")}(${from})`;
         }
       } else {
         throw new Error(`Unhandled field ${field}`);

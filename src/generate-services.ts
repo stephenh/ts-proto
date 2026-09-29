@@ -3,8 +3,8 @@ import { Code, code, def, imp, joinCode } from "ts-poet";
 import {
   BatchMethod,
   detectBatchMethod,
+  getMessageMethod,
   requestType,
-  rawRequestType,
   responsePromiseOrObservable,
   responseType,
   observableType,
@@ -110,9 +110,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
   const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
-  const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
-  const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
   const metadataType = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
 
   const params = [
@@ -135,7 +133,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     `;
   }
 
-  let encode = code`${rawInputType}.encode(request).finish()`;
+  let encode = code`${getMessageMethod(ctx, methodDesc.inputType, "encode")}(request).finish()`;
   let beforeRequest;
   if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
     beforeRequest = generateBeforeRequest(methodDesc.name);
@@ -145,10 +143,10 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       "encodedRequest",
     )}; return encodedRequest}`;
   }
-  let decode = code`${rawOutputType}.decode(new ${BinaryReader}(data))`;
+  let decode = code`${getMessageMethod(ctx, methodDesc.outputType, "decode")}(new ${BinaryReader}(data))`;
   if (options.rpcAfterResponse) {
     decode = code`
-      const response = ${rawOutputType}.decode(new ${BinaryReader}(data));
+      const response = ${decode};
       if (this.rpc.afterResponse) {
         this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
@@ -161,7 +159,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   // }
   if (methodDesc.clientStreaming) {
     if (options.useAsyncIterable) {
-      encode = code`${rawInputType}.encodeTransform(request)`;
+      encode = code`${getMessageMethod(ctx, methodDesc.inputType, "encodeTransform")}(request)`;
     } else {
       encode = code`request.pipe(${imp("map@rxjs/operators")}(request => ${encode}))`;
     }
@@ -219,12 +217,11 @@ function createDefaultServiceReturn(
   errorHandler?: Code,
 ): Code {
   const { options } = ctx;
-  const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
   const returnStatement = arrowFunction("data", decode, !options.rpcAfterResponse);
 
   if (options.returnObservable || methodDesc.serverStreaming) {
     if (options.useAsyncIterable) {
-      return code`${rawOutputType}.decodeTransform(result)`;
+      return code`${getMessageMethod(ctx, methodDesc.outputType, "decodeTransform")}(result)`;
     } else {
       if (errorHandler) {
         const tc = arrowFunction("data", tryCatchBlock(decode, code`throw error`), !options.rpcAfterResponse);
@@ -387,11 +384,11 @@ function generateCachingRpcMethod(
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
-        const data = ${inputType}.encode(request).finish()
+        const data = ${getMessageMethod(ctx, methodDesc.inputType, "encode")}(request).finish()
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
           methodDesc.name
         }", data);
-        return ${outputType}.decode(new ${BinaryReader}(response));
+        return ${getMessageMethod(ctx, methodDesc.outputType, "decode")}(new ${BinaryReader}(response));
       });
       return Promise.all(responses);
     }

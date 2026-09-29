@@ -21,6 +21,7 @@ import {
   FormattedMethodDescriptor,
   fail,
   impProto,
+  impProtoMethod,
   maybePrefixPackage,
   nullOrUndefined,
   withAndMaybeCheckIsNotNull,
@@ -710,6 +711,11 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix: string): Import {
   const [module, type] = toModuleAndType(ctx.typeMap, enumProtoType);
   return impProto(ctx.options, module, `${uncapitalize(type)}${methodSuffix}`);
+}
+
+export function getMessageMethod(ctx: Context, messageProtoType: string, method: string): Code {
+  const [module, type] = toModuleAndType(ctx.typeMap, messageProtoType);
+  return impProtoMethod(ctx.options, module, type, method);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */

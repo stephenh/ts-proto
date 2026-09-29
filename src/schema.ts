@@ -10,7 +10,7 @@ import { visit, visitServices } from "./visit";
 import { Context } from "./context";
 import SourceInfo from "./sourceInfo";
 import { impFile, maybePrefixPackage } from "./utils";
-import { basicTypeName, toReaderCall } from "./types";
+import { getMessageMethod, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { EnvOption, OutputSchemaOption, ServiceOption } from "./options";
 
@@ -187,7 +187,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
 function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: Uint8Array[]): Code {
   if (extension.type == FieldDescriptorProto_Type.TYPE_MESSAGE) {
-    const typeName = basicTypeName(ctx, extension);
+    const decode = getMessageMethod(ctx, extension.typeName, "decode");
     const resultBuffer = Buffer.concat(
       data.map((d) => {
         // Skip length byte
@@ -200,7 +200,7 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
       ctx.options.env === EnvOption.NODE
         ? code`Buffer.from('${result}', 'base64')`
         : code`${ctx.utils.bytesFromBase64}("${result}")`;
-    return code`'${extension.name}': ${typeName}.decode(${encoded})`;
+    return code`'${extension.name}': ${decode}(${encoded})`;
   } else {
     const reader = new BinaryReader(data[0]);
     let value = (reader as any)[toReaderCall(extension)]();
