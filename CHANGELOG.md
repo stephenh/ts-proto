@@ -1,3 +1,10 @@
+# [2.13.0](https://github.com/stephenh/ts-proto/compare/v2.12.4...v2.13.0) (2026-10-03)
+
+
+### Features
+
+* add useContextDataloaders option to opt out of DataLoaders cont… ([#1259](https://github.com/stephenh/ts-proto/issues/1259)) ([8d89976](https://github.com/stephenh/ts-proto/commit/8d89976a045e4c251e0e7aa172db34bcba8e9e16)), closes [#1217](https://github.com/stephenh/ts-proto/issues/1217)
+
 ## [2.12.4](https://github.com/stephenh/ts-proto/compare/v2.12.3...v2.12.4) (2026-09-15)
 
 
