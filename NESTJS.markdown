@@ -33,6 +33,8 @@ The client interface name would be `HeroServiceClient`.
 
 To implement the TypeScript file in your NestJS project you need to implement the **controller** interface in your controller. We also generate a class decorator factory for you controller (for example: `@HeroServiceControllerMethods()`), when you apply this to your controller we add all the method decorators you normally should do, but doing it this way is safer.
 
+By default the generated decorator registers the handlers with the bare service name (for example `@GrpcMethod('HeroService', 'findOneHero')`). With `--ts_proto_opt=useNestjsFqnServiceName=true` it uses the fully qualified name instead (for example `@GrpcMethod('hero.HeroService', 'findOneHero')`), see [supported options](#supported-options) below.
+
 For the client we simply pass the **client** interface to the `client.getService<?>()` method (see [below](#client)).
 
 > **Note:** Based on the `.proto` we'll generate a `const` (for example: `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME`), this way your code will break if you change your package or service name later. It's safer to have compiler errors than runtime errors!
@@ -113,6 +115,12 @@ export class AppService implements OnModuleInit {
   (Requires `nestJs=true`.)
 
 - With`--ts_proto_opt=addNestjsRestParameter=true`, the last argument of service methods will be a rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
+
+  (Requires `nestJs=true`.)
+
+- With `--ts_proto_opt=useNestjsFqnServiceName=true`, the generated `@FooServiceControllerMethods()` decorator will pass the fully qualified service name (i.e. `package.FooService` instead of `FooService`) to the `@GrpcMethod`/`@GrpcStreamMethod` decorators of `@nestjs/microservices`.
+
+  NestJS falls back to resolving a handler by the `package.Service` segment of the gRPC method path, so the handlers are found regardless of which `package` the gRPC server was configured with, and services with the same name in different packages no longer collide. The `FOO_SERVICE_NAME` const is not affected, since `client.getService()` expects the package-relative name.
 
   (Requires `nestJs=true`.)
 

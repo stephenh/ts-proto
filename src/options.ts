@@ -84,6 +84,7 @@ export type Options = {
   addGrpcMetadata: boolean;
   metadataType: string | undefined;
   addNestjsRestParameter: boolean;
+  useNestjsFqnServiceName: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
@@ -161,6 +162,7 @@ export function defaultOptions(): Options {
     addGrpcMetadata: false,
     metadataType: undefined,
     addNestjsRestParameter: false,
+    useNestjsFqnServiceName: false,
     nestJs: false,
     env: EnvOption.BOTH,
     unrecognizedEnum: true,
@@ -307,6 +309,9 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   if (options.nestJs) {
     options.initializeFieldsAsUndefined = false;
+  } else {
+    // useNestjsFqnServiceName requires nestJs=true
+    options.useNestjsFqnServiceName = false;
   }
 
   if (options.outputIndex) {
