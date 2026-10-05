@@ -465,11 +465,17 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
   (Requires `nestJs=true`.)
 
+- With `--ts_proto_opt=useNestjsFqnServiceName=true`, the generated `@FooServiceControllerMethods()` decorator will pass the fully qualified service name (i.e. `package.FooService` instead of `FooService`) to the `@GrpcMethod`/`@GrpcStreamMethod` decorators of `@nestjs/microservices`.
+
+  NestJS falls back to resolving a handler by the `package.Service` segment of the gRPC method path, so the handlers are found regardless of which `package` the gRPC server was configured with, and services with the same name in different packages no longer collide. The `FOO_SERVICE_NAME` const is not affected, since `client.getService()` expects the package-relative name.
+
+  (Requires `nestJs=true`.)
+
 - With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations. See the [nestjs readme](NESTJS.markdown) for more information and implementation examples.
 
   Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, `lowerCaseServiceMethods` will be true and `outputServices` will be ignored.
 
-  Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
+  Note that `addGrpcMetadata`, `addNestjsRestParameter`, `returnObservable` and `useNestjsFqnServiceName` will still be false.
 
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 

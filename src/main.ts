@@ -376,7 +376,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       // and the service controller interface
       chunks.push(generateNestjsServiceController(ctx, fileDesc, sInfo, serviceDesc));
       // generate nestjs grpc service controller decorator
-      chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, serviceDesc));
+      chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, fileDesc, serviceDesc));
       let serviceConstName = `${camelToSnake(serviceDesc.name)}_NAME`;
       if (!serviceDesc.name.toLowerCase().endsWith("service")) {
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;

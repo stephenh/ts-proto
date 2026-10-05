@@ -10,7 +10,7 @@ import {
 } from "./types";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { contextTypeVar } from "./main";
-import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, singular } from "./utils";
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from "./utils";
 import { uncapitalize } from "./case";
 import { Context } from "./context";
 import { ServiceOption } from "./options";
@@ -150,10 +150,18 @@ export function generateNestjsServiceClient(
   return joinCode(chunks, { on: "\n\n" });
 }
 
-export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceDesc: ServiceDescriptorProto): Code {
+export function generateNestjsGrpcServiceMethodsDecorator(
+  ctx: Context,
+  fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto,
+): Code {
   const { options } = ctx;
   const GrpcMethod = imp("GrpcMethod@@nestjs/microservices");
   const GrpcStreamMethod = imp("GrpcStreamMethod@@nestjs/microservices");
+
+  const serviceName = options.useNestjsFqnServiceName
+    ? maybePrefixPackage(fileDesc, serviceDesc.name)
+    : serviceDesc.name;
 
   const grpcMethods = serviceDesc.method
     .filter((m) => !m.clientStreaming)
@@ -177,13 +185,13 @@ export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceD
         const grpcMethods: string[] = [${grpcMethods.join(", ")}];
         for (const method of grpcMethods) {
           const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-          ${GrpcMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
+          ${GrpcMethod}('${serviceName}', method)(constructor.prototype[method], method, descriptor);
           Object.defineProperty(constructor.prototype, method, descriptor);
         }
         const grpcStreamMethods: string[] = [${grpcStreamMethods.join(", ")}];
         for (const method of grpcStreamMethods) {
           const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-          ${GrpcStreamMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
+          ${GrpcStreamMethod}('${serviceName}', method)(constructor.prototype[method], method, descriptor);
           Object.defineProperty(constructor.prototype, method, descriptor);
         }
       };
