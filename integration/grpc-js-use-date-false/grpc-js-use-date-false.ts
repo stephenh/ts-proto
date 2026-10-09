@@ -183,14 +183,16 @@ function fromJsonTimestamp(o: any): Timestamp {
   if (o instanceof globalThis.Date) {
     return toTimestamp(o);
   } else if (typeof o === "string") {
-    const timestamp = toTimestamp(new globalThis.Date(o));
-    // Date only keeps milliseconds, so add back any sub-millisecond digits
-    const fraction = /\.\d+/.exec(o);
-    if (fraction === null || fraction[0].length <= 4) {
-      return timestamp;
+    // Date only keeps milliseconds, and parses longer fractions in an engine-specific way,
+    // so parse the fractional seconds ourselves and give Date only the whole seconds
+    const fraction = /:\d{2}\.\d+/.exec(o);
+    if (fraction === null) {
+      return toTimestamp(new globalThis.Date(o));
     }
-    const subMillisNanos = Number(fraction[0].slice(4, 10).padEnd(6, "0"));
-    return { ...timestamp, nanos: (timestamp.nanos ?? 0) + subMillisNanos };
+    const fractionNanos = Number(fraction[0].slice(4, 13).padEnd(9, "0"));
+    const wholeSeconds = new globalThis.Date(o.replace(fraction[0], fraction[0].slice(0, 3)));
+    const timestamp = toTimestamp(new globalThis.Date(wholeSeconds.getTime() + Math.trunc(fractionNanos / 1_000_000)));
+    return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
   } else {
     return Timestamp.fromJSON(o);
   }

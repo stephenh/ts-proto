@@ -43,5 +43,9 @@ describe("useDate=false", () => {
       seconds: 1780043713,
       nanos: 700719321,
     });
+    expect(Metadata.fromJSON({ lastEdited: "2026-05-29T08:35:13.9999999999Z" }).lastEdited).toEqual({
+      seconds: 1780043713,
+      nanos: 999999999,
+    });
   });
 });
