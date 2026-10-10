@@ -16,7 +16,7 @@ describe('wrappers in service methods', () => {
   it('generates a services that compiles', () => {
     let c: Clock = {
       Now: () => Promise.resolve(Timestamp.fromPartial({ seconds: 0, nanos: 0 })),
-      NowString: (inp: StringValue) => Promise.resolve(inp),
+      NowString: (inp: string | undefined) => Promise.resolve(StringValue.fromPartial({ value: inp })),
       NowStringStream: (inp: Observable<StringValue>) => inp,
       NowBool: () => Promise.resolve(BoolValue.fromPartial({ value: true }))
     };
