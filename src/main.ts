@@ -1067,6 +1067,12 @@ function makeTimestampMethods(
         `,
   );
 
+  // Declared once per file, so the regex isn't compiled on each fromJsonTimestamp call
+  const timestampFractionRegex = conditionalOutput(
+    "timestampFractionRegex",
+    code`const timestampFractionRegex = /:\\d{2}\\.\\d+/;`,
+  );
+
   const fromJsonTimestamp = conditionalOutput(
     "fromJsonTimestamp",
     options.useDate === DateOption.DATE
@@ -1098,7 +1104,18 @@ function makeTimestampMethods(
           if (o instanceof ${bytes.globalThis}.Date) {
             return ${toTimestamp}(o);
           } else if (typeof o === "string") {
-            return ${toTimestamp}(new ${bytes.globalThis}.Date(o));
+            // Date only keeps milliseconds, and parses longer fractions in an engine-specific way,
+            // so parse the fractional seconds ourselves and give Date only the whole seconds
+            const fraction = ${timestampFractionRegex}.exec(o);
+            if (fraction === null) {
+              return ${toTimestamp}(new ${bytes.globalThis}.Date(o));
+            }
+            const fractionNanos = Number(fraction[0].slice(4, 13).padEnd(9, "0"));
+            const wholeSeconds = new ${bytes.globalThis}.Date(o.replace(fraction[0], fraction[0].slice(0, 3)));
+            const timestamp = ${toTimestamp}(
+              new ${bytes.globalThis}.Date(wholeSeconds.getTime() + Math.trunc(fractionNanos / 1_000_000)),
+            );
+            return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
           } else {
             return ${options.typePrefix}Timestamp${options.typeSuffix}.fromJSON(o);
           }
@@ -1106,7 +1123,7 @@ function makeTimestampMethods(
       `,
   );
 
-  return { toTimestamp, fromTimestamp, fromJsonTimestamp };
+  return { toTimestamp, fromTimestamp, timestampFractionRegex, fromJsonTimestamp };
 }
 
 function makeComparisonUtils() {

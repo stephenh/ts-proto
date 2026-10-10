@@ -110,11 +110,22 @@ function fromTimestamp(t: Timestamp): Date {
   return new globalThis.Date(millis);
 }
 
+const timestampFractionRegex = /:\d{2}\.\d+/;
+
 function fromJsonTimestamp(o: any): Timestamp {
   if (o instanceof globalThis.Date) {
     return toTimestamp(o);
   } else if (typeof o === "string") {
-    return toTimestamp(new globalThis.Date(o));
+    // Date only keeps milliseconds, and parses longer fractions in an engine-specific way,
+    // so parse the fractional seconds ourselves and give Date only the whole seconds
+    const fraction = timestampFractionRegex.exec(o);
+    if (fraction === null) {
+      return toTimestamp(new globalThis.Date(o));
+    }
+    const fractionNanos = Number(fraction[0].slice(4, 13).padEnd(9, "0"));
+    const wholeSeconds = new globalThis.Date(o.replace(fraction[0], fraction[0].slice(0, 3)));
+    const timestamp = toTimestamp(new globalThis.Date(wholeSeconds.getTime() + Math.trunc(fractionNanos / 1_000_000)));
+    return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
   } else {
     return Timestamp.fromJSON(o);
   }
