@@ -7,8 +7,6 @@ import type { handleBidiStreamingCall, handleUnaryCall, Metadata, UntypedService
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
-export const protobufPackage = "hero";
-
 export interface HeroById {
   id: number;
 }
