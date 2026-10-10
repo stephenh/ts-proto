@@ -112,13 +112,15 @@ function fromTimestamp(t: NoUseDatePTimestampNoUseDateS): Date {
   return new globalThis.Date(millis);
 }
 
+const timestampFractionRegex = /:\d{2}\.\d+/;
+
 function fromJsonTimestamp(o: any): NoUseDatePTimestampNoUseDateS {
   if (o instanceof globalThis.Date) {
     return toTimestamp(o);
   } else if (typeof o === "string") {
     // Date only keeps milliseconds, and parses longer fractions in an engine-specific way,
     // so parse the fractional seconds ourselves and give Date only the whole seconds
-    const fraction = /:\d{2}\.\d+/.exec(o);
+    const fraction = timestampFractionRegex.exec(o);
     if (fraction === null) {
       return toTimestamp(new globalThis.Date(o));
     }
