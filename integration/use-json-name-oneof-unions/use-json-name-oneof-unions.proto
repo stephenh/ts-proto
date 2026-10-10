@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package json_name_oneof_unions;
+
+message CreateRoomAction {
+  string name = 1;
+}
+
+message JoinRoomAction {
+  string room_id = 1;
+}
+
+message RoomMessage {
+  oneof action {
+    CreateRoomAction create = 1;
+    JoinRoomAction join = 2;
+    string leave_reason = 3;
+  }
+}
