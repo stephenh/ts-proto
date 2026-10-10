@@ -29,4 +29,23 @@ describe("useDate=false", () => {
       }
     `);
   });
+
+  it("keeps sub-millisecond precision when decoding json", () => {
+    expect(Metadata.fromJSON({ lastEdited: "2026-05-29T08:35:13.700719321Z" }).lastEdited).toEqual({
+      seconds: 1780043713,
+      nanos: 700719321,
+    });
+    expect(Metadata.fromJSON({ lastEdited: "2026-05-29T08:35:13.700719Z" }).lastEdited).toEqual({
+      seconds: 1780043713,
+      nanos: 700719000,
+    });
+    expect(Metadata.fromJSON({ lastEdited: "2026-05-29T10:35:13.700719321+02:00" }).lastEdited).toEqual({
+      seconds: 1780043713,
+      nanos: 700719321,
+    });
+    expect(Metadata.fromJSON({ lastEdited: "2026-05-29T08:35:13.9999999999Z" }).lastEdited).toEqual({
+      seconds: 1780043713,
+      nanos: 999999999,
+    });
+  });
 });
