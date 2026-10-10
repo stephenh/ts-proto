@@ -1305,9 +1305,7 @@ function generateBaseInstanceFactory(
       if (!processedOneofs.has(oneofIndex)) {
         processedOneofs.add(oneofIndex);
 
-        const name = options.useJsonName
-          ? getFieldName(field, options)
-          : maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
+        const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
         fields.push(code`${safeAccessor(name)}: ${nullOrUndefined(options)}`);
       }
       continue;
@@ -1593,9 +1591,10 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      const oneofNameWithMessage = options.useJsonName
-        ? messageProperty
-        : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
+      const oneofNameWithMessage = getPropertyAccessor(
+        "message",
+        maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options),
+      );
       const valueName = oneofValueName(fieldName, options);
       chunks.push(code`
         ${tagCheck}
@@ -1915,9 +1914,10 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       if (!processedOneofs.has(field.oneofIndex)) {
         processedOneofs.add(field.oneofIndex);
 
-        const oneofNameWithMessage = options.useJsonName
-          ? messageProperty
-          : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
+        const oneofNameWithMessage = getPropertyAccessor(
+          "message",
+          maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options),
+        );
         chunks.push(code`switch (${oneofNameWithMessage}?.$case) {`);
         for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
           const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
@@ -2828,9 +2828,10 @@ function generateToJson(
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
-      const oneofNameWithMessage = options.useJsonName
-        ? messageProperty
-        : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
+      const oneofNameWithMessage = getPropertyAccessor(
+        "message",
+        maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options),
+      );
       const valueName = oneofValueName(fieldName, options);
       chunks.push(code`
         ${
