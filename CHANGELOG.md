@@ -1,3 +1,11 @@
+## [2.13.1](https://github.com/stephenh/ts-proto/compare/v2.13.0...v2.13.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* name oneof unions after the oneof when useJsonName is set ([#1277](https://github.com/stephenh/ts-proto/issues/1277)) ([4efb560](https://github.com/stephenh/ts-proto/commit/4efb560cd91474bee435a6680daa4b76bccb5568)), closes [#1227](https://github.com/stephenh/ts-proto/issues/1227)
+* preserve nanosecond precision when parsing JSON timestamps ([#1276](https://github.com/stephenh/ts-proto/issues/1276)) ([ffb0b37](https://github.com/stephenh/ts-proto/commit/ffb0b3711d44962ee9ea39a5e2f92fbdc2236877)), closes [#1271](https://github.com/stephenh/ts-proto/issues/1271)
+
 # [2.13.0](https://github.com/stephenh/ts-proto/compare/v2.12.4...v2.13.0) (2026-10-03)
 
 
