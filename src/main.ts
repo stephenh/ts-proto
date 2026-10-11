@@ -3139,9 +3139,9 @@ function convertToObjectKey(
   if (keyType.toCodeString([]) === "string") {
     return code`${variableName}`;
   } else if (isLong(keyField) && shouldGenerateJSMapType(ctx, messageDesc, field)) {
-    if (ctx.options.forceLong === LongOption.LONG) {
-      return code`${ctx.utils.longToNumber}(${variableName})`;
-    } else if (ctx.options.forceLong === LongOption.BIGINT) {
+    // JSON object keys are strings, and converting a 64-bit key to a JS number
+    // would lose precision (or throw, for Long) above Number.MAX_SAFE_INTEGER.
+    if (ctx.options.forceLong === LongOption.LONG || ctx.options.forceLong === LongOption.BIGINT) {
       return code`${variableName}.toString()`;
     } else {
       return code`${variableName}`;

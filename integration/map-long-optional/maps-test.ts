@@ -27,4 +27,19 @@ describe('maps-test', () => {
       ])
     });
   });
+
+  it('writes 64-bit keys as decimal strings in toJSON', () => {
+    // JSON object keys are strings, so 64-bit keys need their exact decimal form;
+    // converting them to a JS number throws above Number.MAX_SAFE_INTEGER.
+    const test: MapBigInt = {
+      map: new Map([
+        [Long.fromString('18446744073709551615', true), Long.fromNumber(5)],
+        [Long.fromNumber(1, true), Long.fromNumber(2)]
+      ])
+    };
+
+    expect(MapBigInt.toJSON(test)).toEqual({
+      map: { '18446744073709551615': '5', '1': '2' }
+    });
+  });
 })
