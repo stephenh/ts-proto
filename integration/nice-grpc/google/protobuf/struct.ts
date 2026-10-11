@@ -305,7 +305,7 @@ export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry> = {
   fromPartial(object: DeepPartial<Struct_FieldsEntry>): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = object.key ?? "";
-    message.value = object.value ?? undefined;
+    message.value = object.value === undefined ? undefined : object.value;
     return message;
   },
 };

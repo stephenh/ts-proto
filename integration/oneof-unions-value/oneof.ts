@@ -419,7 +419,7 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
       }
     }
     message.signature = object.signature ?? new Uint8Array(0);
-    message.value = object.value ?? undefined;
+    message.value = object.value === undefined ? undefined : object.value;
     return message;
   },
 };

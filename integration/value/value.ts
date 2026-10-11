@@ -142,7 +142,7 @@ export const ValueMessage: MessageFns<ValueMessage> = {
   },
   fromPartial<I extends Exact<DeepPartial<ValueMessage>, I>>(object: I): ValueMessage {
     const message = createBaseValueMessage();
-    message.value = object.value ?? undefined;
+    message.value = object.value === undefined ? undefined : object.value;
     message.anyList = object.anyList ?? undefined;
     message.repeatedAny = object.repeatedAny?.map((e) => e) || [];
     message.repeatedStrings = object.repeatedStrings?.map((e) => e) || [];

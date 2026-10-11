@@ -3089,6 +3089,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         }
       `);
       currentSwitchTarget = oneofNameWithObject;
+    } else if (isAnyValueType(field)) {
+      // null is a valid google.protobuf.Value (NullValue), so only an absent value gets the fallback.
+      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
+      chunks.push(code`${messageProperty} = ${objectProperty} === undefined ? ${fallback} : ${objectProperty};`);
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
