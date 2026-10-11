@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package demo;
+
+message Foo {
+  string name = 1;
+  Bar bar = 2;
+}
+
+message Bar {
+  int32 n = 1;
+}
