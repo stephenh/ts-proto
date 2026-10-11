@@ -178,7 +178,7 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
       obj.enabled = message.enabled;
     }
     if (message.bananas !== undefined) {
-      obj.bananas = message.bananas;
+      obj.bananas = message.bananas.toString();
     }
     if (message.coins?.length) {
       obj.coins = message.coins;

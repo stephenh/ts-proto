@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package wrappers;
+
+import "google/protobuf/wrappers.proto";
+
+message Wrappers {
+  google.protobuf.Int64Value int64 = 1;
+  google.protobuf.UInt64Value uint64 = 2;
+  map<string, google.protobuf.Int64Value> int64_map = 3;
+  map<string, google.protobuf.UInt64Value> uint64_map = 4;
+}

@@ -2263,6 +2263,26 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
   };
 }
 
+/** Converts the JSON of a wrapper type, such as `google.protobuf.Int64Value`, to the unwrapped value. */
+function valueTypeFromJson(ctx: Context, field: FieldDescriptorProto, from: string): Code {
+  const { options } = ctx;
+  const valueType = valueTypeName(ctx, field.typeName)!;
+  if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
+    return code`${capitalize(valueType.toCodeString([]))}.fromValue(${from})`;
+  } else if (isLongValueType(field) && options.forceLong === LongOption.BIGINT) {
+    return code`BigInt(${from})`;
+  } else if (isBytesValueType(field)) {
+    return code`new ${capitalize(valueType.toCodeString([]))}(${from})`;
+  } else {
+    return code`${capitalize(valueType.toCodeString([]))}(${from})`;
+  }
+}
+
+/** Whether `field` is a 64-bit wrapper type unwrapped to a `Long` or `bigint`, which JSON writes as a string. */
+function isLongValueTypeAsObject(options: Options, field: FieldDescriptorProto): boolean {
+  return isLongValueType(field) && (options.forceLong === LongOption.LONG || options.forceLong === LongOption.BIGINT);
+}
+
 /**
  * Creates a function to decode a message from JSON.
  *
@@ -2392,16 +2412,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else if (isListValueType(field)) {
         return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
-        const valueType = valueTypeName(ctx, field.typeName)!;
-        if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
-          return code`${capitalize(valueType.toCodeString([]))}.fromValue(${from})`;
-        } else if (isLongValueType(field) && options.forceLong === LongOption.BIGINT) {
-          return code`BigInt(${from})`;
-        } else if (isBytesValueType(field)) {
-          return code`new ${capitalize(valueType.toCodeString([]))}(${from})`;
-        } else {
-          return code`${capitalize(valueType.toCodeString([]))}(${from})`;
-        }
+        return valueTypeFromJson(ctx, field, from);
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
           const { valueField, valueType } = detectMapType(ctx, messageDesc, field)!;
@@ -2438,6 +2449,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
+          } else if (isLongValueType(valueField)) {
+            return valueTypeFromJson(ctx, valueField, from);
           } else if (isValueType(ctx, valueField)) {
             return code`${from} as ${valueType}`;
           } else if (isAnyValueType(valueField)) {
@@ -2782,6 +2795,9 @@ function generateToJson(
           return code`Math.round(${from})`;
         } else if (isFloatingPoint(valueType)) {
           return code`${utils.floatToJson}(${from})`;
+        } else if (isLongValueTypeAsObject(options, valueType)) {
+          // Map values of wrapper types are declared `| undefined`.
+          return code`${from}?.toString()`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else if (isAnyValueType(valueType)) {
@@ -2800,6 +2816,8 @@ function generateToJson(
         return code`${type}.toJSON(${from})`;
       } else if (isBytes(field)) {
         return code`${utils.base64FromBytes}(${from})`;
+      } else if (isLongValueTypeAsObject(options, field)) {
+        return code`${from}.toString()`;
       } else if (isLong(field) && isJsTypeFieldOption(options, field)) {
         const fieldType = getFieldOptionsJsType(field, ctx.options) ?? field.type;
         if (!fieldType) {
