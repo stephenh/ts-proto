@@ -1,3 +1,10 @@
+## [2.13.3](https://github.com/stephenh/ts-proto/compare/v2.13.2...v2.13.3) (2026-10-11)
+
+
+### Bug Fixes
+
+* Serialize non-finite float values as protobuf JSON strings ([#1278](https://github.com/stephenh/ts-proto/issues/1278)) ([8c45e89](https://github.com/stephenh/ts-proto/commit/8c45e896c16a9a349d6af41a942bb00a880af848)), closes [#1260](https://github.com/stephenh/ts-proto/issues/1260) [#1260](https://github.com/stephenh/ts-proto/issues/1260)
+
 ## [2.13.2](https://github.com/stephenh/ts-proto/compare/v2.13.1...v2.13.2) (2026-10-11)
 
 
