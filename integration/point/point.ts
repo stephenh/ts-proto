@@ -82,10 +82,10 @@ export const Point: MessageFns<Point> = {
   toJSON(message: Point): unknown {
     const obj: any = {};
     if (message.lat !== 0) {
-      obj.lat = message.lat;
+      obj.lat = floatToJson(message.lat);
     }
     if (message.lng !== 0) {
-      obj.lng = message.lng;
+      obj.lng = floatToJson(message.lng);
     }
     return obj;
   },
@@ -185,6 +185,10 @@ export const Area: MessageFns<Area> = {
     return message;
   },
 };
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

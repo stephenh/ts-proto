@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package nonfinite;
+
+import "google/protobuf/wrappers.proto";
+
+message Floats {
+  double d = 1;
+  float f = 2;
+  repeated double ds = 3;
+  map<string, double> dm = 4;
+  google.protobuf.DoubleValue dw = 5;
+  google.protobuf.FloatValue fw = 6;
+  map<string, google.protobuf.FloatValue> fwm = 7;
+  oneof choice {
+    double od = 8;
+    string os = 9;
+  }
+}

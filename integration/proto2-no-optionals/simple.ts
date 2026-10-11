@@ -884,7 +884,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.repData = message.repData.map((e) => base64FromBytes(e));
     }
     if (message.repFloat?.length) {
-      obj.repFloat = message.repFloat;
+      obj.repFloat = message.repFloat.map((e) => floatToJson(e));
     }
     if (message.optId !== 0) {
       obj.optId = Math.round(message.optId);
@@ -908,7 +908,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.optData = base64FromBytes(message.optData);
     }
     if (message.optFloat !== 0) {
-      obj.optFloat = message.optFloat;
+      obj.optFloat = floatToJson(message.optFloat);
     }
     if (message.reqId !== 0) {
       obj.reqId = Math.round(message.reqId);
@@ -932,7 +932,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.reqData = base64FromBytes(message.reqData);
     }
     if (message.reqFloat !== 0) {
-      obj.reqFloat = message.reqFloat;
+      obj.reqFloat = floatToJson(message.reqFloat);
     }
     if (message.reqDefvalId !== 100) {
       obj.reqDefvalId = Math.round(message.reqDefvalId);
@@ -953,7 +953,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.reqDefvalData = base64FromBytes(message.reqDefvalData);
     }
     if (message.reqDefvalFloat !== 0.12354) {
-      obj.reqDefvalFloat = message.reqDefvalFloat;
+      obj.reqDefvalFloat = floatToJson(message.reqDefvalFloat);
     }
     if (message.optDefvalId !== 100) {
       obj.optDefvalId = Math.round(message.optDefvalId);
@@ -974,7 +974,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       obj.optDefvalData = base64FromBytes(message.optDefvalData);
     }
     if (message.optDefvalFloat !== 0.12354) {
-      obj.optDefvalFloat = message.optDefvalFloat;
+      obj.optDefvalFloat = floatToJson(message.optDefvalFloat);
     }
     if (message.translations) {
       const entries = globalThis.Object.entries(message.translations) as [string, string][];
@@ -1210,6 +1210,10 @@ function base64FromBytes(arr: Uint8Array): string {
     });
     return globalThis.btoa(bin.join(""));
   }
+}
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

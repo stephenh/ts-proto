@@ -458,7 +458,7 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
       obj.nullValue = nullValueToJSON(message.null_value);
     }
     if (message.number_value !== undefined) {
-      obj.numberValue = message.number_value;
+      obj.numberValue = floatToJson(message.number_value);
     }
     if (message.string_value !== undefined) {
       obj.stringValue = message.string_value;
@@ -607,6 +607,10 @@ export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
     }
   },
 };
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
