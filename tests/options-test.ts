@@ -73,6 +73,7 @@ describe("options", () => {
         "useJsonWireFormat": false,
         "useMapType": false,
         "useMongoObjectId": false,
+        "useNestjsFqnServiceName": false,
         "useNullAsOptional": false,
         "useNumericEnumForJson": false,
         "useOptionals": "none",
@@ -206,6 +207,20 @@ describe("options", () => {
     expect(options).toMatchObject({
       rpcBeforeRequest: true,
       outputServices: [ServiceOption.DEFAULT, ServiceOption.GENERIC],
+    });
+  });
+
+  it("useNestjsFqnServiceName requires nestJs=true", () => {
+    expect(optionsFromParameter("useNestjsFqnServiceName=true")).toMatchObject({
+      nestJs: false,
+      useNestjsFqnServiceName: false,
+    });
+  });
+
+  it("can set useNestjsFqnServiceName with nestJs=true", () => {
+    expect(optionsFromParameter("nestJs=true,useNestjsFqnServiceName=true")).toMatchObject({
+      nestJs: true,
+      useNestjsFqnServiceName: true,
     });
   });
 
