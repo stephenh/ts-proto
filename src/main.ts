@@ -1906,7 +1906,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }
           `);
         } else {
-          chunks.push(listWriteSnippet);
+          // A packed field with no elements must not be written, not even its tag and length.
+          chunks.push(code`
+            if (${messageProperty}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
         }
       } else {
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
@@ -1968,7 +1973,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }
           `);
         } else {
-          chunks.push(listWriteSnippet);
+          // A packed field with no elements must not be written, not even its tag and length.
+          chunks.push(code`
+            if (${messageProperty}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {

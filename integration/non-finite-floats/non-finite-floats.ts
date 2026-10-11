@@ -41,11 +41,13 @@ export const Floats: MessageFns<Floats> = {
     if (message.f !== 0) {
       writer.uint32(21).float(message.f);
     }
-    writer.uint32(26).fork();
-    for (const v of message.ds) {
-      writer.double(v);
+    if (message.ds.length !== 0) {
+      writer.uint32(26).fork();
+      for (const v of message.ds) {
+        writer.double(v);
+      }
+      writer.join();
     }
-    writer.join();
     globalThis.Object.entries(message.dm).forEach(([key, value]: [string, number]) => {
       Floats_DmEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
