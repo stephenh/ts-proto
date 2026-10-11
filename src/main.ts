@@ -206,7 +206,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
         const outputWrapAndUnwrap = isWrapperType(fullTypeName);
 
-        // Only decode, fromPartial, and wrap use the createBase method
+        // Only decode, fromPartial, and wrap use the createBase method. The deep `Value.wrap`
+        // generated for NestJS builds its result without it.
         if (
           (options.outputEncodeMethods &&
             options.outputEncodeMethods !== "encode-no-creation" &&
@@ -214,7 +215,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             (options.outputDecodeIncludeTypes === "" ||
               new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))) ||
           options.outputPartialMethods ||
-          outputWrapAndUnwrap
+          (outputWrapAndUnwrap && !(options.nestJs && isAnyValueTypeName(fullTypeName)))
         ) {
           chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
         }
@@ -307,7 +308,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             .filter((p) => !!p)
             .join(", ");
 
-          const interfaces: Code[] = [code`${utils.MessageFns}<${messageFnsTypeParameters}>`];
+          const interfaces: Code[] = [];
+          if (utils.MessageFns) {
+            interfaces.push(code`${utils.MessageFns}<${messageFnsTypeParameters}>`);
+          }
           if (
             options.outputEncodeMethods &&
             options.outputExtensions &&
@@ -824,14 +828,19 @@ function makeMessageFns(
   }
 
   const maybeExport = options.exportCommonSymbols ? "export" : "";
-  const MessageFns = conditionalOutput(
-    "MessageFns",
-    code`
-      ${maybeExport} interface MessageFns<T${hasTypeMember ? ", V extends string" : ""}> {
-        ${joinCode(commonStaticMembers, { on: "\n" })}
-      }
-    `,
-  );
+  // Without any common members, e.g. with only the NestJS wrappers, the interface
+  // would be empty and its type parameter unused, so it is not generated at all.
+  const MessageFns =
+    commonStaticMembers.length > 0
+      ? conditionalOutput(
+          "MessageFns",
+          code`
+            ${maybeExport} interface MessageFns<T${hasTypeMember ? ", V extends string" : ""}> {
+              ${joinCode(commonStaticMembers, { on: "\n" })}
+            }
+          `,
+        )
+      : undefined;
 
   const ExtensionFns = conditionalOutput(
     "ExtensionFns",
