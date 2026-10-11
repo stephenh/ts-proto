@@ -31,11 +31,14 @@ export interface MyService {
   MyMethod(request: RequestType): Promise<ResponseType>;
 }
 
+type ProtoMetaEnumOptions = { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } };
+
 type ProtoMetaMessageOptions = {
   options?: { [key: string]: any };
   fields?: { [key: string]: { [key: string]: any } };
   oneof?: { [key: string]: { [key: string]: any } };
   nested?: { [key: string]: ProtoMetaMessageOptions };
+  enums?: { [key: string]: ProtoMetaEnumOptions };
 };
 
 export interface ProtoMetadata {
@@ -48,7 +51,7 @@ export interface ProtoMetadata {
       [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
     messages?: { [key: string]: ProtoMetaMessageOptions };
-    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
+    enums?: { [key: string]: ProtoMetaEnumOptions };
   };
 }
 

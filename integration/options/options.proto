@@ -51,6 +51,13 @@ message MyMessage {
 
     string quux = 4;
   }
+
+  enum MyNestedEnum {
+    option (my_enum_option) = true;
+
+    NESTED_FOO = 0 [(my_enum_value_option) = 654];
+    NESTED_BAR = 1;
+  }
 }
 
 enum MyEnum {
