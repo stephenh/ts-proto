@@ -4540,7 +4540,7 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
       obj.negativeIntValue = Math.round(message.negativeIntValue);
     }
     if (message.doubleValue !== undefined && message.doubleValue !== 0) {
-      obj.doubleValue = message.doubleValue;
+      obj.doubleValue = floatToJson(message.doubleValue);
     }
     if (message.stringValue !== undefined && message.stringValue.length !== 0) {
       obj.stringValue = base64FromBytes(message.stringValue);
@@ -5127,6 +5127,10 @@ function base64FromBytes(arr: Uint8Array): string {
     });
     return globalThis.btoa(bin.join(""));
   }
+}
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

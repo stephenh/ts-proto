@@ -307,10 +307,10 @@ export const Tile_Value: MessageFns<Tile_Value> = {
       obj.stringValue = message.stringValue;
     }
     if (message.floatValue !== undefined && message.floatValue !== 0) {
-      obj.floatValue = message.floatValue;
+      obj.floatValue = floatToJson(message.floatValue);
     }
     if (message.doubleValue !== undefined && message.doubleValue !== 0) {
-      obj.doubleValue = message.doubleValue;
+      obj.doubleValue = floatToJson(message.doubleValue);
     }
     if (message.intValue !== undefined && message.intValue !== 0) {
       obj.intValue = Math.round(message.intValue);
@@ -634,6 +634,10 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
     return message;
   },
 };
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

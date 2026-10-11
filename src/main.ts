@@ -68,6 +68,7 @@ import {
   isEnum,
   isFieldMaskType,
   isFieldMaskTypeName,
+  isFloatingPoint,
   isJsTypeFieldOption,
   isListValueType,
   isListValueTypeName,
@@ -672,7 +673,18 @@ function makeByteUtils(options: Options) {
       }
     `,
   );
-  return { globalThis, bytesFromBase64, base64FromBytes };
+
+  // JSON numbers can't represent NaN or +/-Infinity, so the proto3 JSON mapping
+  // writes them as the strings "NaN", "Infinity" and "-Infinity".
+  const floatToJson = conditionalOutput(
+    "floatToJson",
+    code`
+      function floatToJson(value: number | null | undefined): number | string | null | undefined {
+        return typeof value === "number" && !${globalThis}.Number.isFinite(value) ? ${globalThis}.String(value) : value;
+      }
+    `,
+  );
+  return { globalThis, bytesFromBase64, base64FromBytes, floatToJson };
 }
 
 function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtils>) {
@@ -2768,6 +2780,8 @@ function generateToJson(
           return code`${from}.toString()`;
         } else if (isWholeNumber(valueType) && !(isLong(valueType) && options.forceLong === LongOption.STRING)) {
           return code`Math.round(${from})`;
+        } else if (isFloatingPoint(valueType)) {
+          return code`${utils.floatToJson}(${from})`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else if (isAnyValueType(valueType)) {
@@ -2802,6 +2816,8 @@ function generateToJson(
         return code`${from}.toString()`;
       } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
         return code`Math.round(${from})`;
+      } else if (isFloatingPoint(field)) {
+        return code`${utils.floatToJson}(${from})`;
       } else {
         return code`${from}`;
       }

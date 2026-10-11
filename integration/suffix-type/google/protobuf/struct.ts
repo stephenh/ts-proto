@@ -458,7 +458,7 @@ export const GRPCPValueGRPCS: MessageFns<GRPCPValueGRPCS> & AnyValueWrapperFns =
       obj.nullValue = gRPCPNullValueGRPCSToJSON(message.nullValue);
     }
     if (message.numberValue !== undefined) {
-      obj.numberValue = message.numberValue;
+      obj.numberValue = floatToJson(message.numberValue);
     }
     if (message.stringValue !== undefined) {
       obj.stringValue = message.stringValue;
@@ -607,6 +607,10 @@ export const GRPCPListValueGRPCS: MessageFns<GRPCPListValueGRPCS> & ListValueWra
     }
   },
 };
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

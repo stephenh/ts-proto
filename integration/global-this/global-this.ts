@@ -489,7 +489,7 @@ export const Number: MessageFns<Number> = {
   toJSON(message: Number): unknown {
     const obj: any = {};
     if (message.value !== 0) {
-      obj.value = message.value;
+      obj.value = floatToJson(message.value);
     }
     return obj;
   },
@@ -589,6 +589,10 @@ const gt: any = (() => {
   }
   throw "Unable to locate global object";
 })();
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !gt.Number.isFinite(value) ? gt.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

@@ -322,7 +322,7 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
       obj.name = message.name;
     }
     if (message.choice?.$case === "aNumber") {
-      obj.aNumber = message.choice.aNumber;
+      obj.aNumber = floatToJson(message.choice.aNumber);
     } else if (message.choice?.$case === "aString") {
       obj.aString = message.choice.aString;
     } else if (message.choice?.$case === "aMessage") {
@@ -599,6 +599,10 @@ function base64FromBytes(arr: Uint8Array): string {
     });
     return globalThis.btoa(bin.join(""));
   }
+}
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
