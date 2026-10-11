@@ -1,3 +1,10 @@
+# [2.15.0](https://github.com/stephenh/ts-proto/compare/v2.14.0...v2.15.0) (2026-10-11)
+
+
+### Features
+
+* add useNestjsFqnServiceName option to use fully qualified service names in NestJS decorators ([#1275](https://github.com/stephenh/ts-proto/issues/1275)) ([03473e2](https://github.com/stephenh/ts-proto/commit/03473e263a6db675b761a85f4901a2a65497c055))
+
 # [2.14.0](https://github.com/stephenh/ts-proto/compare/v2.13.3...v2.14.0) (2026-10-11)
 
 
