@@ -53,11 +53,13 @@ export const Entity: MessageFns<Entity> = {
     if (message.stringVal !== "") {
       writer.uint32(18).string(message.stringVal);
     }
-    writer.uint32(26).fork();
-    for (const v of message.intArray) {
-      writer.int32(v);
+    if (message.intArray.length !== 0) {
+      writer.uint32(26).fork();
+      for (const v of message.intArray) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     for (const v of message.stringArray) {
       writer.uint32(34).string(v!);
     }

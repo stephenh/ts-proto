@@ -352,19 +352,23 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
     if (message.id !== undefined && message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
-    writer.uint32(18).fork();
-    for (const v of message.tags) {
-      writer.uint32(v);
+    if (message.tags.length !== 0) {
+      writer.uint32(18).fork();
+      for (const v of message.tags) {
+        writer.uint32(v);
+      }
+      writer.join();
     }
-    writer.join();
     if (message.type !== undefined && message.type !== 0) {
       writer.uint32(24).int32(message.type);
     }
-    writer.uint32(34).fork();
-    for (const v of message.geometry) {
-      writer.uint32(v);
+    if (message.geometry.length !== 0) {
+      writer.uint32(34).fork();
+      for (const v of message.geometry) {
+        writer.uint32(v);
+      }
+      writer.join();
     }
-    writer.join();
     return writer;
   },
 

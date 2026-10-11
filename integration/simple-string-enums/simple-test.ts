@@ -1,3 +1,4 @@
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { Simple, StateEnum } from "./simple";
 import { NullValue } from "./google/protobuf/struct";
 
@@ -26,5 +27,18 @@ describe("simple-string-enums", () => {
         ],
       }
     `);
+  });
+
+  it("does not encode an empty packed repeated enum field", () => {
+    const encoded = Simple.encode(Simple.fromPartial({ name: "a", states: [] })).finish();
+    const reader = new BinaryReader(encoded);
+    const fieldNumbers: number[] = [];
+    while (reader.pos < reader.len) {
+      const [fieldNo, wireType] = reader.tag();
+      fieldNumbers.push(fieldNo);
+      reader.skip(wireType);
+    }
+    expect(fieldNumbers).toContain(1);
+    expect(fieldNumbers).not.toContain(5);
   });
 });

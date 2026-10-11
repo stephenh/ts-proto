@@ -131,31 +131,39 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(50).bytes(message.data);
     }
-    writer.uint32(58).fork();
-    for (const v of message.repId) {
-      writer.int32(v);
+    if (message.repId.length !== 0) {
+      writer.uint32(58).fork();
+      for (const v of message.repId) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     if (message.repState !== undefined && message.repState.length !== 0) {
       for (const v of message.repState) {
         writer.uint32(64).int32(v!);
       }
     }
-    writer.uint32(74).fork();
-    for (const v of message.repStateV2) {
-      writer.int32(v);
+    if (message.repStateV2.length !== 0) {
+      writer.uint32(74).fork();
+      for (const v of message.repStateV2) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
-    writer.uint32(82).fork();
-    for (const v of message.repLong) {
-      writer.int64(v);
+    if (message.repLong.length !== 0) {
+      writer.uint32(82).fork();
+      for (const v of message.repLong) {
+        writer.int64(v);
+      }
+      writer.join();
     }
-    writer.join();
-    writer.uint32(90).fork();
-    for (const v of message.repTruth) {
-      writer.bool(v);
+    if (message.repTruth.length !== 0) {
+      writer.uint32(90).fork();
+      for (const v of message.repTruth) {
+        writer.bool(v);
+      }
+      writer.join();
     }
-    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(98).string(v!);
     }
