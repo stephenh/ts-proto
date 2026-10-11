@@ -9,8 +9,10 @@ export function generateTypeRegistry(ctx: BaseContext): Code {
   chunks.push(generateMessageType(ctx));
 
   if (addTypeToMessages(ctx.options)) {
+    // With outputTypeAnnotations=optional, messages declare `$type?`, so the registry has to accept them.
+    const optional = ctx.options.outputTypeAnnotations === "optional" ? "?" : "";
     chunks.push(code`
-    export type UnknownMessage = {$type: string};
+    export type UnknownMessage = {$type${optional}: string};
   `);
   } else {
     chunks.push(code`
