@@ -305,7 +305,7 @@ export const GRPCPStruct_FieldsEntryGRPCS: MessageFns<GRPCPStruct_FieldsEntryGRP
   fromPartial<I extends Exact<DeepPartial<GRPCPStruct_FieldsEntryGRPCS>, I>>(object: I): GRPCPStruct_FieldsEntryGRPCS {
     const message = createBaseGRPCPStruct_FieldsEntryGRPCS();
     message.key = object.key ?? "";
-    message.value = object.value ?? undefined;
+    message.value = object.value === undefined ? undefined : object.value;
     return message;
   },
 };

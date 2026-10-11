@@ -107,7 +107,7 @@ export const Holder: MessageFns<Holder> = {
   },
   fromPartial<I extends Exact<DeepPartial<Holder>, I>>(object: I): Holder {
     const message = createBaseHolder();
-    message.value = object.value ?? undefined;
+    message.value = object.value === undefined ? undefined : object.value;
     message.struct = object.struct ?? undefined;
     message.list = object.list ?? undefined;
     return message;

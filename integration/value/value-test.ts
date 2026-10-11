@@ -65,4 +65,20 @@ describe("values", () => {
     });
     expect(s1).toEqual({ anyList: [1], repeatedAny: [2], repeatedStrings: [] });
   });
+
+  it("keeps a null value in fromPartial", () => {
+    // null is a valid google.protobuf.Value (NullValue), not an unset field.
+    const s1 = ValueMessage.fromPartial({ value: null });
+    expect(s1.value).toBeNull();
+
+    const s2 = PbValueMessage.decode(ValueMessage.encode(s1).finish());
+    expect(s2.value).toEqual({ nullValue: 0 });
+    expect(ValueMessage.decode(ValueMessage.encode(s1).finish()).value).toBeNull();
+  });
+
+  it("leaves an unset value undefined in fromPartial", () => {
+    const s1 = ValueMessage.fromPartial({});
+    expect(s1.value).toBeUndefined();
+    expect(PbValueMessage.decode(ValueMessage.encode(s1).finish()).value).toBeNull();
+  });
 });
