@@ -173,6 +173,19 @@ export const Timestamp: MessageFns<Timestamp, "google.protobuf.Timestamp"> = {
   },
 
   fromJSON(object: any): Timestamp {
+    if (typeof object === "string") {
+      const match = /^.+T\d{2}:\d{2}:\d{2}(\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.exec(object);
+      // Date only keeps milliseconds, so it parses the string without the fractional seconds
+      const fraction = match?.[1];
+      const millis = match
+        ? new globalThis.Date(fraction === undefined ? object : object.replace(fraction, "")).getTime()
+        : NaN;
+      if (!match || globalThis.Number.isNaN(millis)) {
+        throw new globalThis.Error(`Invalid timestamp: ${object}`);
+      }
+      const nanos = fraction === undefined ? 0 : globalThis.Number(fraction.slice(1, 10).padEnd(9, "0"));
+      return Timestamp.fromJSON({ seconds: millis / 1_000, nanos });
+    }
     return {
       $type: Timestamp.$type,
       seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
@@ -180,15 +193,15 @@ export const Timestamp: MessageFns<Timestamp, "google.protobuf.Timestamp"> = {
     };
   },
 
-  toJSON(message: Timestamp): unknown {
-    const obj: any = {};
-    if (message.seconds !== 0) {
-      obj.seconds = Math.round(message.seconds);
+  toJSON(message: Timestamp): string {
+    const nanos = message.nanos ?? 0;
+    const date = new globalThis.Date(globalThis.Number(message.seconds ?? 0) * 1_000).toISOString().slice(0, 19);
+    if (nanos === 0) {
+      return `${date}Z`;
     }
-    if (message.nanos !== 0) {
-      obj.nanos = Math.round(message.nanos);
-    }
-    return obj;
+    const padded = nanos.toString().padStart(9, "0");
+    const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
+    return `${date}.${padded.slice(0, len)}Z`;
   },
 
   create<I extends Exact<DeepPartial<Timestamp>, I>>(base?: I): Timestamp {

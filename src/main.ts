@@ -2311,10 +2311,31 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   }
 
   // create the basic function declaration
-  chunks.push(code`
-    fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
-      return {
-  `);
+  if (fullTypeName === "google.protobuf.Timestamp") {
+    // The canonical JSON of a Timestamp is an RFC 3339 string; the object form is still accepted.
+    chunks.push(code`
+      fromJSON(object: any): ${fullName} {
+        if (typeof object === "string") {
+          const match = /^.+T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/.exec(object);
+          // Date only keeps milliseconds, so it parses the string without the fractional seconds
+          const fraction = match?.[1];
+          const millis = match
+            ? new ${utils.globalThis}.Date(fraction === undefined ? object : object.replace(fraction, "")).getTime()
+            : NaN;
+          if (!match || ${utils.globalThis}.Number.isNaN(millis)) {
+            throw new ${utils.globalThis}.Error(\`Invalid timestamp: \${object}\`);
+          }
+          const nanos = fraction === undefined ? 0 : ${utils.globalThis}.Number(fraction.slice(1, 10).padEnd(9, "0"));
+          return ${fullName}.fromJSON({ seconds: millis / 1_000, nanos });
+        }
+        return {
+    `);
+  } else {
+    chunks.push(code`
+      fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
+        return {
+    `);
+  }
 
   if (addTypeToMessages(options)) {
     chunks.push(code`$type: ${fullName}.$type,`);
@@ -2648,7 +2669,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals, useNullAsOptional, useDuration, forceLong }: Options,
+  { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong }: Options,
+  globalThisRef: ConditionalOutput,
 ): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
@@ -2696,6 +2718,22 @@ function generateCanonicalToJson(
     }
     `;
   }
+  if (fullProtobufTypeName === "google.protobuf.Timestamp" && useJsonTimestamp === JsonTimestampOption.RFC3339) {
+    const millis =
+      forceLong === LongOption.LONG
+        ? code`(message.seconds?.toNumber() ?? 0) * 1_000`
+        : code`${globalThisRef}.Number(message.seconds ?? 0) * 1_000`;
+    return code`
+    toJSON(message: ${fullName}): string {
+      const nanos = message.nanos ?? 0;
+      const date = new ${globalThisRef}.Date(${millis}).toISOString().slice(0, 19);
+      if (nanos === 0) return \`\${date}Z\`;
+      const padded = nanos.toString().padStart(9, "0");
+      const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
+      return \`\${date}.\${padded.slice(0, len)}Z\`;
+    }
+    `;
+  }
   return undefined;
 }
 
@@ -2708,7 +2746,7 @@ function generateToJson(
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
-  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options);
+  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options, utils.globalThis);
   if (canonicalToJson) {
     chunks.push(canonicalToJson);
     return joinCode(chunks, { on: "\n" });

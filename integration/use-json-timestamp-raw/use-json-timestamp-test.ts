@@ -38,4 +38,9 @@ describe("useJsonTimestamp=raw", () => {
     expect(d.lastEdited?.seconds).toStrictEqual(nov29.seconds);
     expect(d.lastEdited?.nanos).toStrictEqual(nov29.nanos);
   });
+
+  it("keeps Timestamp.toJSON in the raw form", () => {
+    expect(Timestamp.toJSON(nov29)).toEqual({ seconds: 123456789, nanos: 234567890 });
+    expect(Timestamp.fromJSON("1973-11-29T21:33:09.234567890Z")).toEqual(nov29);
+  });
 });

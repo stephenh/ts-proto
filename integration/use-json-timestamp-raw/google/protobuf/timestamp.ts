@@ -170,6 +170,19 @@ export const Timestamp: MessageFns<Timestamp> = {
   },
 
   fromJSON(object: any): Timestamp {
+    if (typeof object === "string") {
+      const match = /^.+T\d{2}:\d{2}:\d{2}(\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.exec(object);
+      // Date only keeps milliseconds, so it parses the string without the fractional seconds
+      const fraction = match?.[1];
+      const millis = match
+        ? new globalThis.Date(fraction === undefined ? object : object.replace(fraction, "")).getTime()
+        : NaN;
+      if (!match || globalThis.Number.isNaN(millis)) {
+        throw new globalThis.Error(`Invalid timestamp: ${object}`);
+      }
+      const nanos = fraction === undefined ? 0 : globalThis.Number(fraction.slice(1, 10).padEnd(9, "0"));
+      return Timestamp.fromJSON({ seconds: millis / 1_000, nanos });
+    }
     return {
       seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
       nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0,

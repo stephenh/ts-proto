@@ -49,3 +49,28 @@ describe("useDate=false", () => {
     });
   });
 });
+
+describe("Timestamp JSON", () => {
+  it("encodes an RFC 3339 string", () => {
+    expect(Timestamp.toJSON(nov29)).toBe("1973-11-29T21:33:09.234567890Z");
+    expect(Timestamp.toJSON({ seconds: 123456789, nanos: 0 })).toBe("1973-11-29T21:33:09Z");
+    expect(Timestamp.toJSON({ seconds: 123456789, nanos: 234000000 })).toBe("1973-11-29T21:33:09.234Z");
+    expect(Timestamp.toJSON({ seconds: 123456789, nanos: 234567000 })).toBe("1973-11-29T21:33:09.234567Z");
+    expect(Timestamp.toJSON({ seconds: -1, nanos: 500000000 })).toBe("1969-12-31T23:59:59.500Z");
+  });
+
+  it("decodes an RFC 3339 string", () => {
+    expect(Timestamp.fromJSON("1973-11-29T21:33:09.234567890Z")).toEqual(nov29);
+    expect(Timestamp.fromJSON("1973-11-29T22:33:09.234567890+01:00")).toEqual(nov29);
+    expect(Timestamp.fromJSON("1973-11-29T21:33:09Z")).toEqual({ seconds: 123456789, nanos: 0 });
+    expect(Timestamp.fromJSON(Timestamp.toJSON(nov29))).toEqual(nov29);
+  });
+
+  it("still decodes the object form", () => {
+    expect(Timestamp.fromJSON({ seconds: 123456789, nanos: 234567890 })).toEqual(nov29);
+  });
+
+  it("rejects an invalid string", () => {
+    expect(() => Timestamp.fromJSON("1973-11-29")).toThrow();
+  });
+});
