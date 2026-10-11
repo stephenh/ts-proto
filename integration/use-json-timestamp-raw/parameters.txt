@@ -1,2 +1,1 @@
-useDate=false
-useJsonTimestamp=raw
+useDate=false,useJsonTimestamp=raw
