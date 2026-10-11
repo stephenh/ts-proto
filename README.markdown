@@ -662,6 +662,8 @@ This option allows the library to act in a compatible way with the [Wire impleme
 
 - With `--ts_proto_opt=useDuration=string`, the generated code will use the `string` type for `google.protobuf.Duration` instead of `{seconds: number, nano: number}`.
 
+- With `--ts_proto_opt=anyType=@type`, `google.protobuf.Any` uses its canonical JSON form in `toJSON`/`fromJSON`: the JSON of the packed message with an added `"@type"` key, or `{"@type": ..., "value": ...}` when the packed message is a well-known type with its own JSON form, such as `google.protobuf.Duration`. The packed message type is looked up by name in the type registry, so this requires `outputTypeRegistry=true` (and the default `outputEncodeMethods=true`), and the type must be registered; otherwise `toJSON`/`fromJSON` throw. The default, `anyType=typeUrl`, keeps the plain `{"typeUrl": ..., "value": ...}` form.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).

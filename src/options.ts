@@ -25,6 +25,11 @@ export enum DurationOption {
   STRING = "string",
 }
 
+export enum AnyTypeOption {
+  TYPE_URL = "typeUrl",
+  AT_TYPE = "@type",
+}
+
 export enum EnvOption {
   NODE = "node",
   BROWSER = "browser",
@@ -123,6 +128,7 @@ export type Options = {
   typePrefix: string;
   typeSuffix: string;
   useDuration: DurationOption;
+  anyType: AnyTypeOption;
 };
 
 export function defaultOptions(): Options {
@@ -198,6 +204,7 @@ export function defaultOptions(): Options {
     typePrefix: "",
     typeSuffix: "",
     useDuration: DurationOption.DURATION,
+    anyType: AnyTypeOption.TYPE_URL,
   };
 }
 
