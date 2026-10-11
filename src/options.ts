@@ -25,6 +25,12 @@ export enum DurationOption {
   STRING = "string",
 }
 
+export enum AnyTypeOption {
+  /** @deprecated Kept for existing users of the `{ typeUrl, value }` JSON form; may be removed in the future. */
+  TYPE_URL = "typeUrl",
+  AT_TYPE = "@type",
+}
+
 export enum EnvOption {
   NODE = "node",
   BROWSER = "browser",
@@ -123,6 +129,7 @@ export type Options = {
   typePrefix: string;
   typeSuffix: string;
   useDuration: DurationOption;
+  anyType: AnyTypeOption;
 };
 
 export function defaultOptions(): Options {
@@ -198,6 +205,7 @@ export function defaultOptions(): Options {
     typePrefix: "",
     typeSuffix: "",
     useDuration: DurationOption.DURATION,
+    anyType: AnyTypeOption.AT_TYPE,
   };
 }
 

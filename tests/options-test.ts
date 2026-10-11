@@ -8,6 +8,7 @@ describe("options", () => {
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
         "annotateFilesWithVersion": true,
+        "anyType": "@type",
         "bigIntLiteral": true,
         "comments": true,
         "constEnums": false,
