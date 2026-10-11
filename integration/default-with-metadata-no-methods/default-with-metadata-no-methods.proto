@@ -1,0 +1,7 @@
+syntax = "proto3";
+package basic;
+
+// A service without methods still declares the Rpc interface, which refers
+// to Metadata.
+service BasicService {
+}
