@@ -2725,7 +2725,8 @@ function generateCanonicalToJson(
 
 /** Whether `google.protobuf.Any` gets its canonical `@type` JSON form, see the `anyType` option. */
 function useCanonicalAnyJson(options: Options): boolean {
-  // Converting the packed message needs the type registry and its encode/decode methods.
+  // Converting the packed message needs the type registry and its encode/decode methods. Without
+  // them, Any keeps the `{ typeUrl, value }` form even though `@type` is the default.
   return (
     options.anyType === AnyTypeOption.AT_TYPE && options.outputTypeRegistry && options.outputEncodeMethods === true
   );

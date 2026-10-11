@@ -10,7 +10,8 @@ const durationUrl = "type.googleapis.com/google.protobuf.Duration";
 const duration = Duration.fromPartial({ seconds: 3, nanos: 500 });
 const durationAny = Any.fromPartial({ typeUrl: durationUrl, value: Duration.encode(duration).finish() });
 
-describe("anyType=@type", () => {
+// anyType defaults to @type, which with outputTypeRegistry gives the canonical form.
+describe("anyType=@type (the default)", () => {
   it("writes the packed message's fields next to @type", () => {
     expect(Any.toJSON(personAny)).toEqual({ "@type": personUrl, firstName: "Ada", lastName: "Lovelace" });
   });

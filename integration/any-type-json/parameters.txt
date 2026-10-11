@@ -1,1 +1,1 @@
-outputTypeRegistry=true,anyType=@type
+outputTypeRegistry=true
