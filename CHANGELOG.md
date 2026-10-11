@@ -1,3 +1,10 @@
+## [2.13.2](https://github.com/stephenh/ts-proto/compare/v2.13.1...v2.13.2) (2026-10-11)
+
+
+### Bug Fixes
+
+* serialize Long map keys as strings in toJSON ([#1280](https://github.com/stephenh/ts-proto/issues/1280)) ([6f49c97](https://github.com/stephenh/ts-proto/commit/6f49c977e34ea554beff588b4906e29e2e200d00)), closes [#1128](https://github.com/stephenh/ts-proto/issues/1128)
+
 ## [2.13.1](https://github.com/stephenh/ts-proto/compare/v2.13.0...v2.13.1) (2026-10-10)
 
 
