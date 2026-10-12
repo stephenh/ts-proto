@@ -105,14 +105,16 @@ export const Numbers: MessageFns<Numbers> = {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).join();
     }
-    writer.uint32(122).fork();
-    for (const v of message.uint64s) {
-      if (BigInt.asUintN(64, v) !== v) {
-        throw new globalThis.Error("a value provided in array field uint64s of type uint64 is too large");
+    if (message.uint64s.length !== 0) {
+      writer.uint32(122).fork();
+      for (const v of message.uint64s) {
+        if (BigInt.asUintN(64, v) !== v) {
+          throw new globalThis.Error("a value provided in array field uint64s of type uint64 is too large");
+        }
+        writer.uint64(v);
       }
-      writer.uint64(v);
+      writer.join();
     }
-    writer.join();
     return writer;
   },
 

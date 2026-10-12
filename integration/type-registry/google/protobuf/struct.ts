@@ -321,7 +321,7 @@ export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry, "google.protobuf
   fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = object.key ?? "";
-    message.value = object.value ?? undefined;
+    message.value = object.value === undefined ? undefined : object.value;
     return message;
   },
 };

@@ -10570,7 +10570,39 @@ exports[`options generates types correctly 1`] = `
     ],
     "messageType": [
       {
-        "enumType": [],
+        "enumType": [
+          {
+            "name": "MyNestedEnum",
+            "options": {
+              "allowAlias": false,
+              "deprecated": false,
+              "deprecatedLegacyJsonFieldConflicts": false,
+              "features": undefined,
+              "uninterpretedOption": [],
+            },
+            "reservedName": [],
+            "reservedRange": [],
+            "value": [
+              {
+                "name": "NESTED_FOO",
+                "number": 0,
+                "options": {
+                  "debugRedact": false,
+                  "deprecated": false,
+                  "featureSupport": undefined,
+                  "features": undefined,
+                  "uninterpretedOption": [],
+                },
+              },
+              {
+                "name": "NESTED_BAR",
+                "number": 1,
+                "options": undefined,
+              },
+            ],
+            "visibility": 0,
+          },
+        ],
         "extension": [],
         "extensionRange": [],
         "field": [
@@ -10793,6 +10825,18 @@ exports[`options generates types correctly 1`] = `
     },
     "messages": {
       "MyMessage": {
+        "enums": {
+          "MyNestedEnum": {
+            "options": {
+              "my_enum_option": true,
+            },
+            "values": {
+              "NESTED_FOO": {
+                "my_enum_value_option": 654,
+              },
+            },
+          },
+        },
         "fields": {
           "foo": {
             "my_field_option": 4.5,
@@ -10850,6 +10894,14 @@ exports[`options generates types correctly 1`] = `
     ".MyMessage": {
       "decode": [Function],
       "encode": [Function],
+    },
+    ".MyMessage.MyNestedEnum": {
+      "-1": "UNRECOGNIZED",
+      "0": "NESTED_FOO",
+      "1": "NESTED_BAR",
+      "NESTED_BAR": 1,
+      "NESTED_FOO": 0,
+      "UNRECOGNIZED": -1,
     },
     ".MyService": [Function],
     ".RequestType": {
