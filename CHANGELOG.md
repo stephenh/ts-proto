@@ -1,3 +1,10 @@
+## [2.15.1](https://github.com/stephenh/ts-proto/compare/v2.15.0...v2.15.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* serialize Timestamp JSON as RFC 3339 strings ([#1281](https://github.com/stephenh/ts-proto/issues/1281)) ([273d469](https://github.com/stephenh/ts-proto/commit/273d4694c0eaad75e6c14b24b31e7a7ef11bc593)), closes [#1250](https://github.com/stephenh/ts-proto/issues/1250)
+
 # [2.15.0](https://github.com/stephenh/ts-proto/compare/v2.14.0...v2.15.0) (2026-10-11)
 
 
