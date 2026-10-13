@@ -179,11 +179,13 @@ function createBaseNumbers(): Numbers {
 
 export const Numbers: MessageFns<Numbers> = {
   encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    writer.uint32(10).fork();
-    for (const v of message.num) {
-      writer.double(v);
+    if (message.num.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.num) {
+        writer.double(v);
+      }
+      writer.join();
     }
-    writer.join();
     return writer;
   },
 

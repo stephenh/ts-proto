@@ -704,11 +704,13 @@ export const Numbers: MessageFns<Numbers> = {
     if (!message.sfixed64.equals(Long.ZERO)) {
       writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
-    writer.uint32(106).fork();
-    for (const v of message.manyUint64) {
-      writer.uint64(v.toString());
+    if (message.manyUint64.length !== 0) {
+      writer.uint32(106).fork();
+      for (const v of message.manyUint64) {
+        writer.uint64(v.toString());
+      }
+      writer.join();
     }
-    writer.join();
     return writer;
   },
 

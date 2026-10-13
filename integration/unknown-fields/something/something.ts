@@ -21,11 +21,13 @@ export const Something: MessageFns<Something> = {
     if (message.hello !== "") {
       writer.uint32(10).string(message.hello);
     }
-    writer.uint32(18).fork();
-    for (const v of message.foo) {
-      writer.int32(v);
+    if (message.foo.length !== 0) {
+      writer.uint32(18).fork();
+      for (const v of message.foo) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     if (message._unknownFields !== undefined) {
       for (const [key, values] of globalThis.Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);

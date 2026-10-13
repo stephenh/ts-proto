@@ -25,6 +25,12 @@ export enum DurationOption {
   STRING = "string",
 }
 
+export enum AnyTypeOption {
+  /** @deprecated Kept for existing users of the `{ typeUrl, value }` JSON form; may be removed in the future. */
+  TYPE_URL = "typeUrl",
+  AT_TYPE = "@type",
+}
+
 export enum EnvOption {
   NODE = "node",
   BROWSER = "browser",
@@ -84,6 +90,7 @@ export type Options = {
   addGrpcMetadata: boolean;
   metadataType: string | undefined;
   addNestjsRestParameter: boolean;
+  useNestjsFqnServiceName: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
@@ -123,6 +130,7 @@ export type Options = {
   typePrefix: string;
   typeSuffix: string;
   useDuration: DurationOption;
+  anyType: AnyTypeOption;
 };
 
 export function defaultOptions(): Options {
@@ -161,6 +169,7 @@ export function defaultOptions(): Options {
     addGrpcMetadata: false,
     metadataType: undefined,
     addNestjsRestParameter: false,
+    useNestjsFqnServiceName: false,
     nestJs: false,
     env: EnvOption.BOTH,
     unrecognizedEnum: true,
@@ -198,6 +207,7 @@ export function defaultOptions(): Options {
     typePrefix: "",
     typeSuffix: "",
     useDuration: DurationOption.DURATION,
+    anyType: AnyTypeOption.AT_TYPE,
   };
 }
 
@@ -307,6 +317,9 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   if (options.nestJs) {
     options.initializeFieldsAsUndefined = false;
+  } else {
+    // useNestjsFqnServiceName requires nestJs=true
+    options.useNestjsFqnServiceName = false;
   }
 
   if (options.outputIndex) {

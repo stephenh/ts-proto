@@ -422,4 +422,19 @@ describe("simple", () => {
     expect(decoded.enumsById).toBeTruthy();
     expect(decoded.enumsById[2]).toBe(PbState.OFF);
   });
+
+  it("does not encode empty packed repeated fields", () => {
+    // A packed repeated field with no elements must not appear on the wire at all.
+    const encoded = Simple.encode(Simple.fromPartial({ coins: [], oldStates: [] })).finish();
+    const reader = new BinaryReader(encoded);
+    const fieldNumbers: number[] = [];
+    while (reader.pos < reader.len) {
+      const [fieldNo, wireType] = reader.tag();
+      fieldNumbers.push(fieldNo);
+      reader.skip(wireType);
+    }
+    expect(fieldNumbers).not.toContain(6);
+    expect(fieldNumbers).not.toContain(8);
+    expect(Array.from(encoded)).toEqual(Array.from(PbSimple.encode(PbSimple.fromObject({})).finish()));
+  });
 });

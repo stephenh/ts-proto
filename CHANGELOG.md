@@ -1,3 +1,25 @@
+# [2.15.0](https://github.com/stephenh/ts-proto/compare/v2.14.0...v2.15.0) (2026-10-11)
+
+
+### Features
+
+* add useNestjsFqnServiceName option to use fully qualified service names in NestJS decorators ([#1275](https://github.com/stephenh/ts-proto/issues/1275)) ([03473e2](https://github.com/stephenh/ts-proto/commit/03473e263a6db675b761a85f4901a2a65497c055))
+
+# [2.14.0](https://github.com/stephenh/ts-proto/compare/v2.13.3...v2.14.0) (2026-10-11)
+
+
+### Bug Fixes
+
+* preserve null google.protobuf.Value fields in fromPartial ([#1282](https://github.com/stephenh/ts-proto/issues/1282)) ([616a4d6](https://github.com/stephenh/ts-proto/commit/616a4d62486948756a226bb3a744c3b69899409a)), closes [#1137](https://github.com/stephenh/ts-proto/issues/1137)
+* preserve options for enums nested inside messages ([#1284](https://github.com/stephenh/ts-proto/issues/1284)) ([a226745](https://github.com/stephenh/ts-proto/commit/a2267458c8214a552ecea47c1140a8f97e6e1112)), closes [#1175](https://github.com/stephenh/ts-proto/issues/1175)
+* skip encoding empty packed repeated fields ([#1283](https://github.com/stephenh/ts-proto/issues/1283)) ([6ce6897](https://github.com/stephenh/ts-proto/commit/6ce6897837d9218aaf524a00afe09d098b3210ef)), closes [#819](https://github.com/stephenh/ts-proto/issues/819)
+* support optional type annotations in the type registry ([#1285](https://github.com/stephenh/ts-proto/issues/1285)) ([1b52f87](https://github.com/stephenh/ts-proto/commit/1b52f87bf62cef479cb129b86a69610abbd368cd)), closes [#1216](https://github.com/stephenh/ts-proto/issues/1216)
+
+
+### Features
+
+* support canonical JSON mapping for google.protobuf.Any ([#1279](https://github.com/stephenh/ts-proto/issues/1279)) ([46f4d79](https://github.com/stephenh/ts-proto/commit/46f4d792566bb84e7e3e6de47ebbf86d5e2a0ee3)), closes [#1200](https://github.com/stephenh/ts-proto/issues/1200)
+
 ## [2.13.3](https://github.com/stephenh/ts-proto/compare/v2.13.2...v2.13.3) (2026-10-11)
 
 

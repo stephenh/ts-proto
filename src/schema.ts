@@ -1,5 +1,6 @@
 import {
   DescriptorProto,
+  EnumDescriptorProto,
   FileDescriptorProto,
   FieldDescriptorProto,
   FieldDescriptorProto_Type,
@@ -33,11 +34,17 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   const outputAsConst = outputSchemaOptions.includes(OutputSchemaOption.CONST);
 
   chunks.push(code`
+    type ProtoMetaEnumOptions = {
+      options?: { [key: string]: any };
+      values?: { [key: string]: { [key: string]: any } };
+    };
+
     type ProtoMetaMessageOptions = {
       options?: { [key: string]: any };
       fields?: { [key: string]: { [key: string]: any } };
       oneof?: { [key: string]: { [key: string]: any } };
       nested?: { [key: string]: ProtoMetaMessageOptions };
+      enums?: { [key: string]: ProtoMetaEnumOptions };
     };
 
     export interface ProtoMetadata {
@@ -55,10 +62,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
           [key: string]: ProtoMetaMessageOptions;
         };
         enums?: {
-          [key: string]: {
-            options?: { [key: string]: any };
-            values?: { [key: string]: { [key: string]: any } };
-          };
+          [key: string]: ProtoMetaEnumOptions;
         };
       };
     }
@@ -153,34 +157,9 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   const enumsOptions: Code[] = [];
   (fileDesc.enumType || []).forEach((Enum) => {
-    const valuesOptions: Code[] = [];
-    Enum.value.forEach((value) => {
-      if (value.options) {
-        const valueOptions = encodedOptionsToOptions(
-          ctx,
-          ".google.protobuf.EnumValueOptions",
-          value.options._unknownFields,
-        );
-        delete value.options._unknownFields;
-        if (valueOptions) {
-          valuesOptions.push(code`'${value.name}': ${valueOptions}`);
-        }
-      }
-    });
-
-    let enumOptions: Code | undefined;
-    if (Enum.options) {
-      enumOptions = encodedOptionsToOptions(ctx, ".google.protobuf.EnumOptions", Enum.options._unknownFields);
-      delete Enum.options._unknownFields;
-    }
-
-    if (valuesOptions.length > 0 || enumOptions) {
-      enumsOptions.push(code`
-        '${Enum.name}': {
-          ${enumOptions ? code`options: ${enumOptions},` : ""}
-          values: {${joinCode(valuesOptions, { on: "," })}}
-        }
-      `);
+    const resolvedEnum = resolveEnumOptions(ctx, Enum);
+    if (resolvedEnum) {
+      enumsOptions.push(resolvedEnum);
     }
   });
 
@@ -306,19 +285,66 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
     });
   }
 
+  const enumsOptions: Code[] = [];
+  (message.enumType || []).forEach((Enum) => {
+    const resolvedEnum = resolveEnumOptions(ctx, Enum);
+    if (resolvedEnum) {
+      enumsOptions.push(resolvedEnum);
+    }
+  });
+
   let messageOptions: Code | undefined;
   if (message.options) {
     messageOptions = encodedOptionsToOptions(ctx, ".google.protobuf.MessageOptions", message.options._unknownFields);
     delete message.options._unknownFields;
   }
 
-  if (fieldsOptions.length > 0 || oneOfsOptions.length > 0 || nestedOptions.length > 0 || messageOptions) {
+  if (
+    fieldsOptions.length > 0 ||
+    oneOfsOptions.length > 0 ||
+    nestedOptions.length > 0 ||
+    enumsOptions.length > 0 ||
+    messageOptions
+  ) {
     return code`
       '${message.name}': {
         ${messageOptions ? code`options: ${messageOptions},` : ""}
         ${fieldsOptions.length > 0 ? code`fields: {${joinCode(fieldsOptions, { on: "," })}},` : ""}
         ${oneOfsOptions.length > 0 ? code`oneof: {${joinCode(oneOfsOptions, { on: "," })}},` : ""}
         ${nestedOptions.length > 0 ? code`nested: {${joinCode(nestedOptions, { on: "," })}},` : ""}
+        ${enumsOptions.length > 0 ? code`enums: {${joinCode(enumsOptions, { on: "," })}},` : ""}
+      }
+    `;
+  }
+}
+
+function resolveEnumOptions(ctx: Context, Enum: EnumDescriptorProto): Code | undefined {
+  const valuesOptions: Code[] = [];
+  Enum.value.forEach((value) => {
+    if (value.options) {
+      const valueOptions = encodedOptionsToOptions(
+        ctx,
+        ".google.protobuf.EnumValueOptions",
+        value.options._unknownFields,
+      );
+      delete value.options._unknownFields;
+      if (valueOptions) {
+        valuesOptions.push(code`'${value.name}': ${valueOptions}`);
+      }
+    }
+  });
+
+  let enumOptions: Code | undefined;
+  if (Enum.options) {
+    enumOptions = encodedOptionsToOptions(ctx, ".google.protobuf.EnumOptions", Enum.options._unknownFields);
+    delete Enum.options._unknownFields;
+  }
+
+  if (valuesOptions.length > 0 || enumOptions) {
+    return code`
+      '${Enum.name}': {
+        ${enumOptions ? code`options: ${enumOptions},` : ""}
+        values: {${joinCode(valuesOptions, { on: "," })}}
       }
     `;
   }
