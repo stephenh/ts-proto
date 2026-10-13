@@ -170,21 +170,17 @@ export const PrefixTimestampSuffix: MessageFns<PrefixTimestampSuffix> = {
   },
 
   fromJSON(object: any): PrefixTimestampSuffix {
+    if (typeof object === "string") {
+      return PrefixTimestampSuffix.fromJSON(timestampFromJson(object));
+    }
     return {
       seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
       nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0,
     };
   },
 
-  toJSON(message: PrefixTimestampSuffix): unknown {
-    const obj: any = {};
-    if (message.seconds !== 0) {
-      obj.seconds = Math.round(message.seconds);
-    }
-    if (message.nanos !== 0) {
-      obj.nanos = Math.round(message.nanos);
-    }
-    return obj;
+  toJSON(message: PrefixTimestampSuffix): string {
+    return timestampToJson(globalThis.Number(message.seconds ?? 0), message.nanos ?? 0);
   },
 
   create<I extends Exact<DeepPartial<PrefixTimestampSuffix>, I>>(base?: I): PrefixTimestampSuffix {
@@ -209,6 +205,32 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+const timestampJsonRegex = /^.+T\d{2}:\d{2}:\d{2}(\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function timestampFromJson(value: string): { seconds: number; nanos: number } {
+  const match = timestampJsonRegex.exec(value);
+  // Date only keeps milliseconds, so it parses the string without the fractional seconds
+  const fraction = match?.[1];
+  const millis = match
+    ? new globalThis.Date(fraction === undefined ? value : value.replace(fraction, "")).getTime()
+    : NaN;
+  if (!match || globalThis.Number.isNaN(millis)) {
+    throw new globalThis.Error(`Invalid timestamp: ${value}`);
+  }
+  const nanos = fraction === undefined ? 0 : globalThis.Number(fraction.slice(1, 10).padEnd(9, "0"));
+  return { seconds: millis / 1_000, nanos };
+}
+
+function timestampToJson(seconds: number, nanos: number): string {
+  const date = new globalThis.Date(seconds * 1_000).toISOString().slice(0, 19);
+  if (nanos === 0) {
+    return `${date}Z`;
+  }
+  const padded = nanos.toString().padStart(9, "0");
+  const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
+  return `${date}.${padded.slice(0, len)}Z`;
+}
 
 function longToNumber(int64: { toString(): string }): number {
   const num = globalThis.Number(int64.toString());
