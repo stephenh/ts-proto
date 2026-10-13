@@ -112,14 +112,16 @@ export const Numbers: MessageFns<Numbers> = {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).join();
     }
-    writer.uint32(122).fork();
-    for (const v of message.uint64s) {
-      if (BigInt.asUintN(64, v) !== v) {
-        throw new globalThis.Error("a value provided in array field uint64s of type uint64 is too large");
+    if (message.uint64s.length !== 0) {
+      writer.uint32(122).fork();
+      for (const v of message.uint64s) {
+        if (BigInt.asUintN(64, v) !== v) {
+          throw new globalThis.Error("a value provided in array field uint64s of type uint64 is too large");
+        }
+        writer.uint64(v);
       }
-      writer.uint64(v);
+      writer.join();
     }
-    writer.join();
     message.longLookup.forEach((value, key) => {
       Numbers_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(130).fork()).join();
     });
@@ -324,10 +326,10 @@ export const Numbers: MessageFns<Numbers> = {
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.double !== 0) {
-      obj.double = message.double;
+      obj.double = floatToJson(message.double);
     }
     if (message.float !== 0) {
-      obj.float = message.float;
+      obj.float = floatToJson(message.float);
     }
     if (message.int32 !== 0) {
       obj.int32 = Math.round(message.int32);
@@ -497,6 +499,10 @@ export const Numbers_LongLookupEntry: MessageFns<Numbers_LongLookupEntry> = {
     return message;
   },
 };
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 

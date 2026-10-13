@@ -59,9 +59,9 @@ export const Metadata: MessageFns<Metadata> = {
   fromJSON(object: any): Metadata {
     return {
       lastEdited: isSet(object.lastEdited)
-        ? Timestamp.fromJSON(object.lastEdited)
+        ? fromJsonTimestamp(object.lastEdited)
         : isSet(object.last_edited)
-        ? Timestamp.fromJSON(object.last_edited)
+        ? fromJsonTimestamp(object.last_edited)
         : undefined,
     };
   },
@@ -69,7 +69,7 @@ export const Metadata: MessageFns<Metadata> = {
   toJSON(message: Metadata): unknown {
     const obj: any = {};
     if (message.lastEdited !== undefined) {
-      obj.lastEdited = Timestamp.toJSON(message.lastEdited);
+      obj.lastEdited = message.lastEdited;
     }
     return obj;
   },
@@ -97,6 +97,33 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = Math.trunc(date.getTime() / 1_000);
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+const timestampFractionRegex = /:\d{2}\.\d+/;
+
+function fromJsonTimestamp(o: any): Timestamp {
+  if (o instanceof globalThis.Date) {
+    return toTimestamp(o);
+  } else if (typeof o === "string") {
+    // Date only keeps milliseconds, and parses longer fractions in an engine-specific way,
+    // so parse the fractional seconds ourselves and give Date only the whole seconds
+    const fraction = timestampFractionRegex.exec(o);
+    if (fraction === null) {
+      return toTimestamp(new globalThis.Date(o));
+    }
+    const fractionNanos = Number(fraction[0].slice(4, 13).padEnd(9, "0"));
+    const wholeSeconds = new globalThis.Date(o.replace(fraction[0], fraction[0].slice(0, 3)));
+    const timestamp = toTimestamp(new globalThis.Date(wholeSeconds.getTime() + Math.trunc(fractionNanos / 1_000_000)));
+    return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
+  } else {
+    return Timestamp.fromJSON(o);
+  }
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

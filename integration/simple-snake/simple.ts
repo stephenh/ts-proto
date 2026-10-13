@@ -280,19 +280,23 @@ export const Simple: MessageFns<Simple> = {
     for (const v of message.grand_children) {
       Child.encode(v!, writer.uint32(42).fork()).join();
     }
-    writer.uint32(50).fork();
-    for (const v of message.coins) {
-      writer.int32(v);
+    if (message.coins.length !== 0) {
+      writer.uint32(50).fork();
+      for (const v of message.coins) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     for (const v of message.snacks) {
       writer.uint32(58).string(v!);
     }
-    writer.uint32(66).fork();
-    for (const v of message.old_states) {
-      writer.int32(v);
+    if (message.old_states.length !== 0) {
+      writer.uint32(66).fork();
+      for (const v of message.old_states) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     if (message.thing !== undefined) {
       ImportedThing.encode(message.thing, writer.uint32(82).fork()).join();
     }
@@ -2124,10 +2128,10 @@ export const Numbers: MessageFns<Numbers> = {
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.double !== 0) {
-      obj.double = message.double;
+      obj.double = floatToJson(message.double);
     }
     if (message.float !== 0) {
-      obj.float = message.float;
+      obj.float = floatToJson(message.float);
     }
     if (message.int32 !== 0) {
       obj.int32 = Math.round(message.int32);
@@ -2278,6 +2282,10 @@ export class PingServiceClientImpl implements PingService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+}
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

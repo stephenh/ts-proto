@@ -42,6 +42,7 @@ import {
 } from "./generate-struct-wrappers";
 import {
   addTypeToMessages,
+  AnyTypeOption,
   DateOption,
   DurationOption,
   EnvOption,
@@ -68,6 +69,7 @@ import {
   isEnum,
   isFieldMaskType,
   isFieldMaskTypeName,
+  isFloatingPoint,
   isJsTypeFieldOption,
   isListValueType,
   isListValueTypeName,
@@ -380,7 +382,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       // and the service controller interface
       chunks.push(generateNestjsServiceController(ctx, fileDesc, sInfo, serviceDesc));
       // generate nestjs grpc service controller decorator
-      chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, serviceDesc));
+      chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, fileDesc, serviceDesc));
       let serviceConstName = `${camelToSnake(serviceDesc.name)}_NAME`;
       if (!serviceDesc.name.toLowerCase().endsWith("service")) {
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
@@ -488,7 +490,8 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeGrpcWebErrorClass> &
   ReturnType<typeof makeExtensionClass> &
   ReturnType<typeof makeAssertionUtils> &
-  ReturnType<typeof makeMessageFns>;
+  ReturnType<typeof makeMessageFns> &
+  ReturnType<typeof makeAnyJsonUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -508,6 +511,7 @@ export function makeUtils(options: Options): Utils {
     ...extension,
     ...makeAssertionUtils(bytes),
     ...makeMessageFns(options, deepPartial, extension),
+    ...makeAnyJsonUtils(),
   };
 }
 
@@ -676,7 +680,18 @@ function makeByteUtils(options: Options) {
       }
     `,
   );
-  return { globalThis, bytesFromBase64, base64FromBytes };
+
+  // JSON numbers can't represent NaN or +/-Infinity, so the proto3 JSON mapping
+  // writes them as the strings "NaN", "Infinity" and "-Infinity".
+  const floatToJson = conditionalOutput(
+    "floatToJson",
+    code`
+      function floatToJson(value: number | null | undefined): number | string | null | undefined {
+        return typeof value === "number" && !${globalThis}.Number.isFinite(value) ? ${globalThis}.String(value) : value;
+      }
+    `,
+  );
+  return { globalThis, bytesFromBase64, base64FromBytes, floatToJson };
 }
 
 function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtils>) {
@@ -1132,7 +1147,84 @@ function makeTimestampMethods(
       `,
   );
 
-  return { toTimestamp, fromTimestamp, timestampFractionRegex, fromJsonTimestamp };
+  // Declared once per file, so the regex isn't compiled on each timestampFromJson call
+  const timestampJsonRegex = conditionalOutput(
+    "timestampJsonRegex",
+    code`const timestampJsonRegex = /^.+T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/;`,
+  );
+
+  // Parses the canonical JSON of a Timestamp, an RFC 3339 string
+  const timestampFromJson = conditionalOutput(
+    "timestampFromJson",
+    code`
+      function timestampFromJson(value: string): { seconds: number; nanos: number } {
+        const match = ${timestampJsonRegex}.exec(value);
+        // Date only keeps milliseconds, so it parses the string without the fractional seconds
+        const fraction = match?.[1];
+        const millis = match
+          ? new ${bytes.globalThis}.Date(fraction === undefined ? value : value.replace(fraction, "")).getTime()
+          : NaN;
+        if (!match || ${bytes.globalThis}.Number.isNaN(millis)) {
+          throw new ${bytes.globalThis}.Error(\`Invalid timestamp: \${value}\`);
+        }
+        const nanos = fraction === undefined ? 0 : ${bytes.globalThis}.Number(fraction.slice(1, 10).padEnd(9, "0"));
+        return { seconds: millis / 1_000, nanos };
+      }
+    `,
+  );
+
+  // Writes the canonical JSON of a Timestamp, an RFC 3339 string
+  const timestampToJson = conditionalOutput(
+    "timestampToJson",
+    code`
+      function timestampToJson(seconds: number, nanos: number): string {
+        const date = new ${bytes.globalThis}.Date(seconds * 1_000).toISOString().slice(0, 19);
+        if (nanos === 0) return \`\${date}Z\`;
+        const padded = nanos.toString().padStart(9, "0");
+        const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
+        return \`\${date}.\${padded.slice(0, len)}Z\`;
+      }
+    `,
+  );
+
+  return {
+    toTimestamp,
+    fromTimestamp,
+    timestampFractionRegex,
+    fromJsonTimestamp,
+    timestampJsonRegex,
+    timestampFromJson,
+    timestampToJson,
+  };
+}
+
+function makeAnyJsonUtils() {
+  // Well-known types whose JSON is not an object of their fields. Packed in an Any, that
+  // JSON goes under "value" rather than next to "@type".
+  const anyJsonValueTypes = conditionalOutput(
+    "anyJsonValueTypes",
+    code`
+      const anyJsonValueTypes: readonly string[] = [
+        "google.protobuf.Any",
+        "google.protobuf.BoolValue",
+        "google.protobuf.BytesValue",
+        "google.protobuf.DoubleValue",
+        "google.protobuf.Duration",
+        "google.protobuf.FieldMask",
+        "google.protobuf.FloatValue",
+        "google.protobuf.Int32Value",
+        "google.protobuf.Int64Value",
+        "google.protobuf.ListValue",
+        "google.protobuf.StringValue",
+        "google.protobuf.Struct",
+        "google.protobuf.Timestamp",
+        "google.protobuf.UInt32Value",
+        "google.protobuf.UInt64Value",
+        "google.protobuf.Value",
+      ];
+    `,
+  );
+  return { anyJsonValueTypes };
 }
 
 function makeComparisonUtils() {
@@ -1871,7 +1963,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }
           `);
         } else {
-          chunks.push(listWriteSnippet);
+          // A packed field with no elements must not be written, not even its tag and length.
+          chunks.push(code`
+            if (${messageProperty}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
         }
       } else {
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
@@ -1933,7 +2030,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }
           `);
         } else {
-          chunks.push(listWriteSnippet);
+          // A packed field with no elements must not be written, not even its tag and length.
+          chunks.push(code`
+            if (${messageProperty}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -2270,6 +2372,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   const { options, utils, currentFile } = ctx;
   const chunks: Code[] = [];
 
+  if (fullTypeName === "google.protobuf.Any" && useCanonicalAnyJson(options)) {
+    return generateCanonicalAnyFromJson(ctx, fullName, messageDesc);
+  }
+
   // Handle Duration string format as a special case
   if (fullTypeName === "google.protobuf.Duration" && ctx.options.useDuration === DurationOption.STRING) {
     let parseSeconds: Code;
@@ -2308,10 +2414,21 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   }
 
   // create the basic function declaration
-  chunks.push(code`
-    fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
-      return {
-  `);
+  if (fullTypeName === "google.protobuf.Timestamp") {
+    // The canonical JSON of a Timestamp is an RFC 3339 string; the object form is still accepted.
+    chunks.push(code`
+      fromJSON(object: any): ${fullName} {
+        if (typeof object === "string") {
+          return ${fullName}.fromJSON(${utils.timestampFromJson}(object));
+        }
+        return {
+    `);
+  } else {
+    chunks.push(code`
+      fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
+        return {
+    `);
+  }
 
   if (addTypeToMessages(options)) {
     chunks.push(code`$type: ${fullName}.$type,`);
@@ -2645,7 +2762,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals, useNullAsOptional, useDuration, forceLong }: Options,
+  { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong }: Options,
+  utils: Utils,
 ): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
@@ -2693,7 +2811,94 @@ function generateCanonicalToJson(
     }
     `;
   }
+  if (fullProtobufTypeName === "google.protobuf.Timestamp" && useJsonTimestamp === JsonTimestampOption.RFC3339) {
+    const seconds =
+      forceLong === LongOption.LONG
+        ? code`message.seconds?.toNumber() ?? 0`
+        : code`${utils.globalThis}.Number(message.seconds ?? 0)`;
+    return code`
+    toJSON(message: ${fullName}): string {
+      return ${utils.timestampToJson}(${seconds}, message.nanos ?? 0);
+    }
+    `;
+  }
   return undefined;
+}
+
+/** Whether `google.protobuf.Any` gets its canonical `@type` JSON form, see the `anyType` option. */
+function useCanonicalAnyJson(options: Options): boolean {
+  // Converting the packed message needs the type registry and its encode/decode methods. Without
+  // them, Any keeps the `{ typeUrl, value }` form even though `@type` is the default.
+  return (
+    options.anyType === AnyTypeOption.AT_TYPE && options.outputTypeRegistry && options.outputEncodeMethods === true
+  );
+}
+
+/** The `type_url` and `value` fields of `google.protobuf.Any`. */
+function anyFields(messageDesc: DescriptorProto): [FieldDescriptorProto, FieldDescriptorProto] {
+  const typeUrl = messageDesc.field.find((field) => field.number === 1)!;
+  const value = messageDesc.field.find((field) => field.number === 2)!;
+  return [typeUrl, value];
+}
+
+/**
+ * The canonical JSON of an `Any` is the JSON of the packed message with an added
+ * `"@type"`, or `{"@type", "value"}` for well-known types with their own JSON form.
+ */
+function generateCanonicalAnyToJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+  const { options, utils } = ctx;
+  const messageTypeRegistry = impFile(options, "messageTypeRegistry@./typeRegistry");
+  const [typeUrlField, valueField] = anyFields(messageDesc);
+  const typeUrl = getPropertyAccessor("message", getFieldName(typeUrlField, options));
+  const value = getPropertyAccessor("message", getFieldName(valueField, options));
+  return code`
+    toJSON(message: ${fullName}): unknown {
+      const typeUrl = ${typeUrl} ?? "";
+      if (typeUrl === "") {
+        return {};
+      }
+      const typeName = typeUrl.slice(typeUrl.lastIndexOf("/") + 1);
+      const type = ${messageTypeRegistry}.get(typeName);
+      if (type === undefined) {
+        throw new ${utils.globalThis}.Error(\`Cannot convert google.protobuf.Any to JSON: unknown type \${typeName}\`);
+      }
+      const json = type.toJSON(type.decode(${value} ?? new Uint8Array(0)));
+      return ${utils.anyJsonValueTypes}.includes(typeName)
+        ? { "@type": typeUrl, value: json }
+        : { "@type": typeUrl, ...(json as object) };
+    }
+  `;
+}
+
+/** The inverse of {@link generateCanonicalAnyToJson}. */
+function generateCanonicalAnyFromJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+  const { options, utils } = ctx;
+  const messageTypeRegistry = impFile(options, "messageTypeRegistry@./typeRegistry");
+  const [typeUrlField, valueField] = anyFields(messageDesc);
+  const typeUrlKey = safeAccessor(getFieldName(typeUrlField, options));
+  const valueKey = safeAccessor(getFieldName(valueField, options));
+  const typeField = addTypeToMessages(options) ? code`$type: ${fullName}.$type,` : "";
+  const bytes = options.env === EnvOption.NODE ? code`Buffer.from(bytes)` : code`bytes`;
+  return code`
+    fromJSON(object: any): ${fullName} {
+      const typeUrl = ${utils.isSet}(object?.["@type"]) ? ${utils.globalThis}.String(object["@type"]) : "";
+      if (typeUrl === "") {
+        return { ${typeField} ${typeUrlKey}: ${defaultValue(ctx, typeUrlField)}, ${valueKey}: ${defaultValue(ctx, valueField)} };
+      }
+      const typeName = typeUrl.slice(typeUrl.lastIndexOf("/") + 1);
+      const type = ${messageTypeRegistry}.get(typeName);
+      if (type === undefined) {
+        throw new ${utils.globalThis}.Error(\`Cannot convert JSON to google.protobuf.Any: unknown type \${typeName}\`);
+      }
+      let json = object.value;
+      if (!${utils.anyJsonValueTypes}.includes(typeName)) {
+        json = { ...object };
+        delete json["@type"];
+      }
+      const bytes = type.encode(type.fromJSON(json)).finish();
+      return { ${typeField} ${typeUrlKey}: typeUrl, ${valueKey}: ${bytes} };
+    }
+  `;
 }
 
 function generateToJson(
@@ -2705,7 +2910,12 @@ function generateToJson(
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
-  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options);
+  if (fullProtobufTypeName === "google.protobuf.Any" && useCanonicalAnyJson(options)) {
+    chunks.push(generateCanonicalAnyToJson(ctx, fullName, messageDesc));
+    return joinCode(chunks, { on: "\n" });
+  }
+
+  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options, utils);
   if (canonicalToJson) {
     chunks.push(canonicalToJson);
     return joinCode(chunks, { on: "\n" });
@@ -2777,6 +2987,8 @@ function generateToJson(
           return code`${from}.toString()`;
         } else if (isWholeNumber(valueType) && !(isLong(valueType) && options.forceLong === LongOption.STRING)) {
           return code`Math.round(${from})`;
+        } else if (isFloatingPoint(valueType)) {
+          return code`${utils.floatToJson}(${from})`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else if (isAnyValueType(valueType)) {
@@ -2811,6 +3023,8 @@ function generateToJson(
         return code`${from}.toString()`;
       } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
         return code`Math.round(${from})`;
+      } else if (isFloatingPoint(field)) {
+        return code`${utils.floatToJson}(${from})`;
       } else {
         return code`${from}`;
       }
@@ -3082,6 +3296,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         }
       `);
       currentSwitchTarget = oneofNameWithObject;
+    } else if (isAnyValueType(field)) {
+      // null is a valid google.protobuf.Value (NullValue), so only an absent value gets the fallback.
+      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
+      chunks.push(code`${messageProperty} = ${objectProperty} === undefined ? ${fallback} : ${objectProperty};`);
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
@@ -3148,9 +3366,9 @@ function convertToObjectKey(
   if (keyType.toCodeString([]) === "string") {
     return code`${variableName}`;
   } else if (isLong(keyField) && shouldGenerateJSMapType(ctx, messageDesc, field)) {
-    if (ctx.options.forceLong === LongOption.LONG) {
-      return code`${ctx.utils.longToNumber}(${variableName})`;
-    } else if (ctx.options.forceLong === LongOption.BIGINT) {
+    // JSON object keys are strings, and converting a 64-bit key to a JS number
+    // would lose precision (or throw, for Long) above Number.MAX_SAFE_INTEGER.
+    if (ctx.options.forceLong === LongOption.LONG || ctx.options.forceLong === LongOption.BIGINT) {
       return code`${variableName}.toString()`;
     } else {
       return code`${variableName}`;

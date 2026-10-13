@@ -71,11 +71,13 @@ export const Simple: MessageFns<Simple> = {
     if (message.state !== 0) {
       writer.uint32(32).int32(message.state);
     }
-    writer.uint32(42).fork();
-    for (const v of message.states) {
-      writer.int32(v);
+    if (message.states.length !== 0) {
+      writer.uint32(42).fork();
+      for (const v of message.states) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     if (message.nullValue !== 0) {
       writer.uint32(48).int32(message.nullValue);
     }

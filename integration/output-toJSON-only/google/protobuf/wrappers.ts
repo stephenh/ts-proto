@@ -99,7 +99,7 @@ export const DoubleValue: MessageFns<DoubleValue> = {
   toJSON(message: DoubleValue): unknown {
     const obj: any = {};
     if (message.value !== 0) {
-      obj.value = message.value;
+      obj.value = floatToJson(message.value);
     }
     return obj;
   },
@@ -109,7 +109,7 @@ export const FloatValue: MessageFns<FloatValue> = {
   toJSON(message: FloatValue): unknown {
     const obj: any = {};
     if (message.value !== 0) {
-      obj.value = message.value;
+      obj.value = floatToJson(message.value);
     }
     return obj;
   },
@@ -195,6 +195,10 @@ function base64FromBytes(arr: Uint8Array): string {
     });
     return globalThis.btoa(bin.join(""));
   }
+}
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
 }
 
 export interface MessageFns<T> {

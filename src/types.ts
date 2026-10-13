@@ -497,6 +497,16 @@ export function isWholeNumber(field: FieldDescriptorProto): boolean {
   );
 }
 
+/** Whether `field` holds a JS number that may be non-finite: a double/float or its wrapper type. */
+export function isFloatingPoint(field: FieldDescriptorProto): boolean {
+  return (
+    field.type === FieldDescriptorProto_Type.TYPE_DOUBLE ||
+    field.type === FieldDescriptorProto_Type.TYPE_FLOAT ||
+    field.typeName === ".google.protobuf.DoubleValue" ||
+    field.typeName === ".google.protobuf.FloatValue"
+  );
+}
+
 export function isMapType(ctx: Context, messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
   return detectMapType(ctx, messageDesc, field) !== undefined;
 }

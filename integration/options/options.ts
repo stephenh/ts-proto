@@ -22,6 +22,12 @@ export interface MyMessage {
   quux?: string | undefined;
 }
 
+export enum MyMessage_MyNestedEnum {
+  NESTED_FOO = 0,
+  NESTED_BAR = 1,
+  UNRECOGNIZED = -1,
+}
+
 export interface RequestType {
 }
 
@@ -201,11 +207,14 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
+type ProtoMetaEnumOptions = { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } };
+
 type ProtoMetaMessageOptions = {
   options?: { [key: string]: any };
   fields?: { [key: string]: { [key: string]: any } };
   oneof?: { [key: string]: { [key: string]: any } };
   nested?: { [key: string]: ProtoMetaMessageOptions };
+  enums?: { [key: string]: ProtoMetaEnumOptions };
 };
 
 export interface ProtoMetadata {
@@ -218,7 +227,7 @@ export interface ProtoMetadata {
       [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
     messages?: { [key: string]: ProtoMetaMessageOptions };
-    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
+    enums?: { [key: string]: ProtoMetaEnumOptions };
   };
 }
 
@@ -313,7 +322,30 @@ export const protoMetadata: ProtoMetadata = {
       }],
       "extension": [],
       "nestedType": [],
-      "enumType": [],
+      "enumType": [{
+        "name": "MyNestedEnum",
+        "value": [{
+          "name": "NESTED_FOO",
+          "number": 0,
+          "options": {
+            "deprecated": false,
+            "features": undefined,
+            "debugRedact": false,
+            "featureSupport": undefined,
+            "uninterpretedOption": [],
+          },
+        }, { "name": "NESTED_BAR", "number": 1, "options": undefined }],
+        "options": {
+          "allowAlias": false,
+          "deprecated": false,
+          "deprecatedLegacyJsonFieldConflicts": false,
+          "features": undefined,
+          "uninterpretedOption": [],
+        },
+        "reservedRange": [],
+        "reservedName": [],
+        "visibility": 0,
+      }],
       "extensionRange": [],
       "oneofDecl": [
         { "name": "qux", "options": { "features": undefined, "uninterpretedOption": [] } },
@@ -521,6 +553,7 @@ export const protoMetadata: ProtoMetadata = {
   references: {
     ".MyEnum": MyEnum,
     ".MyMessage": MyMessage,
+    ".MyMessage.MyNestedEnum": MyMessage_MyNestedEnum,
     ".RequestType": RequestType,
     ".ResponseType": ResponseType,
     ".MyService": MyServiceClientImpl,
@@ -536,6 +569,13 @@ export const protoMetadata: ProtoMetadata = {
           "foo_2": { "something": Something.decode(bytesFromBase64("CgV3b3JsZBIDe9kC")) },
         },
         oneof: { "qux": { "my_oneof_option": 42 } },
+
+        enums: {
+          "MyNestedEnum": {
+            options: { "my_enum_option": true },
+            values: { "NESTED_FOO": { "my_enum_value_option": 654 } },
+          },
+        },
       },
     },
     services: {

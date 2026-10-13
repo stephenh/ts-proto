@@ -87,10 +87,10 @@ export const NumPair: MessageFns<NumPair> = {
   toJSON(message: NumPair): unknown {
     const obj: any = {};
     if (message.num1 !== 0) {
-      obj.num1 = message.num1;
+      obj.num1 = floatToJson(message.num1);
     }
     if (message.num2 !== 0) {
-      obj.num2 = message.num2;
+      obj.num2 = floatToJson(message.num2);
     }
     return obj;
   },
@@ -158,7 +158,7 @@ export const NumSingle: MessageFns<NumSingle> = {
   toJSON(message: NumSingle): unknown {
     const obj: any = {};
     if (message.num !== 0) {
-      obj.num = message.num;
+      obj.num = floatToJson(message.num);
     }
     return obj;
   },
@@ -179,11 +179,13 @@ function createBaseNumbers(): Numbers {
 
 export const Numbers: MessageFns<Numbers> = {
   encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    writer.uint32(10).fork();
-    for (const v of message.num) {
-      writer.double(v);
+    if (message.num.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.num) {
+        writer.double(v);
+      }
+      writer.join();
     }
-    writer.join();
     return writer;
   },
 
@@ -237,7 +239,7 @@ export const Numbers: MessageFns<Numbers> = {
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.num?.length) {
-      obj.num = message.num;
+      obj.num = message.num.map((e) => floatToJson(e));
     }
     return obj;
   },
@@ -310,6 +312,10 @@ export interface DataLoaderOptions {
 export interface DataLoaders {
   rpcDataLoaderOptions?: DataLoaderOptions;
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
+}
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

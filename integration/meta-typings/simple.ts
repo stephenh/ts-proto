@@ -232,19 +232,23 @@ export const Simple: MessageFns<Simple> = {
     for (const v of message.grandChildren) {
       Child.encode(v!, writer.uint32(42).fork()).join();
     }
-    writer.uint32(50).fork();
-    for (const v of message.coins) {
-      writer.int32(v);
+    if (message.coins.length !== 0) {
+      writer.uint32(50).fork();
+      for (const v of message.coins) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     for (const v of message.snacks) {
       writer.uint32(58).string(v!);
     }
-    writer.uint32(66).fork();
-    for (const v of message.oldStates) {
-      writer.int32(v);
+    if (message.oldStates.length !== 0) {
+      writer.uint32(66).fork();
+      for (const v of message.oldStates) {
+        writer.int32(v);
+      }
+      writer.join();
     }
-    writer.join();
     if (message.thing !== undefined) {
       ImportedThing.encode(message.thing, writer.uint32(82).fork()).join();
     }
@@ -1884,11 +1888,14 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
+type ProtoMetaEnumOptions = { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } };
+
 type ProtoMetaMessageOptions = {
   options?: { [key: string]: any };
   fields?: { [key: string]: { [key: string]: any } };
   oneof?: { [key: string]: { [key: string]: any } };
   nested?: { [key: string]: ProtoMetaMessageOptions };
+  enums?: { [key: string]: ProtoMetaEnumOptions };
 };
 
 export interface ProtoMetadata {
@@ -1901,7 +1908,7 @@ export interface ProtoMetadata {
       [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
     messages?: { [key: string]: ProtoMetaMessageOptions };
-    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
+    enums?: { [key: string]: ProtoMetaEnumOptions };
   };
 }
 

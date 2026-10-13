@@ -250,10 +250,10 @@ export const Numbers: MessageFns<Numbers> = {
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.double !== 0) {
-      obj.double = message.double;
+      obj.double = floatToJson(message.double);
     }
     if (message.float !== 0) {
-      obj.float = message.float;
+      obj.float = floatToJson(message.float);
     }
     if (message.int32 !== 0) {
       obj.int32 = Math.round(message.int32);
@@ -316,6 +316,10 @@ export const Numbers: MessageFns<Numbers> = {
     return message;
   },
 };
+
+function floatToJson(value: number | null | undefined): number | string | null | undefined {
+  return typeof value === "number" && !globalThis.Number.isFinite(value) ? globalThis.String(value) : value;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

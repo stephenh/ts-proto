@@ -85,11 +85,13 @@ export const Simple: MessageFns<Simple> = {
     if (message.state !== StateEnum.UNKNOWN) {
       writer.uint32(32).int32(stateEnumToNumber(message.state));
     }
-    writer.uint32(42).fork();
-    for (const v of message.states) {
-      writer.int32(stateEnumToNumber(v));
+    if (message.states.length !== 0) {
+      writer.uint32(42).fork();
+      for (const v of message.states) {
+        writer.int32(stateEnumToNumber(v));
+      }
+      writer.join();
     }
-    writer.join();
     if (message.nullValue !== NullValue.NULL_VALUE) {
       writer.uint32(48).int32(nullValueToNumber(message.nullValue));
     }
