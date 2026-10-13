@@ -171,17 +171,7 @@ export const Timestamp: MessageFns<Timestamp> = {
 
   fromJSON(object: any): Timestamp {
     if (typeof object === "string") {
-      const match = /^.+T\d{2}:\d{2}:\d{2}(\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.exec(object);
-      // Date only keeps milliseconds, so it parses the string without the fractional seconds
-      const fraction = match?.[1];
-      const millis = match
-        ? new globalThis.Date(fraction === undefined ? object : object.replace(fraction, "")).getTime()
-        : NaN;
-      if (!match || globalThis.Number.isNaN(millis)) {
-        throw new globalThis.Error(`Invalid timestamp: ${object}`);
-      }
-      const nanos = fraction === undefined ? 0 : globalThis.Number(fraction.slice(1, 10).padEnd(9, "0"));
-      return Timestamp.fromJSON({ seconds: millis / 1_000, nanos });
+      return Timestamp.fromJSON(timestampFromJson(object));
     }
     return {
       seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
@@ -190,14 +180,7 @@ export const Timestamp: MessageFns<Timestamp> = {
   },
 
   toJSON(message: Timestamp): string {
-    const nanos = message.nanos ?? 0;
-    const date = new globalThis.Date(globalThis.Number(message.seconds ?? 0) * 1_000).toISOString().slice(0, 19);
-    if (nanos === 0) {
-      return `${date}Z`;
-    }
-    const padded = nanos.toString().padStart(9, "0");
-    const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
-    return `${date}.${padded.slice(0, len)}Z`;
+    return timestampToJson(globalThis.Number(message.seconds ?? 0), message.nanos ?? 0);
   },
 
   create(base?: DeepPartial<Timestamp>): Timestamp {
@@ -218,6 +201,32 @@ export type DeepPartial<T> = T extends Builtin ? T
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+const timestampJsonRegex = /^.+T\d{2}:\d{2}:\d{2}(\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function timestampFromJson(value: string): { seconds: number; nanos: number } {
+  const match = timestampJsonRegex.exec(value);
+  // Date only keeps milliseconds, so it parses the string without the fractional seconds
+  const fraction = match?.[1];
+  const millis = match
+    ? new globalThis.Date(fraction === undefined ? value : value.replace(fraction, "")).getTime()
+    : NaN;
+  if (!match || globalThis.Number.isNaN(millis)) {
+    throw new globalThis.Error(`Invalid timestamp: ${value}`);
+  }
+  const nanos = fraction === undefined ? 0 : globalThis.Number(fraction.slice(1, 10).padEnd(9, "0"));
+  return { seconds: millis / 1_000, nanos };
+}
+
+function timestampToJson(seconds: number, nanos: number): string {
+  const date = new globalThis.Date(seconds * 1_000).toISOString().slice(0, 19);
+  if (nanos === 0) {
+    return `${date}Z`;
+  }
+  const padded = nanos.toString().padStart(9, "0");
+  const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
+  return `${date}.${padded.slice(0, len)}Z`;
+}
 
 function longToNumber(int64: { toString(): string }): number {
   const num = globalThis.Number(int64.toString());

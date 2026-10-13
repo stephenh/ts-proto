@@ -1138,7 +1138,55 @@ function makeTimestampMethods(
       `,
   );
 
-  return { toTimestamp, fromTimestamp, timestampFractionRegex, fromJsonTimestamp };
+  // Declared once per file, so the regex isn't compiled on each timestampFromJson call
+  const timestampJsonRegex = conditionalOutput(
+    "timestampJsonRegex",
+    code`const timestampJsonRegex = /^.+T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/;`,
+  );
+
+  // Parses the canonical JSON of a Timestamp, an RFC 3339 string
+  const timestampFromJson = conditionalOutput(
+    "timestampFromJson",
+    code`
+      function timestampFromJson(value: string): { seconds: number; nanos: number } {
+        const match = ${timestampJsonRegex}.exec(value);
+        // Date only keeps milliseconds, so it parses the string without the fractional seconds
+        const fraction = match?.[1];
+        const millis = match
+          ? new ${bytes.globalThis}.Date(fraction === undefined ? value : value.replace(fraction, "")).getTime()
+          : NaN;
+        if (!match || ${bytes.globalThis}.Number.isNaN(millis)) {
+          throw new ${bytes.globalThis}.Error(\`Invalid timestamp: \${value}\`);
+        }
+        const nanos = fraction === undefined ? 0 : ${bytes.globalThis}.Number(fraction.slice(1, 10).padEnd(9, "0"));
+        return { seconds: millis / 1_000, nanos };
+      }
+    `,
+  );
+
+  // Writes the canonical JSON of a Timestamp, an RFC 3339 string
+  const timestampToJson = conditionalOutput(
+    "timestampToJson",
+    code`
+      function timestampToJson(seconds: number, nanos: number): string {
+        const date = new ${bytes.globalThis}.Date(seconds * 1_000).toISOString().slice(0, 19);
+        if (nanos === 0) return \`\${date}Z\`;
+        const padded = nanos.toString().padStart(9, "0");
+        const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
+        return \`\${date}.\${padded.slice(0, len)}Z\`;
+      }
+    `,
+  );
+
+  return {
+    toTimestamp,
+    fromTimestamp,
+    timestampFractionRegex,
+    fromJsonTimestamp,
+    timestampJsonRegex,
+    timestampFromJson,
+    timestampToJson,
+  };
 }
 
 function makeAnyJsonUtils() {
@@ -2362,17 +2410,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     chunks.push(code`
       fromJSON(object: any): ${fullName} {
         if (typeof object === "string") {
-          const match = /^.+T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/.exec(object);
-          // Date only keeps milliseconds, so it parses the string without the fractional seconds
-          const fraction = match?.[1];
-          const millis = match
-            ? new ${utils.globalThis}.Date(fraction === undefined ? object : object.replace(fraction, "")).getTime()
-            : NaN;
-          if (!match || ${utils.globalThis}.Number.isNaN(millis)) {
-            throw new ${utils.globalThis}.Error(\`Invalid timestamp: \${object}\`);
-          }
-          const nanos = fraction === undefined ? 0 : ${utils.globalThis}.Number(fraction.slice(1, 10).padEnd(9, "0"));
-          return ${fullName}.fromJSON({ seconds: millis / 1_000, nanos });
+          return ${fullName}.fromJSON(${utils.timestampFromJson}(object));
         }
         return {
     `);
@@ -2716,7 +2754,7 @@ function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
   { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong }: Options,
-  globalThisRef: ConditionalOutput,
+  utils: Utils,
 ): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
@@ -2765,18 +2803,13 @@ function generateCanonicalToJson(
     `;
   }
   if (fullProtobufTypeName === "google.protobuf.Timestamp" && useJsonTimestamp === JsonTimestampOption.RFC3339) {
-    const millis =
+    const seconds =
       forceLong === LongOption.LONG
-        ? code`(message.seconds?.toNumber() ?? 0) * 1_000`
-        : code`${globalThisRef}.Number(message.seconds ?? 0) * 1_000`;
+        ? code`message.seconds?.toNumber() ?? 0`
+        : code`${utils.globalThis}.Number(message.seconds ?? 0)`;
     return code`
     toJSON(message: ${fullName}): string {
-      const nanos = message.nanos ?? 0;
-      const date = new ${globalThisRef}.Date(${millis}).toISOString().slice(0, 19);
-      if (nanos === 0) return \`\${date}Z\`;
-      const padded = nanos.toString().padStart(9, "0");
-      const len = nanos % 1_000_000 === 0 ? 3 : nanos % 1_000 === 0 ? 6 : 9;
-      return \`\${date}.\${padded.slice(0, len)}Z\`;
+      return ${utils.timestampToJson}(${seconds}, message.nanos ?? 0);
     }
     `;
   }
@@ -2873,7 +2906,7 @@ function generateToJson(
     return joinCode(chunks, { on: "\n" });
   }
 
-  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options, utils.globalThis);
+  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options, utils);
   if (canonicalToJson) {
     chunks.push(canonicalToJson);
     return joinCode(chunks, { on: "\n" });
