@@ -612,6 +612,8 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
 - With `--ts_proto_opt=typeSuffix=MySuffix`, the generated interfaces, enums, and factories will have a suffix of `MySuffix` in their names.
 
+- With `--ts_proto_opt=messagePrefix=MyPrefix` / `messageSuffix=MySuffix`, only the generated message interfaces and factories get the prefix/suffix, and with `enumPrefix=MyPrefix` / `enumSuffix=MySuffix` only the enums do. They are added inside `typePrefix`/`typeSuffix` when both are set, e.g. `typePrefix=T,messagePrefix=M` gives `TMFoo`.
+
 ```protobuf
 message ProfileInfo {
     int32 id = 1;

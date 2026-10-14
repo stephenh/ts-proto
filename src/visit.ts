@@ -40,7 +40,7 @@ export function visit(
     const protoFullName = protoPrefix + enumDesc.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
-    const tsFullNameWithAffixes = messageName(wrapTypeName(options, tsFullName));
+    const tsFullNameWithAffixes = messageName(wrapTypeName(options, tsFullName, "enum"));
     const nestedSourceInfo = sourceInfo.open(childEnumType, index);
     enumFn(tsFullNameWithAffixes, enumDesc, nestedSourceInfo, protoFullName);
   });

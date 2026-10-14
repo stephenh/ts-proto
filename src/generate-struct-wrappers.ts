@@ -56,7 +56,7 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
     chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
       const result = {} as any;
       if (value === null) {
-        result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE;
+        result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE;
       } else if (typeof value === 'boolean') {
         result.${fieldNames.boolValue} = value;
       } else if (typeof value === 'number') {
@@ -203,10 +203,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${wrapTypeName(
-            ctx.options,
-            "NullValue",
-          )}.NULL_VALUE};
+          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
         } else if (typeof value === 'number') {
@@ -226,7 +223,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', value: ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE};
+          result.kind = {$case: '${fieldNames.nullValue}', value: ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', value };
         } else if (typeof value === 'number') {
@@ -246,7 +243,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
       chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE;
+          result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE;
         } else if (typeof value === 'boolean') {
           result.${fieldNames.boolValue} = value;
         } else if (typeof value === 'number') {

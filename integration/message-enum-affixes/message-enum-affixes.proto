@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package affixes;
+
+message AwesomeMessage {
+  message Inner {
+    AwesomeEnum kind = 1;
+  }
+  Inner inner = 1;
+  AwesomeEnum kind = 2;
+  google.protobuf.Value value = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  google.protobuf.UInt64Value guint64 = 5;
+}
+
+enum AwesomeEnum {
+  AWESOME_ENUM_AWESOME = 0;
+  AWESOME_ENUM_COOL = 1;
+}
