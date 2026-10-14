@@ -8,6 +8,8 @@ import Long = require("long");
 
 export const protobufPackage = "";
 
+export const protobufFileName = "use-duration-long.proto";
+
 export interface DurationHolder {
   duration: Duration | undefined;
 }

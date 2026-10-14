@@ -6,6 +6,8 @@ import type { Metadata } from "@grpc/grpc-js";
 
 export const protobufPackage = "basic";
 
+export const protobufFileName = "default-with-metadata-no-methods.proto";
+
 /**
  * A service without methods still declares the Rpc interface, which refers
  * to Metadata.

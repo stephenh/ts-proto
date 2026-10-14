@@ -7,6 +7,8 @@ import { Foo } from "../foo";
 
 export const protobufPackage = "foo.bar";
 
+export const protobufFileName = "bar/bar.proto";
+
 export interface Bar {
   foo: Foo | undefined;
 }

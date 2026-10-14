@@ -9,6 +9,8 @@ import { StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "rpx";
 
+export const protobufFileName = "example.proto";
+
 export interface DashFlash {
   msg: string;
   type: DashFlash_Type;

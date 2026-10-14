@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "proto_json_format";
 
+export const protobufFileName = "proto-json-format.proto";
+
 export interface Message {
   myField: string;
   secondField: string;

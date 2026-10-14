@@ -9,6 +9,8 @@ import { Foo } from "./some-file";
 
 export const protobufPackage = "hero";
 
+export const protobufFileName = "hero.proto";
+
 export interface HeroById {
   id: number;
 }

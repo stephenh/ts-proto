@@ -8,6 +8,8 @@ import { ListValue, Struct } from "./google/protobuf/struct";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "use-readonly-types.proto";
+
 export interface Entity {
   readonly intVal: number;
   readonly stringVal: string;

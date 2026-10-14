@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "test-1110.proto";
+
 export interface UserRule {
   /** just some fake rule for testing */
   UUID: string;

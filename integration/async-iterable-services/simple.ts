@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 /** EchoMsg is the message body for Echo. */
 export interface EchoMsg {
   body: string;

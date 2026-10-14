@@ -150,10 +150,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   if (options.exportCommonSymbols) {
     chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
-    if (options.outputFileName) {
-      // The source .proto path, e.g. for NestJS's `protoPath` or @grpc/proto-loader
-      chunks.push(code`export const protobufFileName = '${fileDesc.name}';`);
-    }
+    // The source .proto path, e.g. for NestJS's `protoPath` or @grpc/proto-loader
+    chunks.push(code`export const protobufFileName = '${fileDesc.name}';`);
   }
 
   // Syntax, unlike most fields, is not repeated and thus does not use an index

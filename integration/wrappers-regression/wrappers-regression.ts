@@ -11,6 +11,8 @@ import { BoolValue, StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "wrappers-regression.proto";
+
 export interface Clock {
   Now(request: Empty): Promise<Timestamp>;
   NowString(request: StringValue): Promise<StringValue>;

@@ -8,6 +8,8 @@ import { Duration } from "./google/protobuf/duration";
 
 export const protobufPackage = "foo.bar";
 
+export const protobufFileName = "any-json-without-registry.proto";
+
 export interface Person {
   firstName: string;
   lastName: string;

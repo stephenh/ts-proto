@@ -5,6 +5,8 @@
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/timestamp.proto";
+
 export interface Timestamp {
   seconds: number;
   nanos: number;

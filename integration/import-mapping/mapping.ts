@@ -11,6 +11,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "import_mapping";
 
+export const protobufFileName = "mapping.proto";
+
 export interface WithEmpty {
   empty: Empty | undefined;
 }

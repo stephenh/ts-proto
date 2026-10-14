@@ -1,7 +1,7 @@
 import { Outer, protobufFileName, protobufPackage } from "./file-name";
 import { protobufFileName as innerFileName } from "./sub/other";
 
-describe("outputFileName", () => {
+describe("protobufFileName", () => {
   it("exports the source .proto path next to the package", () => {
     expect(protobufPackage).toBe("outputfilename");
     expect(protobufFileName).toBe("file-name.proto");

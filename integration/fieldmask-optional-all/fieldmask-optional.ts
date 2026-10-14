@@ -7,6 +7,8 @@ import { FieldMask } from "./google/protobuf/field_mask";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "fieldmask-optional.proto";
+
 export interface Example {
   mask?: string[] | undefined;
 }

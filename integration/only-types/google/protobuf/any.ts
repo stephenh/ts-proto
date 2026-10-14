@@ -5,6 +5,8 @@
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/any.proto";
+
 /**
  * `Any` contains an arbitrary serialized protocol buffer message along with a
  * URL that describes the type of the serialized message.

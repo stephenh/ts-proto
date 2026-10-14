@@ -8,6 +8,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "optionalstest";
 
+export const protobufFileName = "test.proto";
+
 export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,

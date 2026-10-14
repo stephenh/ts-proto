@@ -372,6 +372,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` and `protobufPackage` won't be `export`d.
 
+  Each generated file also exports `protobufFileName`, the path of the `.proto` file it was generated from (for example `export const protobufFileName = "company/foo.proto";`), next to `protobufPackage`; neither is exported with `exportCommonSymbols=false`.
+
   This should make it possible to use create barrel imports of the generated output, i.e. `import * from ./foo` and `import * from ./bar`.
 
   Note that if you have the same message name used in multiple `*.proto` files, you will still get import conflicts.
@@ -595,8 +597,6 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
   Extension encode/decode methods are compliant with the `outputEncodeMethods` option, and if `unknownFields=true`,
   the `setExtension` and `getExtension` methods will be created for extendable messages, also compliant with `outputEncodeMethods` (setExtension = encode, getExtension = decode).
-
-- With `--ts_proto_opt=outputFileName=true`, each generated file also exports `protobufFileName`, the path of the `.proto` file it was generated from (for example `export const protobufFileName = 'company/foo.proto';`), next to `protobufPackage`.
 
 - With `--ts_proto_opt=outputIndex=true`, index files will be generated based on the proto package namespaces.
 

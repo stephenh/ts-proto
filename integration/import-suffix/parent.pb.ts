@@ -8,6 +8,8 @@ import { Timestamp } from "./google/protobuf/timestamp.pb.js";
 
 export const protobufPackage = "file_suffix";
 
+export const protobufFileName = "parent.proto";
+
 export interface Parent {
   child: Child | undefined;
   childEnum: ChildEnum;

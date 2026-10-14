@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "foo.objectid";
 
+export const protobufFileName = "objectid/objectid.proto";
+
 export interface ObjectId {
   value: string;
 }

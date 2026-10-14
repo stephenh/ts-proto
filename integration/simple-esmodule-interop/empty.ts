@@ -4,3 +4,5 @@
 /* eslint-disable */
 
 export const protobufPackage = "empty";
+
+export const protobufFileName = "empty.proto";

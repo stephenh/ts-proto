@@ -6,6 +6,8 @@ import { BinaryReader } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "encode.proto";
+
 export interface Encode {
   encode: string;
 }

@@ -7,6 +7,8 @@ import { StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "nested-repeated-values-optional-all.proto";
+
 export interface NestedList {
   aString?: string[] | undefined;
 }

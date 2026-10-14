@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/descriptor.proto";
+
 /**
  * The protocol compiler can output a FileDescriptorSet containing the .proto
  * files it parses.

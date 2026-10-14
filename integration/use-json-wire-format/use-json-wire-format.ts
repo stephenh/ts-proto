@@ -5,6 +5,8 @@
 
 export const protobufPackage = "";
 
+export const protobufFileName = "use-json-wire-format.proto";
+
 export interface Todo {
   id?: string | undefined;
   timestamp?: string | undefined;

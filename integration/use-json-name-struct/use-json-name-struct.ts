@@ -7,6 +7,8 @@ import { ListValue, Struct, Value } from "./google/protobuf/struct";
 
 export const protobufPackage = "json_name_struct";
 
+export const protobufFileName = "use-json-name-struct.proto";
+
 export interface Holder {
   value: any | undefined;
   struct: { [key: string]: any } | undefined;

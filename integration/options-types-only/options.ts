@@ -8,6 +8,8 @@ import { protoMetadata as protoMetadata2 } from "./something/something";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "options.proto";
+
 export enum MyEnum {
   FOO = 0,
   BAR = 1,

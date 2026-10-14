@@ -7,6 +7,8 @@ import { messageTypeRegistry } from "./typeRegistry";
 
 export const protobufPackage = "demo";
 
+export const protobufFileName = "optional-type-registry.proto";
+
 export interface Foo {
   $type?: "demo.Foo";
   name: string;

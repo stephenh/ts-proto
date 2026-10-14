@@ -5,6 +5,8 @@
 
 export const protobufPackage = "";
 
+export const protobufFileName = "from-json.proto";
+
 export interface Test {
 }
 

@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "batching";
 
+export const protobufFileName = "batching.proto";
+
 export interface BatchQueryRequest {
   ids: string[];
 }

@@ -7,6 +7,8 @@ import { Struct } from "./google/protobuf/struct";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "struct.proto";
+
 export interface StructMessage {
   value: { [key: string]: any } | undefined;
 }

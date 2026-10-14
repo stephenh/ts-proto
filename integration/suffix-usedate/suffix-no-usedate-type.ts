@@ -7,6 +7,8 @@ import { NoUseDatePTimestampNoUseDateS } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "suffix-no-usedate-type.proto";
+
 export interface NoUseDatePSuffixTypeNoUseDateS {
   createdAt: NoUseDatePTimestampNoUseDateS | undefined;
 }
