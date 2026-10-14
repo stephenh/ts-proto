@@ -1,3 +1,10 @@
+## [2.15.3](https://github.com/stephenh/ts-proto/compare/v2.15.2...v2.15.3) (2026-10-14)
+
+
+### Bug Fixes
+
+* write 64-bit wrapper types as JSON strings with forceLong=long/bigint ([#1286](https://github.com/stephenh/ts-proto/issues/1286)) ([5245200](https://github.com/stephenh/ts-proto/commit/52452002a9e9b414b99dbd650f258e5e0d284abb)), closes [#182](https://github.com/stephenh/ts-proto/issues/182)
+
 ## [2.15.2](https://github.com/stephenh/ts-proto/compare/v2.15.1...v2.15.2) (2026-10-14)
 
 
