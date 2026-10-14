@@ -116,6 +116,7 @@ export type Options = {
   useSnakeTypeName: boolean;
   outputExtensions: boolean;
   outputIndex: boolean;
+  outputFileName: boolean;
   M: { [from: string]: string };
   rpcBeforeRequest: boolean;
   rpcAfterResponse: boolean;
@@ -193,6 +194,7 @@ export function defaultOptions(): Options {
     useSnakeTypeName: true,
     outputExtensions: false,
     outputIndex: false,
+    outputFileName: false,
     M: {},
     rpcBeforeRequest: false,
     rpcAfterResponse: false,

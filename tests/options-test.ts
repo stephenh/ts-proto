@@ -37,6 +37,7 @@ describe("options", () => {
         "outputEncodeIncludeTypes": "",
         "outputEncodeMethods": false,
         "outputExtensions": false,
+        "outputFileName": false,
         "outputIndex": false,
         "outputJsonMethods": true,
         "outputPartialMethods": false,

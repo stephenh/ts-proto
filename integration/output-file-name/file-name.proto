@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package outputfilename;
+
+import "sub/other.proto";
+
+message Outer {
+  outputfilename.sub.Inner inner = 1;
+}

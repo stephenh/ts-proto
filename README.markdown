@@ -596,6 +596,8 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
   Extension encode/decode methods are compliant with the `outputEncodeMethods` option, and if `unknownFields=true`,
   the `setExtension` and `getExtension` methods will be created for extendable messages, also compliant with `outputEncodeMethods` (setExtension = encode, getExtension = decode).
 
+- With `--ts_proto_opt=outputFileName=true`, each generated file also exports `protobufFileName`, the path of the `.proto` file it was generated from (for example `export const protobufFileName = 'company/foo.proto';`), next to `protobufPackage`.
+
 - With `--ts_proto_opt=outputIndex=true`, index files will be generated based on the proto package namespaces.
 
   This will disable `exportCommonSymbols` to avoid name collisions on the common symbols.

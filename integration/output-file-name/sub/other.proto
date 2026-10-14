@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package outputfilename.sub;
+
+message Inner {
+  string name = 1;
+}
