@@ -1,3 +1,11 @@
+## [2.15.2](https://github.com/stephenh/ts-proto/compare/v2.15.1...v2.15.2) (2026-10-14)
+
+
+### Bug Fixes
+
+* don't generate unused code for Struct wrappers with nestJs ([#1288](https://github.com/stephenh/ts-proto/issues/1288)) ([e4b8efa](https://github.com/stephenh/ts-proto/commit/e4b8efaee71cc400c114786c733de9f0e6b8e389)), closes [#1199](https://github.com/stephenh/ts-proto/issues/1199)
+* import Metadata in Rpc interface for services without methods ([#1287](https://github.com/stephenh/ts-proto/issues/1287)) ([1e778c5](https://github.com/stephenh/ts-proto/commit/1e778c55b7da36ce75d7de5d3895a64f9208702b)), closes [#1170](https://github.com/stephenh/ts-proto/issues/1170)
+
 ## [2.15.1](https://github.com/stephenh/ts-proto/compare/v2.15.0...v2.15.1) (2026-10-13)
 
 
