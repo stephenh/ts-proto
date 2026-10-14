@@ -87,7 +87,7 @@ function createBaseStruct(): Struct {
   return { fields: {} };
 }
 
-export const Struct: MessageFns<Struct> & StructWrapperFns = {
+export const Struct: StructWrapperFns = {
   wrap(object: { [key: string]: any } | undefined): Struct {
     const struct = createBaseStruct();
 
@@ -110,11 +110,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
   },
 };
 
-function createBaseValue(): Value {
-  return {};
-}
-
-export const Value: MessageFns<Value> & AnyValueWrapperFns = {
+export const Value: AnyValueWrapperFns = {
   wrap(value: any): Value {
     const result = {} as any;
     if (value === null) {
@@ -157,7 +153,7 @@ function createBaseListValue(): ListValue {
   return { values: [] };
 }
 
-export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
+export const ListValue: ListValueWrapperFns = {
   wrap(array: Array<any> | undefined): ListValue {
     const result = createBaseListValue();
     result.values = (array ?? []).map(Value.wrap);
@@ -193,9 +189,6 @@ const gt: any = (() => {
   }
   throw "Unable to locate global object";
 })();
-
-export interface MessageFns<T> {
-}
 
 export interface StructWrapperFns {
   wrap(object: { [key: string]: any } | undefined): Struct;
