@@ -362,7 +362,7 @@ export const Numbers: MessageFns<Numbers> = {
       obj.sfixed64 = message.sfixed64.toString();
     }
     if (message.guint64 !== undefined) {
-      obj.guint64 = message.guint64;
+      obj.guint64 = message.guint64.toString();
     }
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
