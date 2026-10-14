@@ -428,10 +428,10 @@ function generateCachingRpcMethod(
 export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Code {
   const { options } = ctx;
   const metadata = options.metadataType ? imp(options.metadataType) : imp("t:Metadata@@grpc/grpc-js");
-  const metadataType = metadata.symbol;
   const maybeContext = options.context ? "<Context>" : "";
   const maybeContextParam = options.context ? "ctx: Context," : "";
-  const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? `metadata?: ${metadataType},` : "";
+  // Use the import itself, so it is added even if no method of the service refers to it.
+  const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? code`metadata?: ${metadata},` : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   const additionalMethods = [];
