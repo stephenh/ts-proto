@@ -589,12 +589,16 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
         : ctx.options.useJsonWireFormat
           ? code`string`
           : code`Uint8Array`;
-    case ".google.protobuf.ListValue":
-      return ctx.options.useReadonlyTypes ? code`ReadonlyArray<any>` : code`Array<any>`;
+    case ".google.protobuf.ListValue": {
+      const item = ctx.options.useUnknownForValue ? "unknown" : "any";
+      return ctx.options.useReadonlyTypes ? code`ReadonlyArray<${item}>` : code`Array<${item}>`;
+    }
     case ".google.protobuf.Value":
-      return code`any`;
-    case ".google.protobuf.Struct":
-      return ctx.options.useReadonlyTypes ? code`{readonly [key: string]: any}` : code`{[key: string]: any}`;
+      return ctx.options.useUnknownForValue ? code`unknown` : code`any`;
+    case ".google.protobuf.Struct": {
+      const item = ctx.options.useUnknownForValue ? "unknown" : "any";
+      return ctx.options.useReadonlyTypes ? code`{readonly [key: string]: ${item}}` : code`{[key: string]: ${item}}`;
+    }
     case ".google.protobuf.FieldMask":
       return ctx.options.useJsonWireFormat
         ? code`string`
