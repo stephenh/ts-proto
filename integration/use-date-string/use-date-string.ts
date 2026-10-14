@@ -7,6 +7,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "use-date-string.proto";
+
 export interface Todo {
   id: string;
   timestamp: string | undefined;

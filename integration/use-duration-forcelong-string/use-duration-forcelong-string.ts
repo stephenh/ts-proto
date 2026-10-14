@@ -7,6 +7,8 @@ import { Duration } from "./google/protobuf/duration";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "use-duration-forcelong-string.proto";
+
 export interface DurationHolder {
   duration: Duration | undefined;
 }

@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "int64";
 
+export const protobufFileName = "fieldoption-jstype.proto";
+
 export interface Int64FieldOption {
   normalField: number;
   numberField: number;

@@ -8,6 +8,8 @@ import { PrefixUInt64ValueSuffix } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "affixes";
 
+export const protobufFileName = "affixes.proto";
+
 export enum PrefixAwesomeEnumSuffix {
   AWESOME_ENUM_AWESOME = 0,
   AWESOME_ENUM_COOL = 1,

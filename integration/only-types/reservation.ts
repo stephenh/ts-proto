@@ -6,6 +6,8 @@ import type { Any } from "./google/protobuf/any";
 
 export const protobufPackage = "event";
 
+export const protobufFileName = "reservation.proto";
+
 export interface Registration {
   eventName: string;
   date: Date | undefined;

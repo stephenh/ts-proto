@@ -8,6 +8,8 @@ import * as hash from "object-hash";
 
 export const protobufPackage = "batching";
 
+export const protobufFileName = "batching.proto";
+
 export interface BatchQueryRequest {
   ids: string[];
 }

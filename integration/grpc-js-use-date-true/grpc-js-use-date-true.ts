@@ -19,6 +19,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "grpc-js-use-date-true.proto";
+
 export interface TimestampMessage {
   timestamp: Date | undefined;
 }

@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "remove-enum-prefix.proto";
+
 export enum Foo {
   UNSPECIFIED = 0,
   BAR = 1,

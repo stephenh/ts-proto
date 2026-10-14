@@ -19,6 +19,8 @@ import type { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export interface TestMessage {
   value: string;
 }

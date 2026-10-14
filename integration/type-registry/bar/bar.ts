@@ -8,6 +8,8 @@ import { messageTypeRegistry } from "../typeRegistry";
 
 export const protobufPackage = "foo.bar";
 
+export const protobufFileName = "bar/bar.proto";
+
 export interface Bar {
   $type: "foo.bar.Bar";
   foo: Foo | undefined;

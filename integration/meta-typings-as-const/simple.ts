@@ -8,6 +8,8 @@ import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export enum TestEnum {
   VALUE_A = 0,
   VALUE_B = 1,

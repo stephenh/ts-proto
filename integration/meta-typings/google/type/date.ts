@@ -7,6 +7,8 @@ import type { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.type";
 
+export const protobufFileName = "google/type/date.proto";
+
 /**
  * Represents a whole or partial calendar date, e.g. a birthday. The time of day
  * and time zone are either specified elsewhere or are not significant. The date

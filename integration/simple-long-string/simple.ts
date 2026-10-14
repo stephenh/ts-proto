@@ -8,6 +8,8 @@ import { UInt64Value } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export interface Numbers {
   double: number;
   float: number;

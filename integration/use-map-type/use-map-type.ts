@@ -8,6 +8,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "use-map-type.proto";
+
 export interface Entity {
   id: number;
 }

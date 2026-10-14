@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "isolated.declarations";
 
+export const protobufFileName = "service.proto";
+
 export interface TestRequest {
   name: string;
   value: number;

@@ -6,6 +6,8 @@ import type { Simple as Simple2, SimpleEnum as SimpleEnum1 } from "./simple2";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export enum SimpleEnum {
   LOCAL_DEFAULT = 0,
   LOCAL_FOO = 1,

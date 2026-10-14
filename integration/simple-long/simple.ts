@@ -8,6 +8,8 @@ import { BoolValue, Int32Value, Int64Value, StringValue } from "./google/protobu
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export interface SimpleWithWrappers {
   name: string | undefined;
   age: number | undefined;

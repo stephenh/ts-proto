@@ -7,6 +7,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export interface Simple {
   name: string;
   age?: number | undefined;

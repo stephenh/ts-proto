@@ -8,6 +8,8 @@ import { Empty } from "./google/protobuf/empty";
 
 export const protobufPackage = "user";
 
+export const protobufFileName = "user.proto";
+
 export interface ProfileInfo {
   id: number;
   bio: string;

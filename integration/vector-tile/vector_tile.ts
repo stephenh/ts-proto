@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "vector_tile";
 
+export const protobufFileName = "vector_tile.proto";
+
 export interface Tile {
   layers: Tile_Layer[];
 }

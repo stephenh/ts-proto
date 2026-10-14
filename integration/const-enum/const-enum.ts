@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "const-enum.proto";
+
 export interface DividerData {
   type: DividerData_DividerType;
   typeMap: { [key: string]: DividerData_DividerType };

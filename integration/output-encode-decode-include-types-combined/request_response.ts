@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "request_response.proto";
+
 export interface Request {
   requestId: string;
   nested: Request_Nested | undefined;

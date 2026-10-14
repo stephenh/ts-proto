@@ -7,6 +7,8 @@ import { Struct } from "./google/protobuf/struct";
 
 export const protobufPackage = "optionalstest";
 
+export const protobufFileName = "test.proto";
+
 export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,

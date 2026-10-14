@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "optionalstest";
 
+export const protobufFileName = "test.proto";
+
 /** @deprecated */
 export enum StateEnum {
   UNKNOWN = 0,

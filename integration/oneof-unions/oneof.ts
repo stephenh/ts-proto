@@ -7,6 +7,8 @@ import { Value } from "./google/protobuf/struct";
 
 export const protobufPackage = "oneof";
 
+export const protobufFileName = "oneof.proto";
+
 export interface PleaseChoose {
   name: string;
   /**

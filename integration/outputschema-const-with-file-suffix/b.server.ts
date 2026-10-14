@@ -7,6 +7,8 @@ import type { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "test";
 
+export const protobufFileName = "b.proto";
+
 export enum EnumTest {
   ENUM_TEST_Unknown = 0,
   ENUM_TEST_A = 1,

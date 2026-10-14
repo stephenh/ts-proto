@@ -7,6 +7,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "metadata.proto";
+
 export interface Metadata {
   lastEdited: Timestamp | undefined;
 }

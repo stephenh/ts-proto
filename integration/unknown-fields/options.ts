@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "options.proto";
+
 export enum MyEnum {
   FOO = 0,
   BAR = 1,

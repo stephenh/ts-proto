@@ -8,6 +8,8 @@ import { Int64Value, UInt64Value } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "wrappers";
 
+export const protobufFileName = "wrapper-long-json.proto";
+
 export interface Wrappers {
   int64: Long | undefined;
   uint64: Long | undefined;

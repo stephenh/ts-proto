@@ -7,6 +7,8 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "observable.proto";
+
 export interface ProduceRequest {
   ingredients: string;
 }

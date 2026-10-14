@@ -6,6 +6,8 @@ import { wrappers } from "protobufjs";
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/struct.proto";
+
 export enum NullValue {
   NULL_VALUE = 0,
   UNRECOGNIZED = -1,

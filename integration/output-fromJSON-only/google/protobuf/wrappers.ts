@@ -5,6 +5,8 @@
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/wrappers.proto";
+
 /**
  * Wrapper message for `double`.
  *

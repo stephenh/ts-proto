@@ -7,6 +7,8 @@ import { NullValue, nullValueFromJSON, nullValueToJSON, nullValueToNumber } from
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export enum StateEnum {
   UNKNOWN = "UNKNOWN",
   ON = "ON",

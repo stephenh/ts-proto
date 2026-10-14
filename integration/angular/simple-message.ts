@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "angular";
 
+export const protobufFileName = "simple-message.proto";
+
 export interface SimpleMessage {
   numberField: number;
 }
