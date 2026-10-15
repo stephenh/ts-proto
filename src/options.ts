@@ -113,6 +113,7 @@ export type Options = {
   initializeFieldsAsUndefined: boolean;
   useMapType: boolean;
   useReadonlyTypes: boolean;
+  useUnknownForValue: boolean;
   useSnakeTypeName: boolean;
   outputExtensions: boolean;
   outputIndex: boolean;
@@ -190,6 +191,7 @@ export function defaultOptions(): Options {
     initializeFieldsAsUndefined: true,
     useMapType: false,
     useReadonlyTypes: false,
+    useUnknownForValue: false,
     useSnakeTypeName: true,
     outputExtensions: false,
     outputIndex: false,

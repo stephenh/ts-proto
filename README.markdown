@@ -569,6 +569,8 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
   The default behavior is `useMapType=false`, which makes it generate the code for protobuf `map<key_type, value_type` with the key-value pair like `{[key: key_type]: value_type}`.
 
+- With `--ts_proto_opt=useUnknownForValue=true`, `google.protobuf.Value` fields are typed as `unknown` instead of `any`, and so are the items of `google.protobuf.ListValue` and the values of `google.protobuf.Struct`. This makes TypeScript ask you to narrow the value before using it.
+
 - With `--ts_proto_opt=useReadonlyTypes=true`, the generated types will be declared as immutable using typescript's `readonly` modifier.
 
 - With `--ts_proto_opt=useSnakeTypeName=false` will remove snake casing from types.
