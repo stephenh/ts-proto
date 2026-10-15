@@ -129,6 +129,10 @@ export type Options = {
   bigIntLiteral: boolean;
   typePrefix: string;
   typeSuffix: string;
+  messagePrefix: string;
+  messageSuffix: string;
+  enumPrefix: string;
+  enumSuffix: string;
   useDuration: DurationOption;
   anyType: AnyTypeOption;
 };
@@ -206,6 +210,10 @@ export function defaultOptions(): Options {
     bigIntLiteral: true,
     typePrefix: "",
     typeSuffix: "",
+    messagePrefix: "",
+    messageSuffix: "",
+    enumPrefix: "",
+    enumSuffix: "",
     useDuration: DurationOption.DURATION,
     anyType: AnyTypeOption.AT_TYPE,
   };

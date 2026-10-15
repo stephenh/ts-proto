@@ -345,6 +345,8 @@ async function readPackageJson(): Promise<any> {
   }
 }
 
-export function wrapTypeName(options: Options, name: string) {
-  return options.typePrefix + name + options.typeSuffix;
+export function wrapTypeName(options: Options, name: string, kind: "message" | "enum" = "message") {
+  const [prefix, suffix] =
+    kind === "enum" ? [options.enumPrefix, options.enumSuffix] : [options.messagePrefix, options.messageSuffix];
+  return options.typePrefix + prefix + name + suffix + options.typeSuffix;
 }

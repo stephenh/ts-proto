@@ -1,0 +1,1 @@
+messagePrefix=Msg,messageSuffix=Data,enumPrefix=E,enumSuffix=Kind
