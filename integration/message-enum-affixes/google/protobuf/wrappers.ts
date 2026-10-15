@@ -10,9 +10,6 @@ export const protobufPackage = "google.protobuf";
  * Wrapper message for `double`.
  *
  * The JSON representation for `DoubleValue` is JSON number.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgDoubleValueData {
   /** The double value. */
@@ -23,9 +20,6 @@ export interface MsgDoubleValueData {
  * Wrapper message for `float`.
  *
  * The JSON representation for `FloatValue` is JSON number.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgFloatValueData {
   /** The float value. */
@@ -36,9 +30,6 @@ export interface MsgFloatValueData {
  * Wrapper message for `int64`.
  *
  * The JSON representation for `Int64Value` is JSON string.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgInt64ValueData {
   /** The int64 value. */
@@ -49,9 +40,6 @@ export interface MsgInt64ValueData {
  * Wrapper message for `uint64`.
  *
  * The JSON representation for `UInt64Value` is JSON string.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgUInt64ValueData {
   /** The uint64 value. */
@@ -62,9 +50,6 @@ export interface MsgUInt64ValueData {
  * Wrapper message for `int32`.
  *
  * The JSON representation for `Int32Value` is JSON number.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgInt32ValueData {
   /** The int32 value. */
@@ -75,9 +60,6 @@ export interface MsgInt32ValueData {
  * Wrapper message for `uint32`.
  *
  * The JSON representation for `UInt32Value` is JSON number.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgUInt32ValueData {
   /** The uint32 value. */
@@ -88,9 +70,6 @@ export interface MsgUInt32ValueData {
  * Wrapper message for `bool`.
  *
  * The JSON representation for `BoolValue` is JSON `true` and `false`.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgBoolValueData {
   /** The bool value. */
@@ -101,9 +80,6 @@ export interface MsgBoolValueData {
  * Wrapper message for `string`.
  *
  * The JSON representation for `StringValue` is JSON string.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgStringValueData {
   /** The string value. */
@@ -114,9 +90,6 @@ export interface MsgStringValueData {
  * Wrapper message for `bytes`.
  *
  * The JSON representation for `BytesValue` is JSON string.
- *
- * Not recommended for use in new APIs, but still useful for legacy APIs and
- * has no plan to be removed.
  */
 export interface MsgBytesValueData {
   /** The bytes value. */
