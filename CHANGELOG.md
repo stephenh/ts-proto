@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/stephenh/ts-proto/compare/v2.16.0...v2.17.0) (2026-10-18)
+
+
+### Features
+
+* add useUnknownForValue option to type google.protobuf.Value as unknown ([#1289](https://github.com/stephenh/ts-proto/issues/1289)) ([ee5c016](https://github.com/stephenh/ts-proto/commit/ee5c016911417e3623bf660cbc2e677eb2f9aa9b)), closes [#1181](https://github.com/stephenh/ts-proto/issues/1181)
+
 # [2.16.0](https://github.com/stephenh/ts-proto/compare/v2.15.3...v2.16.0) (2026-10-18)
 
 
