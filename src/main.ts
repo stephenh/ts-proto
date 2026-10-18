@@ -716,6 +716,10 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   const maybeBigInt =
     options.forceLong === LongOption.BIGINT ? code`T extends bigint ? string | number | bigint : ` : "";
 
+  // Keep `unknown` (useUnknownForValue) as is; mapping over it would turn it into `{}`
+  const maybeUnknownT = options.useUnknownForValue ? "unknown extends T ? T : " : "";
+  const maybeUnknownP = options.useUnknownForValue ? "unknown extends P ? P : " : "";
+
   const optionalBuiltins: string[] = [];
   if (options.forceLong === LongOption.BIGINT) {
     optionalBuiltins.push("bigint");
@@ -737,7 +741,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     "Exact",
     code`
       type KeysOfUnion<T> = T extends T ? keyof T : never;
-      ${maybeExport} type Exact<P, I extends P> = P extends ${Builtin}
+      ${maybeExport} type Exact<P, I extends P> = ${maybeUnknownP}P extends ${Builtin}
         ? P
         : P &
         { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>]: never };
@@ -749,7 +753,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   const DeepPartial = conditionalOutput(
     "DeepPartial",
     code`
-      ${maybeExport} type DeepPartial<T> = ${maybeBigInt} T extends ${Builtin}
+      ${maybeExport} type DeepPartial<T> = ${maybeUnknownT}${maybeBigInt} T extends ${Builtin}
         ? T
         ${maybeLong}
         : T extends globalThis.Array<infer U>
