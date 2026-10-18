@@ -1,3 +1,15 @@
+# [2.18.0](https://github.com/stephenh/ts-proto/compare/v2.17.0...v2.18.0) (2026-10-18)
+
+
+### Bug Fixes
+
+* Re-codegen. ([18a5faf](https://github.com/stephenh/ts-proto/commit/18a5faf6ca7d02890475eb668d0ec8a09006799a))
+
+
+### Features
+
+* export protobufFileName next to protobufPackage ([#1290](https://github.com/stephenh/ts-proto/issues/1290)) ([e11bd33](https://github.com/stephenh/ts-proto/commit/e11bd3367e88b8a5ef588463ef51dfc561a79818)), closes [#1160](https://github.com/stephenh/ts-proto/issues/1160)
+
 # [2.17.0](https://github.com/stephenh/ts-proto/compare/v2.16.0...v2.17.0) (2026-10-18)
 
 
