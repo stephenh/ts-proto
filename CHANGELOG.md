@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/stephenh/ts-proto/compare/v2.15.3...v2.16.0) (2026-10-18)
+
+
+### Features
+
+* add messagePrefix/messageSuffix and enumPrefix/enumSuffix options ([#1291](https://github.com/stephenh/ts-proto/issues/1291)) ([73bb285](https://github.com/stephenh/ts-proto/commit/73bb2850c1b0c72f168276bb9e3fd2390985796a)), closes [#1151](https://github.com/stephenh/ts-proto/issues/1151)
+
 ## [2.15.3](https://github.com/stephenh/ts-proto/compare/v2.15.2...v2.15.3) (2026-10-14)
 
 
