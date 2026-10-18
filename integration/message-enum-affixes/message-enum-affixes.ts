@@ -9,6 +9,8 @@ import { MsgUInt64ValueData } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "affixes";
 
+export const protobufFileName = "message-enum-affixes.proto";
+
 export enum EAwesomeEnumKind {
   AWESOME_ENUM_AWESOME = 0,
   AWESOME_ENUM_COOL = 1,

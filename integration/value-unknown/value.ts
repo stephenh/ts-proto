@@ -8,6 +8,8 @@ import { StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "value.proto";
+
 export interface ValueMessage {
   value: unknown | undefined;
   anyList: Array<unknown> | undefined;
