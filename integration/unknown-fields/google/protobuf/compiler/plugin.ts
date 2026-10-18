@@ -7,6 +7,8 @@ import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
 
 export const protobufPackage = "google.protobuf.compiler";
 
+export const protobufFileName = "google/protobuf/compiler/plugin.proto";
+
 /** The version number of protocol compiler. */
 export interface Version {
   major?: number | undefined;

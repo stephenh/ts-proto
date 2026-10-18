@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple2";
 
+export const protobufFileName = "ui.proto";
+
 export enum SimpleEnum {
   IMPORT_DEFAULT = 0,
   IMPORT_FOO = 10,

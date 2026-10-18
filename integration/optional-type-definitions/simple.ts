@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 /**
  * Adding a comment to the syntax will become the first
  * comment in the output source file.

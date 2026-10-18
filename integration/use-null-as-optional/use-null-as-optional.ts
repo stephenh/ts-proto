@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "useNullAsOptional";
 
+export const protobufFileName = "use-null-as-optional.proto";
+
 export interface ProfileInfo {
   id: number;
   bio: string;

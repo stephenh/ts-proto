@@ -10,6 +10,8 @@ import { take } from "rxjs/operators";
 
 export const protobufPackage = "rpx";
 
+export const protobufFileName = "example.proto";
+
 export interface DashFlash {
   msg: string;
   type: DashFlash_Type;

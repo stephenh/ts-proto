@@ -8,6 +8,8 @@ import { map } from "rxjs/operators";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "no-proto-package.proto";
+
 export interface User {
   name: string;
 }

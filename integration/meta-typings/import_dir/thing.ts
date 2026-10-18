@@ -8,6 +8,8 @@ import { protoMetadata as protoMetadata1, Timestamp } from "../google/protobuf/t
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "import_dir/thing.proto";
+
 export interface ImportedThing {
   createdAt: Date | undefined;
 }

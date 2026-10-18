@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "foo";
 
+export const protobufFileName = "foo.proto";
+
 export interface Foo {
   bar: string;
   baz: string;

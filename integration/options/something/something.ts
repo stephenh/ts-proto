@@ -8,6 +8,8 @@ import { protoMetadata as protoMetadata1 } from "../google/protobuf/descriptor";
 
 export const protobufPackage = "something";
 
+export const protobufFileName = "something/something.proto";
+
 export interface Something {
   hello: string;
   foo: number[];

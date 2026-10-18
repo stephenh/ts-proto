@@ -7,6 +7,8 @@ import { messageTypeRegistry } from "../../typeRegistry";
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/struct.proto";
+
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
  * `Value` type union.

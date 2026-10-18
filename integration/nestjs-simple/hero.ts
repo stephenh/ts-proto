@@ -11,6 +11,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "hero";
 
+export const protobufFileName = "hero.proto";
+
 export interface HeroById {
   id: number;
 }

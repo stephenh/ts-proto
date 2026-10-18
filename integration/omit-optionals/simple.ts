@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "omit";
 
+export const protobufFileName = "simple.proto";
+
 export interface TestMessage {
   field1: boolean;
   field2?: boolean | undefined;

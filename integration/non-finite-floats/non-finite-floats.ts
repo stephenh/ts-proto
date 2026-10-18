@@ -7,6 +7,8 @@ import { DoubleValue, FloatValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "nonfinite";
 
+export const protobufFileName = "non-finite-floats.proto";
+
 export interface Floats {
   d: number;
   f: number;

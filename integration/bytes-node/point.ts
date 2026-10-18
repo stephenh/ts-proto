@@ -7,6 +7,8 @@ import { BytesValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "point.proto";
+
 export interface Point {
   data: Buffer;
   dataWrapped: Buffer | undefined;

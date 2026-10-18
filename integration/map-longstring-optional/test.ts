@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "test.proto";
+
 export interface MapBigInt {
   map?: Map<string, string> | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;

@@ -5,6 +5,8 @@
 
 export const protobufPackage = "";
 
+export const protobufFileName = "message.proto";
+
 export interface Message {
   data: Buffer;
 }

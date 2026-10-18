@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "json_name_oneof_unions";
 
+export const protobufFileName = "use-json-name-oneof-unions.proto";
+
 export interface CreateRoomAction {
   name: string;
 }

@@ -8,6 +8,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "foo";
 
+export const protobufFileName = "foo.proto";
+
 export interface Foo {
   $type: "foo.Foo";
   timestamp: Date | undefined;

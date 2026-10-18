@@ -8,6 +8,8 @@ import { BrowserHeaders } from "browser-headers";
 
 export const protobufPackage = "rpx";
 
+export const protobufFileName = "example.proto";
+
 export interface DashFlash {
   msg: string;
   type: DashFlash_Type;

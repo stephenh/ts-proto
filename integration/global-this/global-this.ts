@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "global-this.proto";
+
 export interface Object {
   name: string;
   metadata: { [key: string]: string };

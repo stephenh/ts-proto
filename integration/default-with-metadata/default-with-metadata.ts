@@ -7,6 +7,8 @@ import type { Metadata } from "@grpc/grpc-js";
 
 export const protobufPackage = "basic";
 
+export const protobufFileName = "default-with-metadata.proto";
+
 export interface GetBasicRequest {
   name: string;
 }

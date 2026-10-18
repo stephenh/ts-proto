@@ -7,6 +7,8 @@ import { Foo } from "./custom-metadata";
 
 export const protobufPackage = "basic";
 
+export const protobufFileName = "default-with-custom-metadata.proto";
+
 export interface GetBasicRequest {
   name: string;
 }

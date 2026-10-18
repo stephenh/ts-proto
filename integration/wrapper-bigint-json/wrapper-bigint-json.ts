@@ -7,6 +7,8 @@ import { Int64Value, UInt64Value } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "wrappers";
 
+export const protobufFileName = "wrapper-bigint-json.proto";
+
 export interface Wrappers {
   int64: bigint | undefined;
   uint64: bigint | undefined;

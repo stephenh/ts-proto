@@ -5,6 +5,8 @@
 
 export const protobufPackage = "google.protobuf";
 
+export const protobufFileName = "google/protobuf/field_mask.proto";
+
 /**
  * `FieldMask` represents a set of symbolic field paths, for example:
  *

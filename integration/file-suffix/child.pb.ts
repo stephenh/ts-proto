@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "file_suffix";
 
+export const protobufFileName = "child.proto";
+
 export enum ChildEnum {
   DEFAULT = 0,
   FOO = 1,

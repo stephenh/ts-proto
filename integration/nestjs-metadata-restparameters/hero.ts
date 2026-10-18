@@ -8,6 +8,8 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "hero";
 
+export const protobufFileName = "hero.proto";
+
 export interface HeroById {
   id: number;
 }

@@ -20,6 +20,8 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "grpc-js-use-date-string-nano.proto";
+
 export interface TimestampMessage {
   timestamp: string | undefined;
 }

@@ -8,6 +8,8 @@ import { EnumTest, enumTestFromJSON, enumTestToJSON, MessageTest, protoMetadata 
 
 export const protobufPackage = "test";
 
+export const protobufFileName = "a.proto";
+
 export interface TestMsg {
   testE: EnumTest;
   testM: MessageTest | undefined;

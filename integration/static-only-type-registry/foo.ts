@@ -9,6 +9,8 @@ import { messageTypeRegistry } from "./typeRegistry";
 
 export const protobufPackage = "foo";
 
+export const protobufFileName = "foo.proto";
+
 export interface Foo {
   timestamp: Date | undefined;
 }

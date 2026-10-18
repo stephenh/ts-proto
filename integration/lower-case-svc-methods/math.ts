@@ -8,6 +8,8 @@ import * as hash from "object-hash";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "math.proto";
+
 export interface NumPair {
   num1: number;
   num2: number;

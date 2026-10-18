@@ -9,6 +9,8 @@ import { messageTypeRegistry } from "./typeRegistry";
 
 export const protobufPackage = "foo.bar";
 
+export const protobufFileName = "any-type-url-json.proto";
+
 export interface Person {
   $type: "foo.bar.Person";
   firstName: string;

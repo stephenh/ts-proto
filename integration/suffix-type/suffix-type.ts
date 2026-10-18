@@ -9,6 +9,8 @@ import { GRPCPTimestampGRPCS } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
+export const protobufFileName = "suffix-type.proto";
+
 export interface GRPCPSuffixTypeGRPCS {
   createdAt: Date | undefined;
   mask: string[] | undefined;

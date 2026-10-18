@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "foo";
 
+export const protobufFileName = "fieldoption-jstype-with-forcelong-number.proto";
+
 export interface FieldOption {
   normalField: number;
   numberField: number;

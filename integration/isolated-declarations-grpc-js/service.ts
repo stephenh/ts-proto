@@ -20,6 +20,8 @@ import {
 
 export const protobufPackage = "isolated.declarations.grpcjs";
 
+export const protobufFileName = "service.proto";
+
 export interface TestRequest {
   name: string;
   value: number;

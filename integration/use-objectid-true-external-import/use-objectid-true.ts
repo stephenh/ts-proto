@@ -8,6 +8,8 @@ import { ObjectId } from "./objectid/objectid";
 
 export const protobufPackage = "foo";
 
+export const protobufFileName = "use-objectid-true.proto";
+
 export interface Todo {
   id: string;
   oid: mongodb.ObjectId | undefined;

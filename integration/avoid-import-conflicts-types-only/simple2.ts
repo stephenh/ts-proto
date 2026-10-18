@@ -5,6 +5,8 @@
 
 export const protobufPackage = "simple2";
 
+export const protobufFileName = "simple2.proto";
+
 export enum SimpleEnum {
   IMPORT_DEFAULT = 0,
   IMPORT_FOO = 10,

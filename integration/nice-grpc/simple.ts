@@ -21,6 +21,8 @@ import {
 
 export const protobufPackage = "simple";
 
+export const protobufFileName = "simple.proto";
+
 export interface TestMessage {
   timestamp: Date | undefined;
 }

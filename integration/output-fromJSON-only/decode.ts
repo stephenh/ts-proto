@@ -5,6 +5,8 @@
 
 export const protobufPackage = "";
 
+export const protobufFileName = "decode.proto";
+
 export interface Encode {
   encode: string;
 }

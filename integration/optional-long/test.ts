@@ -8,6 +8,8 @@ import Long = require("long");
 
 export const protobufPackage = "";
 
+export const protobufFileName = "test.proto";
+
 export interface Example {
   datetime?: Date | undefined;
 }

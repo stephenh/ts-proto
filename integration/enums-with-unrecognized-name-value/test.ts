@@ -5,6 +5,8 @@
 
 export const protobufPackage = "";
 
+export const protobufFileName = "test.proto";
+
 export enum StateEnum {
   UNKNOWN_STATE = "UNKNOWN_STATE",
   ON = "ON",

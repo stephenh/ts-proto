@@ -6,6 +6,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "oneof";
 
+export const protobufFileName = "oneof.proto";
+
 export interface Example {
   some: { $case: "option1"; option1: ClassA } | { $case: "option2"; option2: ClassB } | undefined;
 }
