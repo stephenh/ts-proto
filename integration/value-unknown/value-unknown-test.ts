@@ -20,6 +20,22 @@ describe("useUnknownForValue", () => {
     });
   });
 
+  it("rejects unknown properties in fromPartial but keeps unknown fields open", () => {
+    // Not a fresh literal, so only the `Exact` type can reject the extra key.
+    const extra = { value: "Hello", nope: 1 };
+    // @ts-expect-error unknown top-level property
+    ValueMessage.fromPartial(extra);
+
+    const message = ValueMessage.fromPartial({
+      value: { anything: ["goes", 1, null] },
+      anyList: [{ a: 1 }, "b"],
+      structValue: { c: { d: true } },
+    });
+    expect(message.value).toEqual({ anything: ["goes", 1, null] });
+    expect(message.anyList).toEqual([{ a: 1 }, "b"]);
+    expect(message.structValue).toEqual({ c: { d: true } });
+  });
+
   it("makes callers narrow the value before using it", () => {
     const message = ValueMessage.fromPartial({ value: "Hello" });
 

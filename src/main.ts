@@ -743,10 +743,10 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     "Exact",
     code`
       type KeysOfUnion<T> = T extends T ? keyof T : never;
-      ${maybeExport} type Exact<P, I extends P> = ${maybeUnknownP}P extends ${Builtin}
+      ${maybeExport} type Exact<P, I> = ${maybeUnknownP}P extends ${Builtin}
         ? P
         : P &
-        { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>]: never };
+        { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> } & { [K in Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>]: never };
     `,
   );
 

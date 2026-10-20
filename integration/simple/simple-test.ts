@@ -343,6 +343,38 @@ describe("simple", () => {
     });
   });
 
+  it("rejects unknown properties in fromPartial and create", () => {
+    // These objects are not fresh literals, so only the `Exact` type (and not the excess property
+    // check for object literals) can reject the extra keys.
+    const extraTopLevel = { name: "a", nope: 1 };
+    const extraNested = { name: "b", nope: 1 };
+    // @ts-expect-error unknown top-level property
+    Simple.fromPartial(extraTopLevel);
+    // @ts-expect-error unknown property in a nested message
+    Simple.fromPartial({ child: extraNested });
+    // @ts-expect-error unknown property in a repeated message
+    Simple.fromPartial({ grandChildren: [extraNested] });
+    // @ts-expect-error unknown top-level property
+    Simple.create(extraTopLevel);
+    // @ts-expect-error unknown property in a nested message
+    Simple.create({ child: extraNested });
+
+    const s1 = Simple.fromPartial({
+      name: "a",
+      child: { name: "b" },
+      grandChildren: [{ name: "c" }, { name: "d", type: Child_Type.GOOD }],
+      createdAt: new Date(1_000),
+    });
+    expect(s1.child).toEqual({ name: "b", type: Child_Type.UNKNOWN });
+    expect(s1.grandChildren).toEqual([
+      { name: "c", type: Child_Type.UNKNOWN },
+      { name: "d", type: Child_Type.GOOD },
+    ]);
+    expect(s1.createdAt).toEqual(new Date(1_000));
+    const s2 = Simple.create({ name: "a", child: { name: "b" } });
+    expect(s2.child).toEqual({ name: "b", type: Child_Type.UNKNOWN });
+  });
+
   it("can fromPartial on maps with falsey values", () => {
     const s1 = SimpleWithMap.fromPartial({
       intLookup: { 1: 2, 2: 0 },
