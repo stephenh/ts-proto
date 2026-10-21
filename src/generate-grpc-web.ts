@@ -336,6 +336,10 @@ function createInvokeMethod(ctx: Context) {
   const { options } = ctx;
   const { useAbortSignal } = options;
 
+  if (options.useAsyncIterable) {
+    return createAsyncIterableInvokeMethod(ctx);
+  }
+
   return code`
     invoke<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -398,6 +402,102 @@ function createInvokeMethod(ctx: Context) {
         });
         upStream();
       }).pipe(${share}());
+    }
+  `;
+}
+
+/** Creates the streaming `invoke` method for `useAsyncIterable=true`, which returns an async generator. */
+function createAsyncIterableInvokeMethod(ctx: Context) {
+  const { useAbortSignal } = ctx.options;
+
+  return code`
+    invoke<T extends UnaryMethodDefinitionish>(
+      methodDesc: T,
+      _request: any,
+      metadata: grpc.Metadata | undefined,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
+    ): AsyncIterable<any> {
+      const upStreamCodes = this.options.upStreamRetryCodes ?? [];
+      const DEFAULT_TIMEOUT_TIME: number = 3_000;
+      const request = { ..._request, ...methodDesc.requestType };
+      const transport = this.options.streamingTransport ?? this.options.transport;
+      const maybeCombinedMetadata = metadata && this.options.metadata
+        ? new ${BrowserHeaders}({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+        : metadata ?? this.options.metadata;
+      const host = this.host;
+      const debug = this.options.debug ?? false;
+      return (async function* () {
+        const queue: any[] = [];
+        let done = false;
+        let error: unknown = undefined;
+        let wake: (() => void) | undefined;
+        const notify = () => {
+          const resolve = wake;
+          wake = undefined;
+          resolve?.();
+        };
+        let client: { close(): void } | undefined;
+        const upStream = () => {
+          client = ${grpc}.invoke(methodDesc, {
+            host,
+            request,
+            ...(transport !== undefined ? {transport} : {}),
+            metadata: maybeCombinedMetadata ?? {},
+            debug,
+            onMessage: (next) => {
+              queue.push(next);
+              notify();
+            },
+            onEnd: (code: ${grpc}.Code, message: string, trailers: ${grpc}.Metadata) => {
+              if (code === 0) {
+                done = true;
+              } else if (upStreamCodes.includes(code)) {
+                setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
+                return;
+              } else {
+                const err = new Error(message) as any;
+                err.code = code;
+                err.metadata = trailers;
+                error = err;
+                done = true;
+              }
+              notify();
+            },
+          });
+        };
+        ${
+          useAbortSignal
+            ? `
+        const abort = () => {
+          error = abortSignal!.reason;
+          done = true;
+          notify();
+        };
+        abortSignal?.addEventListener("abort", abort);
+        `
+            : ""
+        }
+        upStream();
+        try {
+          while (true) {
+            if (${useAbortSignal ? "error === undefined && " : ""}queue.length > 0) {
+              yield queue.shift();
+            } else if (done) {
+              break;
+            } else {
+              await new Promise<void>((resolve) => {
+                wake = resolve;
+              });
+            }
+          }
+          if (error !== undefined) {
+            throw error;
+          }
+        } finally {
+          ${useAbortSignal ? `abortSignal?.removeEventListener("abort", abort);` : ""}
+          client?.close();
+        }
+      })();
     }
   `;
 }
