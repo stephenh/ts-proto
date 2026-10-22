@@ -1438,9 +1438,15 @@ export class GrpcWebImpl {
     const host = this.host;
     const debug = this.options.debug ?? false;
     return (async function* () {
+      // A listener added after the abort would never run.
+      if (abortSignal?.aborted) {
+        throw abortSignal.reason;
+      }
+
       const queue: any[] = [];
       let done = false;
       let error: unknown = undefined;
+      let aborted = false;
       let wake: (() => void) | undefined;
       const notify = () => {
         const resolve = wake;
@@ -1448,7 +1454,22 @@ export class GrpcWebImpl {
         resolve?.();
       };
       let client: { close(): void } | undefined;
+      let retryTimer: ReturnType<typeof setTimeout> | undefined;
+      let closed = false;
+      // Stops the retry timer and closes the active call, at most once.
+      const close = () => {
+        closed = true;
+        clearTimeout(retryTimer);
+        retryTimer = undefined;
+        const active = client;
+        client = undefined;
+        active?.close();
+      };
       const upStream = () => {
+        retryTimer = undefined;
+        if (closed) {
+          return;
+        }
         client = grpc.invoke(methodDesc, {
           host,
           request,
@@ -1463,7 +1484,7 @@ export class GrpcWebImpl {
             if (code === 0) {
               done = true;
             } else if (upStreamCodes.includes(code)) {
-              setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
+              retryTimer = setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
               return;
             } else {
               const err = new Error(message) as any;
@@ -1478,8 +1499,10 @@ export class GrpcWebImpl {
       };
 
       const abort = () => {
+        aborted = true;
         error = abortSignal!.reason;
         done = true;
+        close();
         notify();
       };
       abortSignal?.addEventListener("abort", abort);
@@ -1487,7 +1510,7 @@ export class GrpcWebImpl {
       upStream();
       try {
         while (true) {
-          if (error === undefined && queue.length > 0) {
+          if (!aborted && queue.length > 0) {
             yield queue.shift();
           } else if (done) {
             break;
@@ -1502,7 +1525,7 @@ export class GrpcWebImpl {
         }
       } finally {
         abortSignal?.removeEventListener("abort", abort);
-        client?.close();
+        close();
       }
     })();
   }

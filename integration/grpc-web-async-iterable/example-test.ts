@@ -61,6 +61,71 @@ describe("grpc-web-async-iterable", () => {
     expect(close).toHaveBeenCalled();
   });
 
+  it("does not reconnect after the consumer stops during a retry delay", async () => {
+    jest.useFakeTimers();
+    try {
+      const { calls, close } = mockInvoke();
+      const rpc = new GrpcWebImpl("http://localhost", { upStreamRetryCodes: [grpc.Code.Unavailable] });
+      const iterator = rpc.invoke(DashStateActiveUserSettingsStreamDesc, {}, undefined)[Symbol.asyncIterator]();
+
+      const first = iterator.next();
+      calls[0].onMessage!(message("a@example.com") as any);
+      expect((await first).value.email).toEqual("a@example.com");
+      calls[0].onEnd!(grpc.Code.Unavailable, "down", new grpc.Metadata());
+
+      await iterator.return!(undefined);
+      jest.advanceTimersByTime(10_000);
+
+      expect(calls).toHaveLength(1);
+      expect(close).toHaveBeenCalledTimes(1);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it("closes the call as soon as the signal aborts after a message", async () => {
+    const { calls, close } = mockInvoke();
+    const rpc = new GrpcWebImpl("http://localhost", {});
+    const controller = new AbortController();
+    const iterator = rpc
+      .invoke(DashStateActiveUserSettingsStreamDesc, {}, undefined, controller.signal)
+      [Symbol.asyncIterator]();
+
+    const first = iterator.next();
+    calls[0].onMessage!(message("a@example.com") as any);
+    expect((await first).value.email).toEqual("a@example.com");
+
+    controller.abort(new Error("aborted"));
+    expect(close).toHaveBeenCalledTimes(1);
+
+    await expect(iterator.next()).rejects.toThrow("aborted");
+    expect(close).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not start the call when the signal is already aborted", async () => {
+    const { calls } = mockInvoke();
+    const rpc = new GrpcWebImpl("http://localhost", {});
+    const controller = new AbortController();
+    const stream = rpc.invoke(DashStateActiveUserSettingsStreamDesc, {}, undefined, controller.signal);
+    controller.abort(new Error("aborted"));
+
+    await expect(stream[Symbol.asyncIterator]().next()).rejects.toThrow("aborted");
+    expect(calls).toHaveLength(0);
+  });
+
+  it("yields a message received before a stream error", async () => {
+    const { calls } = mockInvoke();
+    const rpc = new GrpcWebImpl("http://localhost", {});
+    const iterator = rpc.invoke(DashStateActiveUserSettingsStreamDesc, {}, undefined)[Symbol.asyncIterator]();
+
+    const first = iterator.next();
+    calls[0].onMessage!(message("a@example.com") as any);
+    calls[0].onEnd!(grpc.Code.Internal, "boom", new grpc.Metadata());
+
+    expect((await first).value.email).toEqual("a@example.com");
+    await expect(iterator.next()).rejects.toMatchObject({ message: "boom", code: grpc.Code.Internal });
+  });
+
   it("closes the call when the consumer stops early", async () => {
     const { calls, close } = mockInvoke();
     const rpc = new GrpcWebImpl("http://localhost", {});

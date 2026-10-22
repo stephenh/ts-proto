@@ -427,9 +427,20 @@ function createAsyncIterableInvokeMethod(ctx: Context) {
       const host = this.host;
       const debug = this.options.debug ?? false;
       return (async function* () {
+        ${
+          useAbortSignal
+            ? `
+        // A listener added after the abort would never run.
+        if (abortSignal?.aborted) {
+          throw abortSignal.reason;
+        }
+        `
+            : ""
+        }
         const queue: any[] = [];
         let done = false;
         let error: unknown = undefined;
+        ${useAbortSignal ? "let aborted = false;" : ""}
         let wake: (() => void) | undefined;
         const notify = () => {
           const resolve = wake;
@@ -437,7 +448,22 @@ function createAsyncIterableInvokeMethod(ctx: Context) {
           resolve?.();
         };
         let client: { close(): void } | undefined;
+        let retryTimer: ReturnType<typeof setTimeout> | undefined;
+        let closed = false;
+        // Stops the retry timer and closes the active call, at most once.
+        const close = () => {
+          closed = true;
+          clearTimeout(retryTimer);
+          retryTimer = undefined;
+          const active = client;
+          client = undefined;
+          active?.close();
+        };
         const upStream = () => {
+          retryTimer = undefined;
+          if (closed) {
+            return;
+          }
           client = ${grpc}.invoke(methodDesc, {
             host,
             request,
@@ -452,7 +478,7 @@ function createAsyncIterableInvokeMethod(ctx: Context) {
               if (code === 0) {
                 done = true;
               } else if (upStreamCodes.includes(code)) {
-                setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
+                retryTimer = setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
                 return;
               } else {
                 const err = new Error(message) as any;
@@ -469,8 +495,10 @@ function createAsyncIterableInvokeMethod(ctx: Context) {
           useAbortSignal
             ? `
         const abort = () => {
+          aborted = true;
           error = abortSignal!.reason;
           done = true;
+          close();
           notify();
         };
         abortSignal?.addEventListener("abort", abort);
@@ -480,7 +508,7 @@ function createAsyncIterableInvokeMethod(ctx: Context) {
         upStream();
         try {
           while (true) {
-            if (${useAbortSignal ? "error === undefined && " : ""}queue.length > 0) {
+            if (${useAbortSignal ? "!aborted && " : ""}queue.length > 0) {
               yield queue.shift();
             } else if (done) {
               break;
@@ -495,7 +523,7 @@ function createAsyncIterableInvokeMethod(ctx: Context) {
           }
         } finally {
           ${useAbortSignal ? `abortSignal?.removeEventListener("abort", abort);` : ""}
-          client?.close();
+          close();
         }
       })();
     }
