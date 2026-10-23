@@ -1,3 +1,10 @@
+## [2.18.1](https://github.com/stephenh/ts-proto/compare/v2.18.0...v2.18.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* make the Exact helper compile on TypeScript 7.1 ([#1293](https://github.com/stephenh/ts-proto/issues/1293)) ([1c5aca0](https://github.com/stephenh/ts-proto/commit/1c5aca09537725aadebf3733efa9863149337848)), closes [microsoft/TypeScript#64237](https://github.com/microsoft/TypeScript/issues/64237) [#64307](https://github.com/stephenh/ts-proto/issues/64307)
+
 # [2.18.0](https://github.com/stephenh/ts-proto/compare/v2.17.0...v2.18.0) (2026-10-18)
 
 

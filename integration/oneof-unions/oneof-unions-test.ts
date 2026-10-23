@@ -95,6 +95,23 @@ describe('oneof=unions', () => {
     });
   });
 
+  it('fromPartial rejects unknown properties inside a oneof', () => {
+    // Not fresh literals, so only the `Exact` type can reject the extra keys.
+    const extraInMessage = { $case: 'aMessage' as const, aMessage: { name: 'a', nope: 1 } };
+    const mixedCases = { $case: 'aBool' as const, aBool: true, aString: 'b' };
+    // @ts-expect-error unknown property inside the oneof message
+    PleaseChoose.fromPartial({ choice: extraInMessage });
+    // @ts-expect-error property that belongs to another case of the oneof
+    PleaseChoose.fromPartial({ choice: mixedCases });
+
+    const ok = PleaseChoose.fromPartial({
+      choice: { $case: 'aMessage', aMessage: { name: 'a' } },
+      eitherOr: { $case: 'thirdOption', thirdOption: 'c' },
+    });
+    expect(ok.choice).toEqual({ $case: 'aMessage', aMessage: { name: 'a' } });
+    expect(ok.eitherOr).toEqual({ $case: 'thirdOption', thirdOption: 'c' });
+  });
+
   it('toJSON', () => {
     let debbie: PleaseChoose = {
       name: 'Debbie',
