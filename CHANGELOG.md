@@ -1,3 +1,10 @@
+## [2.18.2](https://github.com/stephenh/ts-proto/compare/v2.18.1...v2.18.2) (2026-10-23)
+
+
+### Bug Fixes
+
+* type bytes fields as base64 strings with useJsonWireFormat ([#1296](https://github.com/stephenh/ts-proto/issues/1296)) ([ce276c3](https://github.com/stephenh/ts-proto/commit/ce276c393afe05b08c0ead47b692bb859fa2d6ad)), closes [#1294](https://github.com/stephenh/ts-proto/issues/1294)
+
 ## [2.18.1](https://github.com/stephenh/ts-proto/compare/v2.18.0...v2.18.1) (2026-10-22)
 
 
