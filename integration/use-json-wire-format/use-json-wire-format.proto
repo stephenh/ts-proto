@@ -8,4 +8,7 @@ message Todo {
   google.protobuf.Timestamp timestamp = 2;
   google.protobuf.Duration duration = 3;
   google.protobuf.FieldMask update_mask =4;
+  bytes payload = 5;
+  repeated bytes chunks = 6;
+  map<string, bytes> attachments = 7;
 }

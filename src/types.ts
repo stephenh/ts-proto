@@ -111,6 +111,8 @@ export function basicTypeName(
     case FieldDescriptorProto_Type.TYPE_BYTES:
       if (options.env === EnvOption.NODE) {
         return code`Buffer`;
+      } else if (options.useJsonWireFormat) {
+        return code`string`;
       } else {
         return code`Uint8Array`;
       }
@@ -289,6 +291,9 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       // todo(proto2): need to look into all the possible default values for the bytes type, and handle each one
       if (options.env === EnvOption.NODE) {
         return "Buffer.alloc(0)";
+      }
+      if (options.useJsonWireFormat) {
+        return '""';
       }
       return "new Uint8Array(0)";
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
