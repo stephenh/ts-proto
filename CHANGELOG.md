@@ -1,3 +1,10 @@
+## [2.18.3](https://github.com/stephenh/ts-proto/compare/v2.18.2...v2.18.3) (2026-10-23)
+
+
+### Bug Fixes
+
+* generate an async iterable invoke for grpc-web with useAsyncIterable ([#1295](https://github.com/stephenh/ts-proto/issues/1295)) ([32374e9](https://github.com/stephenh/ts-proto/commit/32374e9649b5b59cff6fc1503f3b381ca1d3afa0)), closes [#1183](https://github.com/stephenh/ts-proto/issues/1183)
+
 ## [2.18.2](https://github.com/stephenh/ts-proto/compare/v2.18.1...v2.18.2) (2026-10-23)
 
 
