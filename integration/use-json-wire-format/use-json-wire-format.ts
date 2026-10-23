@@ -12,4 +12,12 @@ export interface Todo {
   timestamp?: string | undefined;
   duration?: string | undefined;
   updateMask?: string | undefined;
+  payload?: string | undefined;
+  chunks?: string[] | undefined;
+  attachments?: { [key: string]: string } | undefined;
+}
+
+export interface Todo_AttachmentsEntry {
+  key: string;
+  value: string;
 }
