@@ -1147,7 +1147,7 @@ function makeTimestampMethods(
             );
             return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
           } else {
-            return ${options.typePrefix}Timestamp${options.typeSuffix}.fromJSON(o);
+            return ${wrapTypeName(options, "Timestamp")}.fromJSON(o);
           }
         }
       `,
