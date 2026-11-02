@@ -173,7 +173,7 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
   const { options } = ctx;
   const { useAbortSignal } = options;
 
-  chunks.push(code`interface Rpc {`);
+  chunks.push(code`export interface Rpc {`);
 
   const wrapper = returnObservable ? observableType(ctx) : "Promise";
   chunks.push(code`
