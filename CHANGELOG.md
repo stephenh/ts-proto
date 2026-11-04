@@ -1,3 +1,10 @@
+## [2.18.4](https://github.com/stephenh/ts-proto/compare/v2.18.3...v2.18.4) (2026-11-04)
+
+
+### Bug Fixes
+
+* treat null as a builtin with useNullAsOptional ([#1300](https://github.com/stephenh/ts-proto/issues/1300)) ([8f56223](https://github.com/stephenh/ts-proto/commit/8f56223328c667ce63e9ac62f87ad14dd01ca344)), closes [#1298](https://github.com/stephenh/ts-proto/issues/1298) [#1293](https://github.com/stephenh/ts-proto/issues/1293) [#1293](https://github.com/stephenh/ts-proto/issues/1293) [#1293](https://github.com/stephenh/ts-proto/issues/1293)
+
 ## [2.18.3](https://github.com/stephenh/ts-proto/compare/v2.18.2...v2.18.3) (2026-10-23)
 
 
