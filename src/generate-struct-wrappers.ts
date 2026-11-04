@@ -1,6 +1,6 @@
 import { Context } from "./context";
 import { code, Code } from "ts-poet";
-import { wrapTypeName } from "./utils";
+import { messageMethodHead, wrapTypeName } from "./utils";
 import { isAnyValueTypeName, isFieldMaskTypeName, isListValueTypeName, isStructTypeName } from "./types";
 import { OneofOption, Options } from "./options";
 
@@ -186,7 +186,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
     }
     if (ctx.options.useOptionals !== "all") defaultFields = "";
 
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
+    chunks.push(code`${methodHead(ctx, "Struct", "wrap")}(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
@@ -200,7 +200,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+      chunks.push(code`${methodHead(ctx, "Value", "wrap")}(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE};
@@ -220,7 +220,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         return result;
     }`);
     } else if (ctx.options.oneof === OneofOption.UNIONS_VALUE) {
-      chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+      chunks.push(code`${methodHead(ctx, "Value", "wrap")}(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', value: ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE};
@@ -240,7 +240,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         return result;
     }`);
     } else {
-      chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+      chunks.push(code`${methodHead(ctx, "Value", "wrap")}(value: any): ${wrapTypeName(ctx.options, "Value")} {
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
           result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE;
@@ -264,7 +264,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
 
   if (isListValueTypeName(fullProtoTypeName)) {
     const maybeReadyOnly = ctx.options.useReadonlyTypes ? "Readonly" : "";
-    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
+    chunks.push(code`${methodHead(ctx, "ListValue", "wrap")}(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
       const result = createBase${wrapTypeName(ctx.options, "ListValue")}()${maybeAsAny(ctx.options)};
       result.values = array ?? [];
       return result;
@@ -272,7 +272,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): ${wrapTypeName(ctx.options, "FieldMask")} {
+    chunks.push(code`${methodHead(ctx, "FieldMask", "wrap")}(paths: ${maybeReadonly(ctx.options)} string[]): ${wrapTypeName(ctx.options, "FieldMask")} {
       const result = createBase${wrapTypeName(ctx.options, "FieldMask")}()${maybeAsAny(ctx.options)};
       result.paths = paths;
       return result;
@@ -291,7 +291,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
+      chunks.push(code`${methodHead(ctx, "Struct", "unwrap")}(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of message.fields.keys()) {
@@ -301,7 +301,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         return object;
       }`);
     } else {
-      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
+      chunks.push(code`${methodHead(ctx, "Struct", "unwrap")}(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of ${ctx.utils.globalThis}.Object.keys(message.fields)) {
@@ -315,7 +315,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`unwrap(message: ${wrapTypeName(
+      chunks.push(code`${methodHead(ctx, "Value", "unwrap")}(message: ${wrapTypeName(
         ctx.options,
         "Value",
       )}): string | number | boolean | Object | null | Array<any> | undefined {
@@ -336,14 +336,14 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         }
       }`);
     } else if (ctx.options.oneof === OneofOption.UNIONS_VALUE) {
-      chunks.push(code`unwrap(message: ${wrapTypeName(
+      chunks.push(code`${methodHead(ctx, "Value", "unwrap")}(message: ${wrapTypeName(
         ctx.options,
         "Value",
       )}): string | number | boolean | Object | null | Array<any> | undefined {
         return (message.kind?.$case === '${fieldNames.nullValue}') ? null : message.kind?.value;
       }`);
     } else {
-      chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+      chunks.push(code`${methodHead(ctx, "Value", "unwrap")}(message: any): string | number | boolean | Object | null | Array<any> | undefined {
         if (message.${fieldNames.stringValue} !== undefined) {
           return message.${fieldNames.stringValue};
         } else if (message?.${fieldNames.numberValue} !== undefined) {
@@ -363,7 +363,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${
+    chunks.push(code`${methodHead(ctx, "ListValue", "unwrap")}(message: ${
       ctx.options.useReadonlyTypes ? "any" : wrapTypeName(ctx.options, "ListValue")
     }): Array<any> {
       if (message?.hasOwnProperty('values') && ${ctx.utils.globalThis}.Array.isArray(message.values)) {
@@ -385,11 +385,15 @@ function generateFieldMaskUnwrap(ctx: Context): Code {
   const returnType = ctx.options.useOptionals === "all" ? "string[] | undefined" : "string[]";
   const pathModifier = ctx.options.useOptionals === "all" ? "?" : "";
 
-  return code`unwrap(message: ${
+  return code`${methodHead(ctx, "FieldMask", "unwrap")}(message: ${
     ctx.options.useReadonlyTypes ? "any" : wrapTypeName(ctx.options, "FieldMask")
   }): ${returnType} {
     return message${pathModifier}.paths;
   }`;
+}
+
+function methodHead(ctx: Context, name: string, method: string): Code {
+  return messageMethodHead(ctx.options, wrapTypeName(ctx.options, name), method);
 }
 
 function maybeReadonly(options: Options): string {

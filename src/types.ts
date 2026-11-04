@@ -21,6 +21,7 @@ import {
   FormattedMethodDescriptor,
   fail,
   impProto,
+  impProtoMethod,
   maybePrefixPackage,
   nullOrUndefined,
   withAndMaybeCheckIsNotNull,
@@ -698,8 +699,8 @@ export function messageToTypeName(
   if (!typeOptions.keepValueType && options.useMongoObjectId && protoType.endsWith(".ObjectId")) {
     return code`mongodb.ObjectId`;
   }
-  const [module, type] = toModuleAndType(typeMap, protoType);
-  return code`${impProto(options, module, type)}`;
+  const [module, type, descriptor] = toModuleAndType(typeMap, protoType);
+  return code`${impProto(options, module, type, options.outputStandaloneFunctions && "field" in descriptor)}`;
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
@@ -710,6 +711,11 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix: string): Import {
   const [module, type] = toModuleAndType(ctx.typeMap, enumProtoType);
   return impProto(ctx.options, module, `${uncapitalize(type)}${methodSuffix}`);
+}
+
+export function getMessageMethod(ctx: Context, messageProtoType: string, method: string): Code {
+  const [module, type] = toModuleAndType(ctx.typeMap, messageProtoType);
+  return impProtoMethod(ctx.options, module, type, method);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */

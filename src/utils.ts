@@ -1,5 +1,5 @@
 import * as path from "path";
-import { code, Code, imp, Import, joinCode } from "ts-poet";
+import { code, Code, def, imp, Import, joinCode } from "ts-poet";
 import {
   CodeGeneratorRequest,
   FieldDescriptorProto,
@@ -10,7 +10,7 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from "./sourceInfo";
 import { OneofOption, Options, ServiceOption } from "./options";
-import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
+import { camelCaseGrpc, capitalize, maybeSnakeToCamel, snakeToCamel, uncapitalize } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -273,13 +273,35 @@ export function impFile(options: Options, spec: string) {
   return imp(`${spec}${options.importSuffix}`);
 }
 
-export function impProto(options: Options, module: string, type: string): Import {
-  const prefix = options.onlyTypes ? "t:" : "";
+export function impProto(options: Options, module: string, type: string, typeOnly = false): Import {
+  const prefix = options.onlyTypes || typeOnly ? "t:" : "";
   const protoFile = `${module}.proto`;
   if (options.M[protoFile]) {
     return imp(`${prefix}${type}@${options.M[protoFile]}`);
   }
   return imp(`${prefix}${type}@./${module}${options.fileSuffix}${options.importSuffix}`);
+}
+
+export function messageFunctionName(type: string, method: string): string {
+  return uncapitalize(type) + capitalize(method);
+}
+
+export function impProtoMethod(options: Options, module: string, type: string, method: string): Code {
+  if (options.outputStandaloneFunctions) {
+    return code`${impProto(options, module, messageFunctionName(type, method))}`;
+  }
+  return code`${impProto(options, module, type)}.${method}`;
+}
+
+export function localMessageMethod(options: Options, type: string, method: string): string {
+  return options.outputStandaloneFunctions ? messageFunctionName(type, method) : `${type}.${method}`;
+}
+
+export function messageMethodHead(options: Options, type: string, method: string, isAsyncGenerator = false): Code {
+  if (options.outputStandaloneFunctions) {
+    return code`export ${isAsyncGenerator ? "async function*" : "function"} ${def(messageFunctionName(type, method))}`;
+  }
+  return code`${isAsyncGenerator ? "async *" : ""}${method}`;
 }
 
 export function tryCatchBlock(tryBlock: Code | string, handleErrorBlock: Code | string): Code {
