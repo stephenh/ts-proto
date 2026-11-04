@@ -729,6 +729,10 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   if (options.useDate === DateOption.TEMPORAL) {
     optionalBuiltins.push("Temporal.Instant");
   }
+  // Otherwise Exact reaches `null & {}`, which is never, and drops null from optional fields
+  if (options.useNullAsOptional) {
+    optionalBuiltins.push("null");
+  }
 
   const Builtin = conditionalOutput(
     "Builtin",
