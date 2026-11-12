@@ -103,7 +103,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}: {[key: string]: any} {
+      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of message.fields.keys()) {
