@@ -1,3 +1,10 @@
+## [2.18.5](https://github.com/stephenh/ts-proto/compare/v2.18.4...v2.18.5) (2026-11-12)
+
+
+### Bug Fixes
+
+* correct Struct unwrap signature with useMapType ([#1297](https://github.com/stephenh/ts-proto/issues/1297)) ([4ce0686](https://github.com/stephenh/ts-proto/commit/4ce0686fd999798260bf47061add3b87b245182a))
+
 ## [2.18.4](https://github.com/stephenh/ts-proto/compare/v2.18.3...v2.18.4) (2026-11-04)
 
 
