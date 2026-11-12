@@ -1,0 +1,1 @@
+outputTypeRegistry=true,outputEncodeMethods=encode-only,outputJsonMethods=to-only
