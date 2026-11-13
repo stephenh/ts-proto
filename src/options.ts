@@ -79,6 +79,7 @@ export type Options = {
   outputDecodeIncludeTypes: string;
   outputJsonMethods: true | false | "to-only" | "from-only";
   outputPartialMethods: boolean;
+  outputStandaloneFunctions: boolean;
   outputTypeAnnotations: boolean | "static-only" | "optional";
   outputTypeRegistry: boolean;
   stringEnums: boolean;
@@ -162,6 +163,7 @@ export function defaultOptions(): Options {
     outputDecodeIncludeTypes: "",
     outputJsonMethods: true,
     outputPartialMethods: true,
+    outputStandaloneFunctions: false,
     outputTypeAnnotations: false,
     outputTypeRegistry: false,
     stringEnums: false,
@@ -347,6 +349,19 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   if (options.unrecognizedEnumValue) {
     // Make sure to cast number options to an actual number
     options.unrecognizedEnumValue = Number(options.unrecognizedEnumValue);
+  }
+
+  if (
+    options.outputStandaloneFunctions &&
+    (options.outputTypeRegistry ||
+      options.outputTypeAnnotations === "static-only" ||
+      options.outputServices.includes(ServiceOption.GENERIC) ||
+      options.nestJs ||
+      options.useMongoObjectId)
+  ) {
+    throw new Error(
+      "outputStandaloneFunctions=true can't be used with outputTypeRegistry=true, outputTypeAnnotations=static-only, outputServices=generic-definitions, nestJs=true, or useMongoObjectId=true",
+    );
   }
 
   return options;

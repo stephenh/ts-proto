@@ -62,6 +62,7 @@ import {
   detectMapType,
   getEnumMethod,
   getFieldOptionsJsType,
+  getMessageMethod,
   isAnyValueType,
   isAnyValueTypeName,
   isBytes,
@@ -105,8 +106,12 @@ import {
   getPropertyAccessor,
   impFile,
   impProto,
+  impProtoMethod,
+  localMessageMethod,
   maybeAddComment,
   maybePrefixPackage,
+  messageFunctionName,
+  messageMethodHead,
   nullOrUndefined,
   oneofValueName,
   safeAccessor,
@@ -227,7 +232,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         const staticMembers: Code[] = [];
 
         const hasTypeMember = options.outputTypeAnnotations || options.outputTypeRegistry;
-        if (hasTypeMember) {
+        if (hasTypeMember && !options.outputStandaloneFunctions) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
 
@@ -235,7 +240,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           for (const extension of message.extension) {
             const { name, type, extensionInfo } = generateExtension(ctx, message, extension);
 
-            staticMembers.push(code`${name}: <${ctx.utils.Extension}<${type}>> ${extensionInfo}`);
+            if (options.outputStandaloneFunctions) {
+              staticMembers.push(
+                code`export const ${def(messageFunctionName(fullName, name))}: ${ctx.utils.Extension}<${type}> = ${extensionInfo};`,
+              );
+            } else {
+              staticMembers.push(code`${name}: <${ctx.utils.Extension}<${type}>> ${extensionInfo}`);
+            }
           }
         }
 
@@ -255,7 +266,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
                 staticMembers.push(generateSetExtension(ctx, fullName));
               }
             } else if (options.outputEncodeMethods === true) {
-              staticMembers.push(generateEmptyEncode(fullName));
+              staticMembers.push(generateEmptyEncode(ctx, fullName));
             }
           }
 
@@ -270,14 +281,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
                 staticMembers.push(generateGetExtension(ctx, fullName));
               }
             } else if (options.outputEncodeMethods === true) {
-              staticMembers.push(generateEmptyDecode(fullName));
+              staticMembers.push(generateEmptyDecode(ctx, fullName));
             }
           }
         }
 
         if (options.useAsyncIterable) {
-          staticMembers.push(generateEncodeTransform(ctx.utils, fullName));
-          staticMembers.push(generateDecodeTransform(ctx.utils, fullName));
+          staticMembers.push(generateEncodeTransform(ctx, fullName));
+          staticMembers.push(generateDecodeTransform(ctx, fullName));
         }
         if (options.outputJsonMethods) {
           if (options.outputJsonMethods === true || options.outputJsonMethods === "from-only") {
@@ -307,7 +318,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
         }
 
-        if (staticMembers.length > 0) {
+        if (options.outputStandaloneFunctions) {
+          chunks.push(...staticMembers);
+        } else if (staticMembers.length > 0) {
           const messageFnsTypeParameters = [fullName, hasTypeMember && `'${fullTypeName}'`]
             .filter((p) => !!p)
             .join(", ");
@@ -986,7 +999,12 @@ function makeTimestampMethods(
   longs: ReturnType<typeof makeLongUtils>,
   bytes: ReturnType<typeof makeByteUtils>,
 ) {
-  const Timestamp = impProto(options, "google/protobuf/timestamp", wrapTypeName(options, "Timestamp"));
+  const Timestamp = impProto(
+    options,
+    "google/protobuf/timestamp",
+    wrapTypeName(options, "Timestamp"),
+    options.outputStandaloneFunctions,
+  );
   const NanoDate = imp("NanoDate=nano-date");
 
   let seconds: string | Code = "Math.trunc(date.getTime() / 1_000)";
@@ -1107,6 +1125,13 @@ function makeTimestampMethods(
     code`const timestampFractionRegex = /:\\d{2}\\.\\d+/;`,
   );
 
+  const timestampMessageFromJson = impProtoMethod(
+    options,
+    "google/protobuf/timestamp",
+    wrapTypeName(options, "Timestamp"),
+    "fromJSON",
+  );
+
   const fromJsonTimestamp = conditionalOutput(
     "fromJsonTimestamp",
     options.useDate === DateOption.DATE
@@ -1117,7 +1142,7 @@ function makeTimestampMethods(
           } else if (typeof o === "string") {
             return new ${bytes.globalThis}.Date(o);
           } else {
-            return ${fromTimestamp}(${wrapTypeName(options, "Timestamp")}.fromJSON(o));
+            return ${fromTimestamp}(${timestampMessageFromJson}(o));
           }
         }
       `
@@ -1129,7 +1154,7 @@ function makeTimestampMethods(
             } else if (typeof o === "string") {
               return ${bytes.globalThis}.Temporal.Instant.from(o);
             } else {
-              return ${fromTimestamp}(${wrapTypeName(options, "Timestamp")}.fromJSON(o));
+              return ${fromTimestamp}(${timestampMessageFromJson}(o));
             }
           }
         `
@@ -1151,7 +1176,7 @@ function makeTimestampMethods(
             );
             return { ...timestamp, nanos: (timestamp.nanos ?? 0) + (fractionNanos % 1_000_000) };
           } else {
-            return ${options.typePrefix}Timestamp${options.typeSuffix}.fromJSON(o);
+            return ${timestampMessageFromJson}(o);
           }
         }
       `,
@@ -1522,14 +1547,13 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       }
     }
   } else if (isValueType(ctx, field)) {
-    const type = basicTypeName(ctx, field, { keepValueType: true });
     const unwrap = (decodedValue: any): Code => {
       if (isListValueType(field) || isStructType(field) || isAnyValueType(field) || isFieldMaskType(field)) {
-        return code`${type}.unwrap(${decodedValue})`;
+        return code`${getMessageMethod(ctx, field.typeName, "unwrap")}(${decodedValue})`;
       }
       return code`${decodedValue}.value`;
     };
-    const decoder = code`${type}.decode(reader, reader.uint32())`;
+    const decoder = code`${getMessageMethod(ctx, field.typeName, "decode")}(reader, reader.uint32())`;
     readSnippet = code`${unwrap(decoder)}`;
   } else if (
     isTimestamp(field) &&
@@ -1538,18 +1562,18 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       options.useDate === DateOption.STRING_NANO ||
       options.useDate === DateOption.TEMPORAL)
   ) {
-    const type = basicTypeName(ctx, field, { keepValueType: true });
-    readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
+    const decode = getMessageMethod(ctx, field.typeName, "decode");
+    readSnippet = code`${utils.fromTimestamp}(${decode}(reader, reader.uint32()))`;
   } else if (isObjectId(field) && options.useMongoObjectId) {
     const type = basicTypeName(ctx, field, { keepValueType: true });
     readSnippet = code`${utils.fromProtoObjectId}(${type}.decode(reader, reader.uint32()))`;
   } else if (isMessage(field)) {
-    const type = basicTypeName(ctx, field);
+    const decode = getMessageMethod(ctx, field.typeName, "decode");
 
     if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
-      readSnippet = code`${type}.decode(reader)`;
+      readSnippet = code`${decode}(reader)`;
     } else {
-      readSnippet = code`${type}.decode(reader, reader.uint32())`;
+      readSnippet = code`${decode}(reader, reader.uint32())`;
     }
   } else {
     throw new Error(`Unhandled field ${field}`);
@@ -1558,11 +1582,11 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
   return readSnippet;
 }
 
-function generateEmptyDecode(fullName: string): Code {
+function generateEmptyDecode(ctx: Context, fullName: string): Code {
   const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
 
   return code`
-    decode(
+    ${messageMethodHead(ctx.options, fullName, "decode")}(
       _: ${BinaryReader} | Uint8Array,
       length?: number,
     ): ${fullName} {
@@ -1585,7 +1609,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // create the basic function declaration
   chunks.push(code`
-    decode(
+    ${messageMethodHead(options, fullName, "decode")}(
       input: ${BinaryReader} | Uint8Array,
       length?: number,
     ): ${fullName} {
@@ -1834,42 +1858,42 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
       options.useDate === DateOption.TEMPORAL)
   ) {
     const tag = ((field.number << 3) | 2) >>> 0;
-    const type = basicTypeName(ctx, field, { keepValueType: true });
-    return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).join()`;
+    const encode = getMessageMethod(ctx, field.typeName, "encode");
+    return (place) => code`${encode}(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).join()`;
   } else if (isValueType(ctx, field)) {
     const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
 
-    const type = basicTypeName(ctx, field, { keepValueType: true });
+    const encode = getMessageMethod(ctx, field.typeName, "encode");
     const wrappedValue = (place: string): Code => {
       if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
-        return code`${type}.wrap(${place})`;
+        return code`${getMessageMethod(ctx, field.typeName, "wrap")}(${place})`;
       }
       return code`{${maybeTypeField} value: ${place}!}`;
     };
 
     const tag = ((field.number << 3) | 2) >>> 0;
-    return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).join()`;
+    return (place) => code`${encode}(${wrappedValue(place)}, writer.uint32(${tag}).fork()).join()`;
   } else if (isMessage(field)) {
-    const type = basicTypeName(ctx, field);
+    const encode = getMessageMethod(ctx, field.typeName, "encode");
 
     if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
       const startTag = ((field.number << 3) | 3) >>> 0,
         endTag = ((field.number << 3) | 4) >>> 0;
-      return (place) => code`${type}.encode(${place}, writer.uint32(${startTag})).uint32(${endTag})`;
+      return (place) => code`${encode}(${place}, writer.uint32(${startTag})).uint32(${endTag})`;
     }
 
     const tag = ((field.number << 3) | 2) >>> 0;
-    return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).join()`;
+    return (place) => code`${encode}(${place}, writer.uint32(${tag}).fork()).join()`;
   } else {
     throw new Error(`Unhandled field ${field}`);
   }
 }
 
-function generateEmptyEncode(fullName: string): Code {
+function generateEmptyEncode(ctx: Context, fullName: string): Code {
   const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
 
   return code`
-  encode(
+  ${messageMethodHead(ctx.options, fullName, "encode")}(
     _: ${fullName},
     writer: ${BinaryWriter} = new ${BinaryWriter}(),
   ): ${BinaryWriter} {
@@ -1887,7 +1911,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // create the basic function declaration
   chunks.push(code`
-    encode(
+    ${messageMethodHead(options, fullName, "encode")}(
       ${messageDesc.field.length > 0 || options.unknownFields ? "message" : "_"}: ${fullName},
       writer: ${BinaryWriter} = new ${BinaryWriter}(),
     ): ${BinaryWriter} {
@@ -2115,7 +2139,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
 function generateSetExtension(ctx: Context, fullName: string) {
   return code`
-    setExtension <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>, value: T): void {
+    ${messageMethodHead(ctx.options, fullName, "setExtension")} <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>, value: T): void {
       const encoded = extension.encode!(value);
 
       if (message._unknownFields !== undefined) {
@@ -2142,7 +2166,7 @@ function generateSetExtension(ctx: Context, fullName: string) {
 
 function generateGetExtension(ctx: Context, fullName: string) {
   return code`
-    getExtension <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>): T | undefined {
+    ${messageMethodHead(ctx.options, fullName, "getExtension")} <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>): T | undefined {
       let results: T | undefined = undefined;
 
       if (message._unknownFields === undefined) {
@@ -2240,29 +2264,29 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           options.useDate === DateOption.STRING_NANO ||
           options.useDate === DateOption.TEMPORAL)
       ) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).join()`;
+        const encode = getMessageMethod(ctx, field.typeName, "encode");
+        return (place) => code`${encode}(${utils.toTimestamp}(${place}), writer.fork()).join()`;
       } else if (isValueType(ctx, field)) {
         const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
 
-        const type = basicTypeName(ctx, field, { keepValueType: true });
+        const encode = getMessageMethod(ctx, field.typeName, "encode");
         const wrappedValue = (place: string): Code => {
           if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
-            return code`${type}.wrap(${place})`;
+            return code`${getMessageMethod(ctx, field.typeName, "wrap")}(${place})`;
           }
           return code`{${maybeTypeField} value: ${place}!}`;
         };
 
-        return (place) => code`${type}.encode(${wrappedValue(place)}, writer.fork()).join()`;
+        return (place) => code`${encode}(${wrappedValue(place)}, writer.fork()).join()`;
       } else if (isMessage(field)) {
-        const type = basicTypeName(ctx, field);
+        const encode = getMessageMethod(ctx, field.typeName, "encode");
 
         if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
           const endTag = ((field.number << 3) | 4) >>> 0;
-          return (place) => code`${type}.encode(${place}, writer).uint32(${endTag})`;
+          return (place) => code`${encode}(${place}, writer).uint32(${endTag})`;
         }
 
-        return (place) => code`${type}.encode(${place}, writer.fork()).join()`;
+        return (place) => code`${encode}(${place}, writer.fork()).join()`;
       } else {
         throw new Error(`Unhandled field ${field}`);
       }
@@ -2426,7 +2450,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         break;
     }
     return code`
-      fromJSON(object: string): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromJSON")}(object: string): ${fullName} {
         if (!object.endsWith("s")) throw new Error("Invalid duration string");
         const body = object.slice(0, -1);
         const negative = body.startsWith("-");
@@ -2447,21 +2471,21 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   if (fullTypeName === "google.protobuf.Timestamp") {
     // The canonical JSON of a Timestamp is an RFC 3339 string; the object form is still accepted.
     chunks.push(code`
-      fromJSON(object: any): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromJSON")}(object: any): ${fullName} {
         if (typeof object === "string") {
-          return ${fullName}.fromJSON(${utils.timestampFromJson}(object));
+          return ${localMessageMethod(options, fullName, "fromJSON")}(${utils.timestampFromJson}(object));
         }
         return {
     `);
   } else {
     chunks.push(code`
-      fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromJSON")}(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
         return {
     `);
   }
 
   if (addTypeToMessages(options)) {
-    chunks.push(code`$type: ${fullName}.$type,`);
+    chunks.push(options.outputStandaloneFunctions ? code`$type: '${fullTypeName}',` : code`$type: ${fullName}.$type,`);
   }
 
   const oneofFieldsCases = messageDesc.oneofDecl.map((oneof, oneofIndex) =>
@@ -2531,8 +2555,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.unwrap(${type}.fromJSON(${from}))`;
+        const unwrap = getMessageMethod(ctx, field.typeName, "unwrap");
+        const fromJson = getMessageMethod(ctx, field.typeName, "fromJSON");
+        return code`${unwrap}(${fromJson}(${from}))`;
       } else if (isListValueType(field)) {
         return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
@@ -2580,11 +2605,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           } else if (isAnyValueType(valueField)) {
             return code`${from}`;
           } else {
-            return code`${valueType}.fromJSON(${from})`;
+            return code`${getMessageMethod(ctx, valueField.typeName, "fromJSON")}(${from})`;
           }
         } else {
-          const type = basicTypeName(ctx, field);
-          return code`${type}.fromJSON(${from})`;
+          return code`${getMessageMethod(ctx, field.typeName, "fromJSON")}(${from})`;
         }
       } else {
         throw new Error(`Unhandled field ${field}`);
@@ -2785,15 +2809,16 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong }: Options,
+  options: Options,
   utils: Utils,
 ): Code | undefined {
+  const { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong } = options;
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
     const pathModifier = useOptionals === "all" ? "?" : "";
 
     return code`
-    toJSON(message: ${fullName}): ${returnType} {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): ${returnType} {
       return message.paths${pathModifier}.join(',');
     }
   `;
@@ -2822,7 +2847,7 @@ function generateCanonicalToJson(
         break;
     }
     return code`
-    toJSON(message: ${fullName}): string {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): string {
       const negative = ${isNegSeconds} || message.nanos < 0;
       const sign = negative ? "-" : "";
       const absSeconds = ${absSeconds};
@@ -2840,7 +2865,7 @@ function generateCanonicalToJson(
         ? code`message.seconds?.toNumber() ?? 0`
         : code`${utils.globalThis}.Number(message.seconds ?? 0)`;
     return code`
-    toJSON(message: ${fullName}): string {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): string {
       return ${utils.timestampToJson}(${seconds}, message.nanos ?? 0);
     }
     `;
@@ -2875,7 +2900,7 @@ function generateCanonicalAnyToJson(ctx: Context, fullName: string, messageDesc:
   const typeUrl = getPropertyAccessor("message", getFieldName(typeUrlField, options));
   const value = getPropertyAccessor("message", getFieldName(valueField, options));
   return code`
-    toJSON(message: ${fullName}): unknown {
+    ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): unknown {
       const typeUrl = ${typeUrl} ?? "";
       if (typeUrl === "") {
         return {};
@@ -2903,7 +2928,7 @@ function generateCanonicalAnyFromJson(ctx: Context, fullName: string, messageDes
   const typeField = addTypeToMessages(options) ? code`$type: ${fullName}.$type,` : "";
   const bytes = options.env === EnvOption.NODE ? code`Buffer.from(bytes)` : code`bytes`;
   return code`
-    fromJSON(object: any): ${fullName} {
+    ${messageMethodHead(options, fullName, "fromJSON")}(object: any): ${fullName} {
       const typeUrl = ${utils.isSet}(object?.["@type"]) ? ${utils.globalThis}.String(object["@type"]) : "";
       if (typeUrl === "") {
         return { ${typeField} ${typeUrlKey}: ${defaultValue(ctx, typeUrlField)}, ${valueKey}: ${defaultValue(ctx, valueField)} };
@@ -2946,7 +2971,7 @@ function generateToJson(
 
   // create the basic function declaration
   chunks.push(code`
-    toJSON(${messageDesc.field.length > 0 ? "message" : "_"}: ${fullName}): unknown {
+    ${messageMethodHead(options, fullName, "toJSON")}(${messageDesc.field.length > 0 ? "message" : "_"}: ${fullName}): unknown {
       const obj: any = {};
   `);
 
@@ -3020,17 +3045,16 @@ function generateToJson(
         } else if (isAnyValueType(valueType)) {
           return code`${from}`;
         } else {
-          const type = basicTypeName(ctx, valueType);
-          return code`${type}.toJSON(${from})`;
+          return code`${getMessageMethod(ctx, valueType.typeName, "toJSON")}(${from})`;
         }
       } else if (isAnyValueType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.toJSON(${type}.wrap(${from}))`;
+        const toJson = getMessageMethod(ctx, field.typeName, "toJSON");
+        const wrap = getMessageMethod(ctx, field.typeName, "wrap");
+        return code`${toJson}(${wrap}(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
-        const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${type}.toJSON(${from})`;
+        return code`${getMessageMethod(ctx, field.typeName, "toJSON")}(${from})`;
       } else if (isBytes(field)) {
         return code`${utils.base64FromBytes}(${from})`;
       } else if (isLongValueTypeAsObject(options, field)) {
@@ -3132,18 +3156,20 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   const { options, utils } = ctx;
   const chunks: Code[] = [];
 
+  const maybeComma = options.outputStandaloneFunctions ? "" : ",";
+
   // create the create function definition
   if (ctx.options.useExactTypes) {
     chunks.push(code`
-      create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
-        return ${fullName}.fromPartial(base ?? ({} as any));
-      },
+      ${messageMethodHead(options, fullName, "create")}<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
+        return ${localMessageMethod(options, fullName, "fromPartial")}(base ?? ({} as any));
+      }${maybeComma}
     `);
   } else {
     chunks.push(code`
-      create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
-        return ${fullName}.fromPartial(base ?? {});
-      },
+      ${messageMethodHead(options, fullName, "create")}(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+        return ${localMessageMethod(options, fullName, "fromPartial")}(base ?? {});
+      }${maybeComma}
     `);
   }
 
@@ -3152,11 +3178,11 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
   if (ctx.options.useExactTypes) {
     chunks.push(code`
-      fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromPartial")}<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
     `);
   } else {
     chunks.push(code`
-      fromPartial(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+      ${messageMethodHead(options, fullName, "fromPartial")}(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
     `);
   }
 
@@ -3237,14 +3263,12 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           } else if (isValueType(ctx, valueField)) {
             return code`${from}`;
           } else {
-            const type = basicTypeName(ctx, valueField);
-            return code`${type}.fromPartial(${from})`;
+            return code`${getMessageMethod(ctx, valueField.typeName, "fromPartial")}(${from})`;
           }
         } else if (isAnyValueType(field)) {
           return code`${from}`;
         } else {
-          const type = basicTypeName(ctx, field);
-          return code`${type}.fromPartial(${from})`;
+          return code`${getMessageMethod(ctx, field.typeName, "fromPartial")}(${from})`;
         }
       } else {
         throw new Error(`Unhandled field ${field}`);

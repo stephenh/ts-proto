@@ -1,18 +1,16 @@
 import { Context } from "./context";
-import { code, Code, Import } from "ts-poet";
-import { messageToTypeName, wrapperTypeName } from "./types";
+import { code, Code } from "ts-poet";
+import { getMessageMethod, wrapperTypeName } from "./types";
 import { DateOption, LongOption } from "./options";
-import { impProto, wrapTypeName } from "./utils";
 
 export function generateEncoder(ctx: Context, typeName: string): Code {
   const name = wrapperTypeName(typeName);
+  const encode = getMessageMethod(ctx, typeName, "encode");
   if (!name) {
-    return code`${messageToTypeName(ctx, typeName, { keepValueType: true })}.encode(value).finish()`;
+    return code`${encode}(value).finish()`;
   }
 
   if (name == "Timestamp") {
-    const TimestampValue = impProto(ctx.options, "google/protobuf/timestamp", wrapTypeName(ctx.options, name));
-
     let value = code`value`;
     if (
       ctx.options.useDate === DateOption.DATE ||
@@ -22,40 +20,36 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
     ) {
       value = code`${ctx.utils.toTimestamp}(${value})`;
     }
-    return code`${TimestampValue}.encode(${value}).finish()`;
+    return code`${encode}(${value}).finish()`;
   }
 
   if (name == "Struct" || name == "Value") {
-    const StructType = impProto(ctx.options, "google/protobuf/struct", wrapTypeName(ctx.options, name));
-    return code`${StructType}.encode(${StructType}.wrap(value)).finish()`;
+    return code`${encode}(${getMessageMethod(ctx, typeName, "wrap")}(value)).finish()`;
   }
 
   if (name == "ListValue") {
-    const ListValueType = impProto(ctx.options, "google/protobuf/struct", wrapTypeName(ctx.options, name));
-    return code`${ListValueType}.encode({values: value ?? []}).finish()`;
+    return code`${encode}({values: value ?? []}).finish()`;
   }
-
-  const TypeValue = impProto(ctx.options, "google/protobuf/wrappers", wrapTypeName(ctx.options, name));
 
   switch (name) {
     case "StringValue":
-      return code`${TypeValue}.encode({value: value ?? ""}).finish()`;
+      return code`${encode}({value: value ?? ""}).finish()`;
     case "Int32Value":
     case "UInt32Value":
     case "DoubleValue":
     case "FloatValue":
-      return code`${TypeValue}.encode({value: value ?? 0}).finish()`;
+      return code`${encode}({value: value ?? 0}).finish()`;
     case "Int64Value":
     case "UInt64Value":
       if (ctx.options.forceLong === LongOption.LONG) {
-        return code`${TypeValue}.encode({value: value ? value.toNumber(): 0}).finish()`;
+        return code`${encode}({value: value ? value.toNumber(): 0}).finish()`;
       }
 
-      return code`${TypeValue}.encode({value: value ?? 0 }).finish()`;
+      return code`${encode}({value: value ?? 0 }).finish()`;
     case "BoolValue":
-      return code`${TypeValue}.encode({value: value ?? false}).finish()`;
+      return code`${encode}({value: value ?? false}).finish()`;
     case "BytesValue":
-      return code`${TypeValue}.encode({value: value ?? new Uint8Array(0)}).finish()`;
+      return code`${encode}({value: value ?? new Uint8Array(0)}).finish()`;
   }
 
   throw new Error(`unknown wrapper type: ${name}`);
@@ -64,16 +58,12 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
 export function generateDecoder(ctx: Context, typeName: string): Code {
   const { options } = ctx;
   let name = wrapperTypeName(typeName);
+  const decoder = code`${getMessageMethod(ctx, typeName, "decode")}(value)`;
   if (!name) {
-    return code`${messageToTypeName(ctx, typeName, { keepValueType: true })}.decode(value)`;
+    return decoder;
   }
 
-  let TypeValue: Import;
-
   if (name == "Timestamp") {
-    TypeValue = impProto(ctx.options, "google/protobuf/timestamp", wrapTypeName(ctx.options, name));
-
-    const decoder = code`${TypeValue}.decode(value)`;
     if (
       ctx.options.useDate === DateOption.DATE ||
       ctx.options.useDate === DateOption.STRING ||
@@ -86,11 +76,8 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
   }
 
   if (name == "Struct" || name == "ListValue" || name == "Value") {
-    TypeValue = impProto(ctx.options, "google/protobuf/struct", wrapTypeName(ctx.options, name));
-    return code`${TypeValue}.unwrap(${TypeValue}.decode(value))`;
+    return code`${getMessageMethod(ctx, typeName, "unwrap")}(${decoder})`;
   }
 
-  TypeValue = impProto(ctx.options, "google/protobuf/wrappers", wrapTypeName(ctx.options, name));
-
-  return code`${TypeValue}.decode(value).value`;
+  return code`${decoder}.value`;
 }

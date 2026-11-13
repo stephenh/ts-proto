@@ -443,6 +443,12 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
 - With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` and `Message.create` methods for accepting partially-formed objects/object literals will not be output.
 
+- With `--ts_proto_opt=outputStandaloneFunctions=true`, the message methods are output as standalone functions instead of members of a `Message` const, e.g. `Message.encode` becomes `messageEncode` and `Foo_Bar.fromJSON` becomes `foo_BarFromJSON`, following the enum functions.
+
+  This is useful if you want bundlers to tree-shake the functions you don't use.
+
+  This can't be combined with `outputTypeRegistry=true`, `outputTypeAnnotations=static-only`, `outputServices=generic-definitions`, `nestJs=true` or `useMongoObjectId=true`. `outputSchema` leaves messages out of its `references`, and files mapped with `M` options need to be generated with this option as well.
+
 - With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
 
   This is useful if you want "only types" and are using a gRPC REST Gateway configured to serialize enums as strings.

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package standalone;
+
+message Other {
+  int32 value = 1;
+}
