@@ -1,3 +1,10 @@
+## [2.18.6](https://github.com/stephenh/ts-proto/compare/v2.18.5...v2.18.6) (2026-11-13)
+
+
+### Bug Fixes
+
+* only declare generated methods in the type registry's MessageType ([#1302](https://github.com/stephenh/ts-proto/issues/1302)) ([57ac685](https://github.com/stephenh/ts-proto/commit/57ac68559ea9ec65454b2e5f01993ec9645c0eac)), closes [#1301](https://github.com/stephenh/ts-proto/issues/1301)
+
 ## [2.18.5](https://github.com/stephenh/ts-proto/compare/v2.18.4...v2.18.5) (2026-11-12)
 
 
