@@ -1,3 +1,10 @@
+# [2.19.0](https://github.com/stephenh/ts-proto/compare/v2.18.6...v2.19.0) (2026-11-13)
+
+
+### Features
+
+* add outputStandaloneFunctions option ([#1299](https://github.com/stephenh/ts-proto/issues/1299)) ([f262f50](https://github.com/stephenh/ts-proto/commit/f262f504f8c1d118a794580ebeead7029506a505)), closes [#113](https://github.com/stephenh/ts-proto/issues/113)
+
 ## [2.18.6](https://github.com/stephenh/ts-proto/compare/v2.18.5...v2.18.6) (2026-11-13)
 
 
