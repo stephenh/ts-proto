@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/stephenh/ts-proto/compare/v2.19.0...v2.20.0) (2026-11-13)
+
+
+### Features
+
+* support nestJs=client and nestJs=server to generate one side of the service ([#1303](https://github.com/stephenh/ts-proto/issues/1303)) ([87c72c3](https://github.com/stephenh/ts-proto/commit/87c72c3f3ec977c940513fa2692b2c547902204e)), closes [#527](https://github.com/stephenh/ts-proto/issues/527)
+
 # [2.19.0](https://github.com/stephenh/ts-proto/compare/v2.18.6...v2.19.0) (2026-11-13)
 
 
