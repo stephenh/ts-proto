@@ -40,16 +40,29 @@ function generateMessageType(ctx: BaseContext): Code {
     chunks.push(code`$type: string;`);
   }
 
-  if (ctx.options.outputEncodeMethods) {
-    const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
-    const BinaryWriter = imp("t:BinaryWriter@@bufbuild/protobuf/wire");
+  // Only declare the methods that are actually generated on each message, e.g. with
+  // `outputJsonMethods=to-only` the messages have no `fromJSON` to register.
+  const { outputEncodeMethods, outputJsonMethods } = ctx.options;
+  const hasEncode =
+    outputEncodeMethods === true ||
+    outputEncodeMethods === "encode-only" ||
+    outputEncodeMethods === "encode-no-creation";
+  const hasDecode = outputEncodeMethods === true || outputEncodeMethods === "decode-only";
 
+  const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
+  const BinaryWriter = imp("t:BinaryWriter@@bufbuild/protobuf/wire");
+
+  if (hasEncode) {
     chunks.push(code`encode(message: Message, writer?: ${BinaryWriter}): ${BinaryWriter};`);
+  }
+  if (hasDecode) {
     chunks.push(code`decode(input: ${BinaryReader} | Uint8Array, length?: number): Message;`);
   }
 
-  if (ctx.options.outputJsonMethods) {
+  if (outputJsonMethods === true || outputJsonMethods === "from-only") {
     chunks.push(code`fromJSON(object: any): Message;`);
+  }
+  if (outputJsonMethods === true || outputJsonMethods === "to-only") {
     chunks.push(code`toJSON(message: Message): unknown;`);
   }
 
