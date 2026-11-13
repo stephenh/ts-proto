@@ -187,7 +187,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   );
 
   // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
-  if (options.nestJs) {
+  if (options.nestJs.length > 0) {
     if (options.exportCommonSymbols) {
       const prefix = camelToSnake(fileDesc.package.replace(/\./g, "_"));
       chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
@@ -205,7 +205,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     options.outputJsonMethods ||
     options.outputTypeAnnotations ||
     options.outputTypeRegistry ||
-    options.nestJs
+    options.nestJs.length > 0
   ) {
     // then add the encoder/decoder/base instance
     visit(
@@ -224,7 +224,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             (options.outputDecodeIncludeTypes === "" ||
               new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))) ||
           options.outputPartialMethods ||
-          (outputWrapAndUnwrap && !(options.nestJs && isAnyValueTypeName(fullTypeName)))
+          (outputWrapAndUnwrap && !(options.nestJs.length > 0 && isAnyValueTypeName(fullTypeName)))
         ) {
           chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
         }
@@ -310,7 +310,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           structValue: getFieldName({ name: "struct_value", jsonName: snakeToCamel("struct_value") }, ctx.options),
           listValue: getFieldName({ name: "list_value", jsonName: snakeToCamel("list_value") }, ctx.options),
         };
-        if (options.nestJs) {
+        if (options.nestJs.length > 0) {
           staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames));
           staticMembers.push(...generateUnwrapDeep(ctx, fullTypeName, structFieldNames));
         } else {
@@ -380,7 +380,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   }
 
-  if (options.nestJs) {
+  if (options.nestJs.length > 0) {
     if (fileDesc.messageType.find(hasStructTypeField)) {
       chunks.push(makeProtobufStructWrapper(options));
     }
@@ -390,14 +390,18 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   let hasStreamingMethods = false;
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
-    if (options.nestJs) {
+    if (options.nestJs.length > 0) {
       // NestJS is sufficiently different that we special case the client/server interfaces
-      // generate nestjs grpc client interface
-      chunks.push(generateNestjsServiceClient(ctx, fileDesc, sInfo, serviceDesc));
-      // and the service controller interface
-      chunks.push(generateNestjsServiceController(ctx, fileDesc, sInfo, serviceDesc));
-      // generate nestjs grpc service controller decorator
-      chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, fileDesc, serviceDesc));
+      if (options.nestJs.includes("client")) {
+        // generate nestjs grpc client interface
+        chunks.push(generateNestjsServiceClient(ctx, fileDesc, sInfo, serviceDesc));
+      }
+      if (options.nestJs.includes("server")) {
+        // generate nestjs grpc service controller interface
+        chunks.push(generateNestjsServiceController(ctx, fileDesc, sInfo, serviceDesc));
+        // generate nestjs grpc service controller decorator
+        chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, fileDesc, serviceDesc));
+      }
       let serviceConstName = `${camelToSnake(serviceDesc.name)}_NAME`;
       if (!serviceDesc.name.toLowerCase().endsWith("service")) {
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;

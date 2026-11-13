@@ -485,6 +485,12 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter`, `returnObservable` and `useNestjsFqnServiceName` will still be false.
 
+- With `--ts_proto_opt=nestJs=client` or `--ts_proto_opt=nestJs=server`, only the client-side or server-side NestJS service output will be generated, with the same changed defaults as `nestJs=true`.
+
+  With `nestJs=client`, only the `FooServiceClient` interface is generated, i.e. there is no `FooServiceController` interface or `@FooServiceControllerMethods()` decorator, so the output doesn't import `@nestjs/microservices`. With `nestJs=server`, only the controller interface and decorator are generated. The message types and the `FOO_PACKAGE_NAME`/`FOO_SERVICE_NAME` consts are generated in both cases.
+
+  `nestJs=client,nestJs=server` is the same as `nestJs=true`.
+
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 
 - With `--ts_proto_opt=useMongoObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.

@@ -94,7 +94,7 @@ export type Options = {
   useNestjsFqnServiceName: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
-  nestJs: boolean;
+  nestJs: Array<"client" | "server">;
   env: EnvOption;
   unrecognizedEnum: boolean;
   unrecognizedEnumName: string;
@@ -177,7 +177,7 @@ export function defaultOptions(): Options {
     metadataType: undefined,
     addNestjsRestParameter: false,
     useNestjsFqnServiceName: false,
-    nestJs: false,
+    nestJs: [],
     env: EnvOption.BOTH,
     unrecognizedEnum: true,
     unrecognizedEnumName: "UNRECOGNIZED",
@@ -242,17 +242,31 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     Object.assign(options, parsed);
   }
 
+  // Treat nestJs=true as both the client & server interfaces, and nestJs=false as neither
+  if ((options.nestJs as any) === true) {
+    options.nestJs = ["client", "server"];
+  } else if ((options.nestJs as any) === false) {
+    options.nestJs = [];
+  } else if (typeof options.nestJs === "string") {
+    options.nestJs = [options.nestJs];
+  }
+  for (const value of options.nestJs) {
+    if (value !== "client" && value !== "server") {
+      throw new Error(`nestJs must be true, false, client, or server, but got '${value}'`);
+    }
+  }
+
   // onlyTypes=true implies outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
   if (options.onlyTypes) {
     options.outputJsonMethods = false;
     options.outputEncodeMethods = false;
     options.outputClientImpl = false;
-    options.nestJs = false;
+    options.nestJs = [];
   } else if (
     !options.outputJsonMethods &&
     !options.outputEncodeMethods &&
     !options.outputClientImpl &&
-    !options.nestJs
+    options.nestJs.length === 0
   ) {
     options.onlyTypes = true;
   }
@@ -272,11 +286,11 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   }
   // Assume the user wants the default service output, unless they're using nestJs, which has
   // its own controllers output (although nestjs users can ask for other services too).
-  if (options.outputServices.length == 0 && !options.nestJs) {
+  if (options.outputServices.length == 0 && options.nestJs.length === 0) {
     options.outputServices = [ServiceOption.DEFAULT];
   }
   // If using nestJs + other services, add the encode methods back
-  if (options.nestJs && options.outputServices.length > 0) {
+  if (options.nestJs.length > 0 && options.outputServices.length > 0) {
     options.outputEncodeMethods = true;
   }
 
@@ -327,7 +341,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
   }
 
-  if (options.nestJs) {
+  if (options.nestJs.length > 0) {
     options.initializeFieldsAsUndefined = false;
   } else {
     // useNestjsFqnServiceName requires nestJs=true
@@ -356,7 +370,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     (options.outputTypeRegistry ||
       options.outputTypeAnnotations === "static-only" ||
       options.outputServices.includes(ServiceOption.GENERIC) ||
-      options.nestJs ||
+      options.nestJs.length > 0 ||
       options.useMongoObjectId)
   ) {
     throw new Error(
