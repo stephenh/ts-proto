@@ -32,7 +32,10 @@ describe("options", () => {
         "messagePrefix": "",
         "messageSuffix": "",
         "metadataType": undefined,
-        "nestJs": true,
+        "nestJs": [
+          "client",
+          "server",
+        ],
         "noDefaultsForOptionals": false,
         "oneof": "properties",
         "onlyTypes": false,
@@ -162,7 +165,7 @@ describe("options", () => {
       outputJsonMethods: false,
       outputEncodeMethods: false,
       outputClientImpl: false,
-      nestJs: false,
+      nestJs: [],
     });
   });
 
@@ -218,16 +221,57 @@ describe("options", () => {
 
   it("useNestjsFqnServiceName requires nestJs=true", () => {
     expect(optionsFromParameter("useNestjsFqnServiceName=true")).toMatchObject({
-      nestJs: false,
+      nestJs: [],
       useNestjsFqnServiceName: false,
     });
   });
 
   it("can set useNestjsFqnServiceName with nestJs=true", () => {
     expect(optionsFromParameter("nestJs=true,useNestjsFqnServiceName=true")).toMatchObject({
-      nestJs: true,
+      nestJs: ["client", "server"],
       useNestjsFqnServiceName: true,
     });
+  });
+
+  it("nestJs=false disables the nestjs output", () => {
+    expect(optionsFromParameter("nestJs=false")).toMatchObject({
+      nestJs: [],
+      outputEncodeMethods: true,
+      outputServices: [ServiceOption.DEFAULT],
+    });
+  });
+
+  it("can set nestJs=client", () => {
+    expect(optionsFromParameter("nestJs=client")).toMatchObject({
+      nestJs: ["client"],
+      lowerCaseServiceMethods: true,
+      outputEncodeMethods: false,
+      outputJsonMethods: false,
+      outputClientImpl: false,
+      outputServices: [],
+      initializeFieldsAsUndefined: false,
+    });
+  });
+
+  it("can set nestJs=server", () => {
+    expect(optionsFromParameter("nestJs=server")).toMatchObject({
+      nestJs: ["server"],
+      lowerCaseServiceMethods: true,
+      outputEncodeMethods: false,
+      outputServices: [],
+    });
+  });
+
+  it("can set both nestJs=client and nestJs=server", () => {
+    expect(optionsFromParameter("nestJs=client,nestJs=server")).toMatchObject({
+      nestJs: ["client", "server"],
+    });
+  });
+
+  it("rejects unknown nestJs values", () => {
+    expect(() => optionsFromParameter("nestJs=both")).toThrow(
+      "nestJs must be true, false, client, or server, but got 'both'",
+    );
   });
 
   it("allow use 'null' instead of 'undefined'", () => {
@@ -244,6 +288,7 @@ describe("options", () => {
       "outputTypeAnnotations=static-only",
       "outputServices=generic-definitions",
       "nestJs=true",
+      "nestJs=client",
       "useMongoObjectId=true",
     ]) {
       expect(() => optionsFromParameter(`outputStandaloneFunctions=true,${param}`)).toThrow(

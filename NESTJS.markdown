@@ -10,6 +10,8 @@ To generate `.ts` files for your `.proto` files you can use the `--ts_proto_opt=
 
 For each service in your `.proto` file we generate two TypeScript interfaces: one to implement in your NestJS _controller_, and another one for the _client_ code.
 
+If a project only needs one side of the service, use `nestJs=client` or `nestJs=server` to generate only the client or the controller output (see [supported options](#supported-options) below).
+
 The name of the controller interface is based on the name of the service inside the `.proto`.
 
 If we have to following `.proto` file:
@@ -125,5 +127,11 @@ export class AppService implements OnModuleInit {
   (Requires `nestJs=true`.)
 
 - With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
+
+- With `--ts_proto_opt=nestJs=client` or `--ts_proto_opt=nestJs=server`, only the client-side or server-side service output will be generated, with the same changed defaults as `nestJs=true`.
+
+  With `nestJs=client`, only the `HeroServiceClient` interface is generated, i.e. there is no `HeroServiceController` interface or `@HeroServiceControllerMethods()` decorator, so the output doesn't import `@nestjs/microservices`. With `nestJs=server`, only the controller interface and decorator are generated. The message types and the `HERO_PACKAGE_NAME`/`HERO_SERVICE_NAME` consts are generated in both cases.
+
+  `nestJs=client,nestJs=server` is the same as `nestJs=true`.
 
 - With `--ts_proto_opt=exportCommonSymbols=false`, the plugin will not generate the export with the specified package name.
