@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package hero;
+
+service HeroService {
+    rpc FindOneHero (HeroById) returns (Hero) {}
+    rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
+}
+
+message HeroById {
+    int32 id = 1;
+    string name = 2;
+}
+
+message VillainById {
+    int32 id = 1;
+    string name = 2;
+}
+
+message Weapon {
+    string name = 1;
+    int32 damage = 2;
+}
+
+message Hero {
+    int32 id = 1;
+    string name = 2;
+    Weapon weapon = 3;
+}
+
+message Villain {
+    int32 id = 1;
+    string name = 2;
+    Weapon weapon = 3;
+}
