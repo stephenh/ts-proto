@@ -126,6 +126,20 @@ export class AppService implements OnModuleInit {
 
   (Requires `nestJs=true`.)
 
+- With `--ts_proto_opt=outputPartialMethods=true`, the client methods will accept `DeepPartial` requests and the controller methods may return `DeepPartial` responses, so fields that are left out don't have to be set to their default values by hand. NestJS's `@grpc/proto-loader` leaves any missing fields out of the encoded message, so they're received as their default values. This also outputs the `Message.fromPartial` and `Message.create` methods.
+
+  ```typescript
+  export interface HeroServiceClient {
+    findOneHero(request: DeepPartial<HeroById>): Observable<Hero>;
+  }
+
+  export interface HeroServiceController {
+    findOneHero(request: HeroById): Promise<DeepPartial<Hero>> | Observable<DeepPartial<Hero>> | DeepPartial<Hero>;
+  }
+  ```
+
+  (Requires `nestJs=true`.)
+
 - With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
 
 - With `--ts_proto_opt=nestJs=client` or `--ts_proto_opt=nestJs=server`, only the client-side or server-side service output will be generated, with the same changed defaults as `nestJs=true`.

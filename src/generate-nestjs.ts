@@ -1,13 +1,6 @@
 import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
 import { Code, code, imp, joinCode } from "ts-poet";
-import {
-  detectBatchMethod,
-  isEmptyType,
-  requestType,
-  responseObservable,
-  responsePromise,
-  responseType,
-} from "./types";
+import { detectBatchMethod, isEmptyType, observableType, requestType, responseObservable, responseType } from "./types";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { contextTypeVar } from "./main";
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from "./utils";
@@ -51,18 +44,25 @@ export function generateNestjsServiceController(
       params.push(code`...rest: any`);
     }
 
+    // NestJS encodes the response with @grpc/proto-loader, which leaves out any missing fields,
+    // i.e. the client receives them as their default values, so it's okay to accept partial responses
+    let outputType = responseType(ctx, methodDesc);
+    if (options.outputPartialMethods) {
+      outputType = code`${ctx.utils.DeepPartial}<${outputType}>`;
+    }
+
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     let returns: Code;
     if (isEmptyType(methodDesc.outputType)) {
       returns = code`void | Promise<void>`;
     } else if (options.returnObservable || methodDesc.serverStreaming) {
-      returns = code`${responseObservable(ctx, methodDesc)}`;
+      returns = code`${observableType(ctx)}<${outputType}>`;
     } else {
       // generate nestjs union type
       returns = code`
-        ${responsePromise(ctx, methodDesc)}
-        | ${responseObservable(ctx, methodDesc)}
-        | ${responseType(ctx, methodDesc)}
+        Promise<${outputType}>
+        | ${observableType(ctx)}<${outputType}>
+        | ${outputType}
       `;
     }
 
@@ -111,7 +111,9 @@ export function generateNestjsServiceClient(
     if (options.context) {
       params.push(code`ctx: Context`);
     }
-    params.push(code`request: ${requestType(ctx, methodDesc)}`);
+    // NestJS encodes the request with @grpc/proto-loader, which leaves out any missing fields,
+    // i.e. the server receives them as their default values, so it's okay to accept partial requests
+    params.push(code`request: ${requestType(ctx, methodDesc, options.outputPartialMethods)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
       const q = options.addNestjsRestParameter ? "" : "?";
