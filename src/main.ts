@@ -2409,7 +2409,11 @@ function valueTypeFromJson(ctx: Context, field: FieldDescriptorProto, from: stri
   } else if (isLongValueType(field) && options.forceLong === LongOption.BIGINT) {
     return code`BigInt(${from})`;
   } else if (isBytesValueType(field)) {
-    return code`new ${capitalize(valueType.toCodeString([]))}(${from})`;
+    // BytesValue is a base64 string in JSON, like a plain `bytes` field.
+    if (options.env === EnvOption.NODE) {
+      return code`Buffer.from(${ctx.utils.bytesFromBase64}(${from}))`;
+    }
+    return code`${ctx.utils.bytesFromBase64}(${from})`;
   } else {
     return code`${capitalize(valueType.toCodeString([]))}(${from})`;
   }
@@ -3059,7 +3063,7 @@ function generateToJson(
         return code`${toJson}(${wrap}(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         return code`${getMessageMethod(ctx, field.typeName, "toJSON")}(${from})`;
-      } else if (isBytes(field)) {
+      } else if (isBytes(field) || isBytesValueType(field)) {
         return code`${utils.base64FromBytes}(${from})`;
       } else if (isLongValueTypeAsObject(options, field)) {
         return code`${from}.toString()`;

@@ -75,7 +75,7 @@ describe("simple json", () => {
       enabled: true,
       coins: [1, 2],
       snacks: ["a", "b"],
-      id: new Uint8Array([1, 2, 3, 4]),
+      id: "AQIDBA==",
     };
     const s2 = SimpleWithWrappers.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
@@ -382,12 +382,7 @@ describe("simple json", () => {
           2,
         ],
         "enabled": true,
-        "id": Uint8Array [
-          1,
-          2,
-          3,
-          4,
-        ],
+        "id": "AQIDBA==",
         "name": "first",
         "snacks": [
           "a",
