@@ -1,3 +1,10 @@
+## [2.21.1](https://github.com/stephenh/ts-proto/compare/v2.21.0...v2.21.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* encode BytesValue as base64 in fromJSON and toJSON ([#1305](https://github.com/stephenh/ts-proto/issues/1305)) ([2a3fe3a](https://github.com/stephenh/ts-proto/commit/2a3fe3ab0bc9063d5e86c4431bd6a623091c1746)), closes [#1304](https://github.com/stephenh/ts-proto/issues/1304)
+
 # [2.21.0](https://github.com/stephenh/ts-proto/compare/v2.20.0...v2.21.0) (2026-11-14)
 
 
