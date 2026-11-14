@@ -1,3 +1,10 @@
+# [2.21.0](https://github.com/stephenh/ts-proto/compare/v2.20.0...v2.21.0) (2026-11-14)
+
+
+### Features
+
+* accept partial messages in NestJS services with outputPartialMethods ([#1306](https://github.com/stephenh/ts-proto/issues/1306)) ([78161b6](https://github.com/stephenh/ts-proto/commit/78161b69b6306dcb8e1ed370479aa9681c45a287)), closes [#486](https://github.com/stephenh/ts-proto/issues/486)
+
 # [2.20.0](https://github.com/stephenh/ts-proto/compare/v2.19.0...v2.20.0) (2026-11-13)
 
 
