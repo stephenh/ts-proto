@@ -73,7 +73,7 @@ export const Point: MessageFns<Point> = {
   fromJSON(object: any): Point {
     return {
       data: isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0),
-      dataWrapped: isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined,
+      dataWrapped: isSet(object.dataWrapped) ? Buffer.from(bytesFromBase64(object.dataWrapped)) : undefined,
     };
   },
 
@@ -83,7 +83,7 @@ export const Point: MessageFns<Point> = {
       obj.data = base64FromBytes(message.data);
     }
     if (message.dataWrapped !== undefined) {
-      obj.dataWrapped = message.dataWrapped;
+      obj.dataWrapped = base64FromBytes(message.dataWrapped);
     }
     return obj;
   },
