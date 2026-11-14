@@ -481,7 +481,9 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
 - With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations. See the [nestjs readme](NESTJS.markdown) for more information and implementation examples.
 
-  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, `lowerCaseServiceMethods` will be true and `outputServices` will be ignored.
+  Specifically `outputEncodeMethods`, `outputJsonMethods`, `outputPartialMethods`, and `outputClientImpl` will all be false, `lowerCaseServiceMethods` will be true and `outputServices` will be ignored.
+
+  If `outputPartialMethods=true` is set as well, the `FooServiceClient` methods will accept `DeepPartial` requests and the `FooServiceController` methods may return `DeepPartial` responses, since any missing fields are received as their default values.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter`, `returnObservable` and `useNestjsFqnServiceName` will still be false.
 
