@@ -1185,7 +1185,7 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
       enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
       coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
       snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
-      id: isSet(object.id) ? new Uint8Array(object.id) : undefined,
+      id: isSet(object.id) ? bytesFromBase64(object.id) : undefined,
     };
   },
 
@@ -1207,7 +1207,7 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
       obj.snacks = message.snacks;
     }
     if (message.id !== undefined) {
-      obj.id = message.id;
+      obj.id = base64FromBytes(message.id);
     }
     return obj;
   },
