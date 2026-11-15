@@ -39,6 +39,7 @@ Any tips or tricks for others on the migration would also be appreciated!
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
+  - [Options file](#options-file)
   - [Supported options](#supported-options)
   - [NestJS Support](#nestjs-support)
   - [Watch Mode](#watch-mode)
@@ -308,6 +309,22 @@ protobuf {
 ```
 
 Generated code will be placed in the Gradle build directory.
+
+### Options file
+
+If you pass many options, you can put them in a JSON file and pass its path with `--ts_proto_opt=optionsFile=<path>`, e.g. `--ts_proto_opt=optionsFile=ts-proto.json` with a `ts-proto.json` of:
+
+```json
+{
+  "esModuleInterop": true,
+  "forceLong": "bigint",
+  "outputServices": ["nice-grpc", "generic-definitions"],
+  "useDate": "string",
+  "Mgoogle/protobuf/empty.proto": "./google3/protobuf/empty"
+}
+```
+
+The keys and values are the same as the `--ts_proto_opt` options below, and options that can be passed multiple times (like `outputServices`) are given as arrays. The path is relative to the directory that `protoc` is run from, and any options also passed as `--ts_proto_opt`s take precedence over the ones in the file. Since the plugin reads the file itself, this needs a local `protoc-gen-ts_proto`, i.e. it doesn't work with the remote Buf Registry plugin.
 
 ### Supported options
 

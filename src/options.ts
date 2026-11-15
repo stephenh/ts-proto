@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 import { ToStringOpts } from "ts-poet/build/Code";
 
 export enum LongOption {
@@ -235,7 +236,7 @@ const nestJsOptions: Partial<Options> = {
 export function optionsFromParameter(parameter: string | undefined): Options {
   const options = defaultOptions();
   if (parameter) {
-    const parsed = parseParameter(parameter);
+    const parsed = withOptionsFile(parseParameter(parameter));
     if (parsed.nestJs) {
       Object.assign(options, nestJsOptions);
     }
@@ -413,6 +414,63 @@ function parseParameter(parameter: string): Options {
 
 function parseParamValue(value: string): string | boolean {
   return value === "true" ? true : value === "false" ? false : value;
+}
+
+// Merges the options from an `optionsFile=<path>` JSON file, if one was given, into the
+// options parsed from the protoc parameter, which take precedence over the file's values.
+function withOptionsFile(parsed: Options): Options {
+  const { optionsFile, ...params } = parsed as Options & { optionsFile?: unknown };
+  if (optionsFile === undefined) {
+    return parsed;
+  }
+  if (typeof optionsFile !== "string" || optionsFile === "") {
+    throw new Error(`optionsFile must be set to a single file path, but got '${optionsFile}'`);
+  }
+  const fromFile = readOptionsFile(optionsFile);
+  return { ...fromFile, ...params, M: { ...fromFile.M, ...params.M } };
+}
+
+// Reads a JSON object of options, e.g. `{ "useDate": "string", "outputServices": ["grpc-js", "generic-definitions"] }`,
+// and returns the same values that `parseParameter` would for the equivalent protoc parameters.
+function readOptionsFile(path: string): Options {
+  let json: unknown;
+  try {
+    json = JSON.parse(readFileSync(path, "utf-8"));
+  } catch (e) {
+    throw new Error(`Could not read optionsFile '${path}': ${(e as Error).message}`);
+  }
+  if (typeof json !== "object" || json === null || Array.isArray(json)) {
+    throw new Error(`optionsFile '${path}' must contain a JSON object of options`);
+  }
+  const options = { M: {} } as any;
+  for (const [key, value] of Object.entries(json)) {
+    if (key === "optionsFile") {
+      throw new Error(`optionsFile '${path}' can't set optionsFile`);
+    } else if (key.charAt(0) === "M") {
+      if (typeof value !== "string") {
+        throw new Error(`optionsFile '${path}' must set ${key} to a string, but got ${JSON.stringify(value)}`);
+      }
+      options.M[key.substring(1)] = value;
+    } else if (isOptionValue(value)) {
+      options[key] = normalizeOptionValue(value);
+    } else if (Array.isArray(value) && value.length > 0 && value.every(isOptionValue)) {
+      // A single-element array is the same as passing the option once
+      options[key] = value.length === 1 ? normalizeOptionValue(value[0]) : value.map(normalizeOptionValue);
+    } else {
+      throw new Error(
+        `optionsFile '${path}' must set ${key} to a string, number, boolean, or non-empty array of them, but got ${JSON.stringify(value)}`,
+      );
+    }
+  }
+  return options;
+}
+
+function isOptionValue(value: unknown): value is string | number | boolean {
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
+}
+
+function normalizeOptionValue(value: string | number | boolean): string | boolean {
+  return parseParamValue(String(value));
 }
 
 export function getTsPoetOpts(
