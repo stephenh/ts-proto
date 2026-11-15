@@ -1,3 +1,10 @@
+# [2.22.0](https://github.com/stephenh/ts-proto/compare/v2.21.1...v2.22.0) (2026-11-15)
+
+
+### Features
+
+* support reading options from a JSON file with optionsFile ([#1308](https://github.com/stephenh/ts-proto/issues/1308)) ([496dfb2](https://github.com/stephenh/ts-proto/commit/496dfb25e0af6f8e6e0333cd17c3a018012176ab)), closes [#1087](https://github.com/stephenh/ts-proto/issues/1087)
+
 ## [2.21.1](https://github.com/stephenh/ts-proto/compare/v2.21.0...v2.21.1) (2026-11-14)
 
 
