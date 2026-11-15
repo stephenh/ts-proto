@@ -1,0 +1,1 @@
+optionsFile=ts-proto-options.json

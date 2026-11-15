@@ -1,4 +1,7 @@
-import { DateOption, optionsFromParameter, ServiceOption } from "../src/options";
+import { mkdtempSync, rmSync, writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
+import { DateOption, LongOption, optionsFromParameter, ServiceOption } from "../src/options";
 
 describe("options", () => {
   it("can set outputJsonMethods with nestJs=true", () => {
@@ -295,5 +298,129 @@ describe("options", () => {
         "outputStandaloneFunctions=true can't be used with",
       );
     }
+  });
+
+  describe("optionsFile", () => {
+    let dir: string;
+
+    beforeEach(() => {
+      dir = mkdtempSync(join(tmpdir(), "ts-proto-options-"));
+    });
+
+    afterEach(() => {
+      rmSync(dir, { recursive: true, force: true });
+    });
+
+    function writeOptionsFile(contents: unknown): string {
+      const path = join(dir, "ts-proto.json");
+      writeFileSync(path, typeof contents === "string" ? contents : JSON.stringify(contents));
+      return path;
+    }
+
+    it("reads options from a JSON file", () => {
+      const path = writeOptionsFile({
+        useDate: "string",
+        esModuleInterop: true,
+        forceLong: "bigint",
+        unrecognizedEnumValue: 0,
+        outputServices: ["grpc-js", "generic-definitions"],
+        snakeToCamel: "keys",
+        "Mgoogle/protobuf/empty.proto": "./google3/protobuf/empty",
+      });
+      const options = optionsFromParameter(`optionsFile=${path}`);
+      expect(options).toMatchObject({
+        useDate: DateOption.STRING,
+        esModuleInterop: true,
+        forceLong: LongOption.BIGINT,
+        unrecognizedEnumValue: 0,
+        outputServices: [ServiceOption.GRPC, ServiceOption.GENERIC],
+        snakeToCamel: ["keys", "json"],
+        M: { "google/protobuf/empty.proto": "./google3/protobuf/empty" },
+      });
+      expect(options).not.toHaveProperty("optionsFile");
+    });
+
+    it("treats values the same as protoc parameters", () => {
+      const path = writeOptionsFile({ useDate: true, outputJsonMethods: "false", outputServices: ["false"] });
+      expect(optionsFromParameter(`optionsFile=${path}`)).toEqual(
+        optionsFromParameter("useDate=true,outputJsonMethods=false,outputServices=false"),
+      );
+    });
+
+    it("applies the nestJs defaults from the file", () => {
+      const path = writeOptionsFile({ nestJs: "client", outputJsonMethods: true });
+      expect(optionsFromParameter(`optionsFile=${path}`)).toMatchObject({
+        nestJs: ["client"],
+        lowerCaseServiceMethods: true,
+        outputEncodeMethods: false,
+        outputJsonMethods: true,
+      });
+    });
+
+    it("lets protoc parameters override the file", () => {
+      const path = writeOptionsFile({
+        useDate: "string",
+        stringEnums: true,
+        outputServices: ["grpc-js", "generic-definitions"],
+        "Mfoo.proto": "./foo",
+        "Mbar.proto": "./bar",
+      });
+      const options = optionsFromParameter(
+        `useDate=false,optionsFile=${path},outputServices=nice-grpc,Mbar.proto=./baz`,
+      );
+      expect(options).toMatchObject({
+        useDate: DateOption.TIMESTAMP,
+        stringEnums: true,
+        outputServices: [ServiceOption.NICE_GRPC],
+        M: { "foo.proto": "./foo", "bar.proto": "./baz" },
+      });
+    });
+
+    it("rejects a missing file", () => {
+      const path = join(dir, "missing.json");
+      expect(() => optionsFromParameter(`optionsFile=${path}`)).toThrow(`Could not read optionsFile '${path}'`);
+    });
+
+    it("rejects invalid JSON", () => {
+      const path = writeOptionsFile("useDate=string");
+      expect(() => optionsFromParameter(`optionsFile=${path}`)).toThrow(`Could not read optionsFile '${path}'`);
+    });
+
+    it("rejects JSON that isn't an object", () => {
+      const path = writeOptionsFile(["useDate=string"]);
+      expect(() => optionsFromParameter(`optionsFile=${path}`)).toThrow(
+        `optionsFile '${path}' must contain a JSON object of options`,
+      );
+    });
+
+    it("rejects values that can't be protoc parameters", () => {
+      for (const value of [null, {}, [], [["grpc-js"]]]) {
+        const path = writeOptionsFile({ outputServices: value });
+        expect(() => optionsFromParameter(`optionsFile=${path}`)).toThrow(
+          `optionsFile '${path}' must set outputServices to a string, number, boolean, or non-empty array of them, but got ${JSON.stringify(value)}`,
+        );
+      }
+    });
+
+    it("rejects M options that aren't strings", () => {
+      const path = writeOptionsFile({ "Mfoo.proto": true });
+      expect(() => optionsFromParameter(`optionsFile=${path}`)).toThrow(
+        `optionsFile '${path}' must set Mfoo.proto to a string, but got true`,
+      );
+    });
+
+    it("rejects nested options files", () => {
+      const path = writeOptionsFile({ optionsFile: "other.json" });
+      expect(() => optionsFromParameter(`optionsFile=${path}`)).toThrow(`optionsFile '${path}' can't set optionsFile`);
+    });
+
+    it("rejects an optionsFile that isn't a single path", () => {
+      expect(() => optionsFromParameter("optionsFile=true")).toThrow(
+        "optionsFile must be set to a single file path, but got 'true'",
+      );
+      expect(() => optionsFromParameter("optionsFile=a.json,optionsFile=b.json")).toThrow(
+        "optionsFile must be set to a single file path, but got 'a.json,b.json'",
+      );
+    });
   });
 });

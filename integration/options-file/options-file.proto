@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package optionsFile;
+
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_ACTIVE = 1;
+}
+
+message Event {
+  string event_id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  Status status = 3;
+}
