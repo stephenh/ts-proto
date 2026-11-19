@@ -1,3 +1,10 @@
+# [2.23.0](https://github.com/stephenh/ts-proto/compare/v2.22.0...v2.23.0) (2026-11-19)
+
+
+### Features
+
+* add nestJsStructEncodeWrappers to fix Struct encoding with nestJs and other services ([#1310](https://github.com/stephenh/ts-proto/issues/1310)) ([bc7366a](https://github.com/stephenh/ts-proto/commit/bc7366aebe785d483159f14895fe664b909cde7e))
+
 # [2.22.0](https://github.com/stephenh/ts-proto/compare/v2.21.1...v2.22.0) (2026-11-15)
 
 
