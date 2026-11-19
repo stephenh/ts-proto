@@ -13,6 +13,14 @@ export type StructFieldNames = {
   listValue: string;
 };
 
+/**
+ * Suffix for the method names of the NestJS/protobufjs flavored (deep) wrappers.
+ *
+ * It is empty when they are the only wrappers, and `"Deep"` when they live next to the ts-proto flavored
+ * (shallow) wrappers, which is the case when ts-proto's own `encode`/`decode` methods are generated as well.
+ */
+export type DeepSuffix = "" | "Deep";
+
 /** Whether we need to generate `.wrap` and `.unwrap` methods for the given type. */
 export function isWrapperType(fullProtoTypeName: string): boolean {
   return (
@@ -28,18 +36,23 @@ export function isWrapperType(fullProtoTypeName: string): boolean {
  *
  * We do this deeply b/c NestJS does not invoke wrappers recursively.
  */
-export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
+export function generateWrapDeep(
+  ctx: Context,
+  fullProtoTypeName: string,
+  fieldNames: StructFieldNames,
+  suffix: DeepSuffix = "",
+): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = `struct.fields[key] = ${wrapTypeName(ctx.options, "Value")}.wrap(object[key]);`;
+    let setStatement = `struct.fields[key] = ${wrapTypeName(ctx.options, "Value")}.wrap${suffix}(object[key]);`;
     let defaultFields = "struct.fields ??= {};";
     if (ctx.options.useMapType) {
-      setStatement = `struct.fields.set(key, ${wrapTypeName(ctx.options, "Value")}.wrap(object[key]));`;
+      setStatement = `struct.fields.set(key, ${wrapTypeName(ctx.options, "Value")}.wrap${suffix}(object[key]));`;
       defaultFields = "struct.fields ??= new Map<string, any | undefined>();";
     }
     if (ctx.options.useOptionals !== "all") defaultFields = "";
 
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
+    chunks.push(code`wrap${suffix}(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
@@ -53,7 +66,7 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     // Turn ts-proto representation --> proto representation
-    chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+    chunks.push(code`wrap${suffix}(value: any): ${wrapTypeName(ctx.options, "Value")} {
       const result = {} as any;
       if (value === null) {
         result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE;
@@ -64,9 +77,9 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
       } else if (typeof value === 'string') {
         result.${fieldNames.stringValue} = value;
       } else if (${ctx.utils.globalThis}.Array.isArray(value)) {
-        result.${fieldNames.listValue} = ${wrapTypeName(ctx.options, "ListValue")}.wrap(value);
+        result.${fieldNames.listValue} = ${wrapTypeName(ctx.options, "ListValue")}.wrap${suffix}(value);
       } else if (typeof value === 'object') {
-        result.${fieldNames.structValue} = ${wrapTypeName(ctx.options, "Struct")}.wrap(value);
+        result.${fieldNames.structValue} = ${wrapTypeName(ctx.options, "Struct")}.wrap${suffix}(value);
       } else if (typeof value !== 'undefined') {
         throw new ${ctx.utils.globalThis}.Error('Unsupported any value type: ' + typeof value);
       }
@@ -76,14 +89,15 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
 
   if (isListValueTypeName(fullProtoTypeName)) {
     const maybeReadyOnly = ctx.options.useReadonlyTypes ? "Readonly" : "";
-    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
+    chunks.push(code`wrap${suffix}(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
       const result = createBase${wrapTypeName(ctx.options, "ListValue")}()${maybeAsAny(ctx.options)};
-      result.values = (array ?? []).map(${wrapTypeName(ctx.options, "Value")}.wrap);
+      result.values = (array ?? []).map(${wrapTypeName(ctx.options, "Value")}.wrap${suffix});
       return result;
     }`);
   }
 
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
+  // FieldMask has no deep flavor; protobufjs and ts-proto share the same shape.
+  if (isFieldMaskTypeName(fullProtoTypeName) && suffix === "") {
     chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): ${wrapTypeName(ctx.options, "FieldMask")} {
       const result = createBase${wrapTypeName(ctx.options, "FieldMask")}()${maybeAsAny(ctx.options)};
       result.paths = paths;
@@ -99,25 +113,30 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
  *
  * We do this deeply b/c NestJS does not invoke wrappers recursively.
  */
-export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
+export function generateUnwrapDeep(
+  ctx: Context,
+  fullProtoTypeName: string,
+  fieldNames: StructFieldNames,
+  suffix: DeepSuffix = "",
+): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
+      chunks.push(code`unwrap${suffix}(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of message.fields.keys()) {
-            object[key] = Value.unwrap(message.fields.get(key));
+            object[key] = Value.unwrap${suffix}(message.fields.get(key));
           }
         }
         return object;
       }`);
     } else {
-      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
+      chunks.push(code`unwrap${suffix}(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of ${ctx.utils.globalThis}.Object.keys(message.fields)) {
-            object[key] = Value.unwrap(message.fields[key]);
+            object[key] = Value.unwrap${suffix}(message.fields[key]);
           }
         }
         return object;
@@ -129,7 +148,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
     // We check hasOwnProperty because the incoming `message` has been serde-ing
     // by the NestJS/protobufjs runtime, and so has a base class with default values
     // that throw off the simpler checks we do in generateUnwrapShallow
-    chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+    chunks.push(code`unwrap${suffix}(message: any): string | number | boolean | Object | null | Array<any> | undefined {
       if (message?.hasOwnProperty('${fieldNames.stringValue}') && message.${fieldNames.stringValue} !== undefined) {
         return message.${fieldNames.stringValue};
       } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${
@@ -141,9 +160,9 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
       } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${
         fieldNames.structValue
       } !== undefined) {
-        return ${wrapTypeName(ctx.options, "Struct")}.unwrap(message.${fieldNames.structValue} as any);
+        return ${wrapTypeName(ctx.options, "Struct")}.unwrap${suffix}(message.${fieldNames.structValue} as any);
       } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
-        return ${wrapTypeName(ctx.options, "ListValue")}.unwrap(message.${fieldNames.listValue});
+        return ${wrapTypeName(ctx.options, "ListValue")}.unwrap${suffix}(message.${fieldNames.listValue});
       } else if (message?.hasOwnProperty('${fieldNames.nullValue}') && message?.${fieldNames.nullValue} !== undefined) {
         return null;
       }
@@ -152,18 +171,18 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${
+    chunks.push(code`unwrap${suffix}(message: ${
       ctx.options.useReadonlyTypes ? "any" : wrapTypeName(ctx.options, "ListValue")
     }): Array<any> {
       if (message?.hasOwnProperty('values') && ${ctx.utils.globalThis}.Array.isArray(message.values)) {
-        return message.values.map(Value.unwrap);
+        return message.values.map(Value.unwrap${suffix});
       } else {
         return message as any;
       }
     }`);
   }
 
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
+  if (isFieldMaskTypeName(fullProtoTypeName) && suffix === "") {
     chunks.push(generateFieldMaskUnwrap(ctx));
   }
 

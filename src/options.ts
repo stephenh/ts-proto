@@ -96,6 +96,7 @@ export type Options = {
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: Array<"client" | "server">;
+  nestJsStructEncodeWrappers: boolean;
   env: EnvOption;
   unrecognizedEnum: boolean;
   unrecognizedEnumName: string;
@@ -179,6 +180,7 @@ export function defaultOptions(): Options {
     addNestjsRestParameter: false,
     useNestjsFqnServiceName: false,
     nestJs: [],
+    nestJsStructEncodeWrappers: false,
     env: EnvOption.BOTH,
     unrecognizedEnum: true,
     unrecognizedEnumName: "UNRECOGNIZED",
