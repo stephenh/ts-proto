@@ -224,7 +224,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             (options.outputDecodeIncludeTypes === "" ||
               new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))) ||
           options.outputPartialMethods ||
-          (outputWrapAndUnwrap && !(options.nestJs.length > 0 && isAnyValueTypeName(fullTypeName)))
+          (outputWrapAndUnwrap && !(usesDeepWrappersOnly(options) && isAnyValueTypeName(fullTypeName)))
         ) {
           chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
         }
@@ -311,8 +311,15 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           listValue: getFieldName({ name: "list_value", jsonName: snakeToCamel("list_value") }, ctx.options),
         };
         if (options.nestJs.length > 0) {
-          staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames));
-          staticMembers.push(...generateUnwrapDeep(ctx, fullTypeName, structFieldNames));
+          // NestJS/protobufjs needs the deep wrappers, but ts-proto's own encode/decode methods need the
+          // shallow ones, so when both exist the deep ones are generated as `wrapDeep`/`unwrapDeep`.
+          const deepSuffix = hasShallowAndDeepWrappers(options) ? "Deep" : "";
+          if (deepSuffix) {
+            staticMembers.push(...generateWrapShallow(ctx, fullTypeName, structFieldNames));
+            staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
+          }
+          staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames, deepSuffix));
+          staticMembers.push(...generateUnwrapDeep(ctx, fullTypeName, structFieldNames, deepSuffix));
         } else {
           staticMembers.push(...generateWrapShallow(ctx, fullTypeName, structFieldNames));
           staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
@@ -564,13 +571,27 @@ function hasStructTypeField(message: DescriptorProto): boolean {
   return hasField(message, isStructType);
 }
 
+/**
+ * Whether NestJS is used together with ts-proto's own encode methods, which want differently shaped wrappers,
+ * and the user opted into generating both (`nestJsStructEncodeWrappers=true`).
+ */
+function hasShallowAndDeepWrappers(options: Options): boolean {
+  return options.nestJs.length > 0 && options.nestJsStructEncodeWrappers && !!options.outputEncodeMethods;
+}
+
+/** Whether only the NestJS flavored (deep) wrappers are generated. */
+function usesDeepWrappersOnly(options: Options): boolean {
+  return options.nestJs.length > 0 && !hasShallowAndDeepWrappers(options);
+}
+
 function makeProtobufStructWrapper(options: Options) {
   const wrappers = imp("wrappers@protobufjs");
   const Struct = impProto(options, "google/protobuf/struct", wrapTypeName(options, "Struct"));
+  const suffix = hasShallowAndDeepWrappers(options) ? "Deep" : "";
   return code`
     ${wrappers}['.google.protobuf.Struct'] = {
-      fromObject: ${Struct}.wrap,
-      toObject: ${Struct}.unwrap,
+      fromObject: ${Struct}.wrap${suffix},
+      toObject: ${Struct}.unwrap${suffix},
     } as any;`;
 }
 
@@ -902,12 +923,18 @@ function makeMessageFns(
     `,
   );
 
+  const doc =
+    "/** Only for protobufjs' `wrappers` registration: the result has protobufjs' shape, not the message's, so don't pass it to `encode`. */\n";
+  const deepMembers = (members: string) => (hasShallowAndDeepWrappers(options) ? members : "");
+
   const StructWrapperFns = conditionalOutput(
     "StructWrapperFns",
     code`
       ${maybeExport} interface StructWrapperFns {
         wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(options, "Struct")};
         unwrap(message: ${wrapTypeName(options, "Struct")}): {[key: string]: any};
+        ${deepMembers(`${doc}wrapDeep(object: {[key: string]: any} | undefined): unknown;
+        unwrapDeep(message: ${wrapTypeName(options, "Struct")}): {[key: string]: any};`)}
       }
     `,
   );
@@ -918,6 +945,8 @@ function makeMessageFns(
       ${maybeExport} interface AnyValueWrapperFns {
         wrap(value: any): ${wrapTypeName(options, "Value")};
         unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
+        ${deepMembers(`${doc}wrapDeep(value: any): unknown;
+        unwrapDeep(message: any): string | number | boolean | Object | null | Array<any> | undefined;`)}
       }
     `,
   );
@@ -931,6 +960,8 @@ function makeMessageFns(
           "ListValue",
         )};
         unwrap(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "ListValue")}): Array<any>;
+        ${deepMembers(`${doc}wrapDeep(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): unknown;
+        unwrapDeep(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "ListValue")}): Array<any>;`)}
       }
     `,
   );

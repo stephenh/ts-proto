@@ -39,6 +39,7 @@ describe("options", () => {
           "client",
           "server",
         ],
+        "nestJsStructEncodeWrappers": false,
         "noDefaultsForOptionals": false,
         "oneof": "properties",
         "onlyTypes": false,

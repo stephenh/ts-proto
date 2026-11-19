@@ -504,6 +504,10 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter`, `returnObservable` and `useNestjsFqnServiceName` will still be false.
 
+- With `--ts_proto_opt=nestJsStructEncodeWrappers=true`, `google.protobuf.Struct`/`Value`/`ListValue` can also be encoded with ts-proto's own `encode` methods when `nestJs=true` is combined with other `outputServices` (e.g. `grpc-js`). The `wrap`/`unwrap` methods then produce the shape ts-proto's `encode`/`decode` expect (honoring `oneof=unions`), and the NestJS/protobufjs flavored ones are generated as `wrapDeep`/`unwrapDeep` instead, which is what the protobufjs `wrappers` registration uses. `wrapDeep` is typed as returning `unknown` because its result has protobufjs' shape rather than the message's, so it isn't meant to be passed to `encode`. This changes the output of `wrap`/`unwrap`, so it's opt-in.
+
+  (Requires `nestJs=true`.)
+
 - With `--ts_proto_opt=nestJs=client` or `--ts_proto_opt=nestJs=server`, only the client-side or server-side NestJS service output will be generated, with the same changed defaults as `nestJs=true`.
 
   With `nestJs=client`, only the `FooServiceClient` interface is generated, i.e. there is no `FooServiceController` interface or `@FooServiceControllerMethods()` decorator, so the output doesn't import `@nestjs/microservices`. With `nestJs=server`, only the controller interface and decorator are generated. The message types and the `FOO_PACKAGE_NAME`/`FOO_SERVICE_NAME` consts are generated in both cases.
