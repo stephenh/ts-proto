@@ -1,3 +1,10 @@
+## [2.23.2](https://github.com/stephenh/ts-proto/compare/v2.23.1...v2.23.2) (2026-11-19)
+
+
+### Bug Fixes
+
+* accept duration strings in Duration.fromJSON with default options ([#1313](https://github.com/stephenh/ts-proto/issues/1313)) ([7254cb8](https://github.com/stephenh/ts-proto/commit/7254cb89cdd4577b83cba74062bfc40425e31759)), closes [#1304](https://github.com/stephenh/ts-proto/issues/1304)
+
 ## [2.23.1](https://github.com/stephenh/ts-proto/compare/v2.23.0...v2.23.1) (2026-11-19)
 
 
