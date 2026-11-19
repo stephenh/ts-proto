@@ -45,6 +45,11 @@ describe("fieldmask-optional-all", () => {
     expect(f).toEqual({ mask: undefined });
   });
 
+  it("converts paths between snake_case and lowerCamelCase JSON", () => {
+    expect(Example.toJSON({ mask: ["foo_bar", "baz.qux_quux"] })).toEqual({ mask: "fooBar,baz.quxQuux" });
+    expect(Example.fromJSON({ mask: "fooBar,baz.quxQuux" })).toEqual({ mask: ["foo_bar", "baz.qux_quux"] });
+  });
+
   it("skips empty paths", () => {
     const f = Example.fromJSON({ mask: "a,,c.d" });
     expect(f).toMatchInlineSnapshot(`

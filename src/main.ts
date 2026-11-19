@@ -2531,10 +2531,15 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     messageDesc.field.filter(isWithinOneOf).filter((field) => field.oneofIndex === oneofIndex),
   );
 
+  // The canonical JSON of a FieldMask has lowerCamelCase paths, so convert them back to the proto field names,
+  // unless the JSON keys are kept in snake case as well.
+  const fieldMaskPathFromJson = options.snakeToCamel.includes("json")
+    ? code`.map((path: string) => path.replace(/[A-Z]/g, (c) => "_" + c.toLowerCase()))`
+    : "";
   const canonicalFromJson: { [key: string]: { [field: string]: (from: string) => Code } } = {
     ["google.protobuf.FieldMask"]: {
       paths: (from: string) => code`typeof(${from}) === 'string'
-        ? ${from}.split(",").filter(${ctx.utils.globalThis}.Boolean)
+        ? ${from}.split(",").filter(${ctx.utils.globalThis}.Boolean)${fieldMaskPathFromJson}
         : ${ctx.utils.globalThis}.Array.isArray(${from}?.paths)
         ? ${from}.paths.map(${ctx.utils.globalThis}.String)
         : []`,
@@ -2851,14 +2856,18 @@ function generateCanonicalToJson(
   options: Options,
   utils: Utils,
 ): Code | undefined {
-  const { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong } = options;
+  const { useOptionals, useNullAsOptional, useDuration, useJsonTimestamp, forceLong, snakeToCamel } = options;
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
     const pathModifier = useOptionals === "all" ? "?" : "";
+    // The canonical JSON of a FieldMask has lowerCamelCase paths, unless the JSON keys are kept in snake case as well.
+    const pathToJson = snakeToCamel.includes("json")
+      ? code`.map((path) => path.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase()))`
+      : "";
 
     return code`
     ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): ${returnType} {
-      return message.paths${pathModifier}.join(',');
+      return message.paths${pathModifier}${pathToJson}.join(',');
     }
   `;
   }
