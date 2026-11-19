@@ -143,6 +143,24 @@ export const Duration: MessageFns<Duration> = {
   },
 
   fromJSON(object: any): Duration {
+    if (typeof object === "string") {
+      if (!object.endsWith("s")) {
+        throw new Error("Invalid duration string");
+      }
+      const body = object.slice(0, -1);
+      const negative = body.startsWith("-");
+      const unsigned = negative ? body.slice(1) : body;
+      const dot = unsigned.indexOf(".");
+      const secondsStr = dot < 0 ? unsigned : unsigned.slice(0, dot);
+      const fracStr = dot < 0 ? "" : unsigned.slice(dot + 1);
+      if (secondsStr.length === 0) {
+        throw new Error("Invalid duration string");
+      }
+      const seconds = negative && secondsStr !== "0" ? -Number(secondsStr) : Number(secondsStr);
+      const nanosAbs = fracStr === "" ? 0 : Number(fracStr.padEnd(9, "0").slice(0, 9));
+      const nanos = negative && nanosAbs !== 0 ? -nanosAbs : nanosAbs;
+      return { seconds, nanos };
+    }
     return {
       seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
       nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0,
