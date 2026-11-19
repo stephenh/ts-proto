@@ -11,6 +11,7 @@ describe("proto2-optionals", () => {
     const encoded = OptionalsTest.encode(message).finish();
     const decoded = OptionalsTest.decode(encoded);
 
-    expect(decoded).toEqual(message);
+    // the float default is now on the wire, so it comes back with float32 precision
+    expect(decoded).toEqual({ ...message, reqDefvalFloat: expect.closeTo(message.reqDefvalFloat, 5) });
   });
 });
