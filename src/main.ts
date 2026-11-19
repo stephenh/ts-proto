@@ -459,8 +459,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   }
 
   if (options.context && options.useContextDataloaders) {
-    chunks.push(generateDataLoaderOptionsType());
-    chunks.push(generateDataLoadersType());
+    chunks.push(generateDataLoaderOptionsType(ctx));
+    chunks.push(generateDataLoadersType(ctx));
   }
 
   if (options.outputSchema) {
