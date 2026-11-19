@@ -2439,7 +2439,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   }
 
   // Handle Duration string format as a special case
-  if (fullTypeName === "google.protobuf.Duration" && ctx.options.useDuration === DurationOption.STRING) {
+  if (fullTypeName === "google.protobuf.Duration") {
     let parseSeconds: Code;
     switch (ctx.options.forceLong) {
       case LongOption.BIGINT:
@@ -2457,26 +2457,41 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         parseSeconds = code`negative && secondsStr !== "0" ? -Number(secondsStr) : Number(secondsStr)`;
         break;
     }
-    return code`
-      ${messageMethodHead(options, fullName, "fromJSON")}(object: string): ${fullName} {
-        if (!object.endsWith("s")) throw new Error("Invalid duration string");
-        const body = object.slice(0, -1);
-        const negative = body.startsWith("-");
-        const unsigned = negative ? body.slice(1) : body;
-        const dot = unsigned.indexOf(".");
-        const secondsStr = dot < 0 ? unsigned : unsigned.slice(0, dot);
-        const fracStr = dot < 0 ? "" : unsigned.slice(dot + 1);
-        if (secondsStr.length === 0) throw new Error("Invalid duration string");
-        const seconds = ${parseSeconds};
-        const nanosAbs = fracStr === "" ? 0 : Number(fracStr.padEnd(9, "0").slice(0, 9));
-        const nanos = negative && nanosAbs !== 0 ? -nanosAbs : nanosAbs;
-        return { seconds, nanos };
-      }
+    const typeField = addTypeToMessages(options)
+      ? options.outputStandaloneFunctions
+        ? code`$type: '${fullTypeName}', `
+        : code`$type: ${fullName}.$type, `
+      : code``;
+    const parseDurationString = code`
+      if (!object.endsWith("s")) throw new Error("Invalid duration string");
+      const body = object.slice(0, -1);
+      const negative = body.startsWith("-");
+      const unsigned = negative ? body.slice(1) : body;
+      const dot = unsigned.indexOf(".");
+      const secondsStr = dot < 0 ? unsigned : unsigned.slice(0, dot);
+      const fracStr = dot < 0 ? "" : unsigned.slice(dot + 1);
+      if (secondsStr.length === 0) throw new Error("Invalid duration string");
+      const seconds = ${parseSeconds};
+      const nanosAbs = fracStr === "" ? 0 : Number(fracStr.padEnd(9, "0").slice(0, 9));
+      const nanos = negative && nanosAbs !== 0 ? -nanosAbs : nanosAbs;
+      return { ${typeField}seconds, nanos };
     `;
-  }
-
-  // create the basic function declaration
-  if (fullTypeName === "google.protobuf.Timestamp") {
+    if (ctx.options.useDuration === DurationOption.STRING) {
+      return code`
+        ${messageMethodHead(options, fullName, "fromJSON")}(object: string): ${fullName} {
+          ${parseDurationString}
+        }
+      `;
+    }
+    // The canonical JSON of a Duration is a string ending in "s"; the object form is still accepted.
+    chunks.push(code`
+      ${messageMethodHead(options, fullName, "fromJSON")}(object: any): ${fullName} {
+        if (typeof object === "string") {
+          ${parseDurationString}
+        }
+        return {
+    `);
+  } else if (fullTypeName === "google.protobuf.Timestamp") {
     // The canonical JSON of a Timestamp is an RFC 3339 string; the object form is still accepted.
     chunks.push(code`
       ${messageMethodHead(options, fullName, "fromJSON")}(object: any): ${fullName} {

@@ -26,6 +26,30 @@ describe("anyType=@type (the default)", () => {
     const json = Any.toJSON(durationAny);
     expect(json).toEqual({ "@type": durationUrl, value: Duration.toJSON(duration) });
     expect(Duration.decode(Any.fromJSON(json).value)).toEqual(duration);
+    expect(Duration.decode(Any.fromJSON({ "@type": durationUrl, value: "3.000000500s" }).value)).toEqual(duration);
+  });
+
+  it("parses canonical duration strings in Duration.fromJSON with default useDuration", () => {
+    expect(Duration.fromJSON("1.5s")).toEqual({
+      $type: "google.protobuf.Duration",
+      seconds: 1,
+      nanos: 500_000_000,
+    });
+    expect(Duration.fromJSON("-1.500s")).toEqual({
+      $type: "google.protobuf.Duration",
+      seconds: -1,
+      nanos: -500_000_000,
+    });
+    expect(Duration.fromJSON({ seconds: 1, nanos: 500_000_000 })).toEqual({
+      $type: "google.protobuf.Duration",
+      seconds: 1,
+      nanos: 500_000_000,
+    });
+    expect(Holder.fromJSON({ timeout: "1.5s" }).timeout).toEqual({
+      $type: "google.protobuf.Duration",
+      seconds: 1,
+      nanos: 500_000_000,
+    });
   });
 
   it("round-trips Any fields of other messages through JSON.stringify", () => {
