@@ -1,3 +1,10 @@
+## [2.23.1](https://github.com/stephenh/ts-proto/compare/v2.23.0...v2.23.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* respect exportCommonSymbols for dataloader types ([#1311](https://github.com/stephenh/ts-proto/issues/1311)) ([8b6537c](https://github.com/stephenh/ts-proto/commit/8b6537c70f1c9505483ccdb49a50748c14819065)), closes [#532](https://github.com/stephenh/ts-proto/issues/532)
+
 # [2.23.0](https://github.com/stephenh/ts-proto/compare/v2.22.0...v2.23.0) (2026-11-19)
 
 
