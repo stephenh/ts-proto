@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+message StructMessage {
+  google.protobuf.Struct value = 1;
+  google.protobuf.Value any = 2;
+  google.protobuf.ListValue list = 3;
+}

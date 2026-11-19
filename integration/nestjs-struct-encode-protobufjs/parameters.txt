@@ -1,0 +1,1 @@
+nestJs=true,nestJsStructEncodeWrappers=true,outputServices=grpc-js
