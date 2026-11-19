@@ -1,0 +1,10 @@
+syntax = "proto3";
+package bar;
+
+message Bar {
+  string name = 1;
+}
+
+service BarService {
+  rpc GetBar(Bar) returns (Bar);
+}

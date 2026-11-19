@@ -476,19 +476,21 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   return joinCode(chunks, { on: "\n" });
 }
 
-export function generateDataLoadersType(): Code {
+export function generateDataLoadersType(ctx: Context): Code {
+  const maybeExport = ctx.options.exportCommonSymbols ? "export" : "";
   // TODO Maybe should be a generic `Context.get<T>(id, () => T): T` method
   return code`
-    export interface DataLoaders {
+    ${maybeExport} interface DataLoaders {
       rpcDataLoaderOptions?: DataLoaderOptions;
       getDataLoader<T>(identifier: string, constructorFn: () => T): T;
     }
   `;
 }
 
-export function generateDataLoaderOptionsType(): Code {
+export function generateDataLoaderOptionsType(ctx: Context): Code {
+  const maybeExport = ctx.options.exportCommonSymbols ? "export" : "";
   return code`
-    export interface DataLoaderOptions {
+    ${maybeExport} interface DataLoaderOptions {
       cache?: boolean;
     }
   `;
