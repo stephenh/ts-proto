@@ -2114,9 +2114,14 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         isJsType && options.forceLong === LongOption.BIGINT
           ? writeSnippet(`BigInt(${messageProperty})`)
           : writeSnippet(`${messageProperty}`);
+      // proto2 required fields always go on the wire, even when they match the default value
+      const check =
+        field.label === FieldDescriptorProto_Label.LABEL_REQUIRED
+          ? code`${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(options, messageProperty)}`
+          : notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`);
 
       chunks.push(code`
-        if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
+        if (${check}) {
           ${body};
         }
       `);
