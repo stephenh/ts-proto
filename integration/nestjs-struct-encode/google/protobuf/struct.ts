@@ -156,7 +156,7 @@ export const Struct: MessageFns<Struct> & StructWrapperFns = {
     return object;
   },
 
-  wrapDeep(object: { [key: string]: any } | undefined): Struct {
+  wrapDeep(object: { [key: string]: any } | undefined): unknown {
     const struct = createBaseStruct();
 
     if (object !== undefined) {
@@ -381,7 +381,7 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
     }
   },
 
-  wrapDeep(value: any): Value {
+  wrapDeep(value: any): unknown {
     const result = {} as any;
     if (value === null) {
       result.null_value = NullValue.NULL_VALUE;
@@ -478,7 +478,7 @@ export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
     }
   },
 
-  wrapDeep(array: Array<any> | undefined): ListValue {
+  wrapDeep(array: Array<any> | undefined): unknown {
     const result = createBaseListValue();
     result.values = (array ?? []).map(Value.wrapDeep);
     return result;
@@ -503,20 +503,23 @@ export interface MessageFns<T> {
 export interface StructWrapperFns {
   wrap(object: { [key: string]: any } | undefined): Struct;
   unwrap(message: Struct): { [key: string]: any };
-  wrapDeep(object: { [key: string]: any } | undefined): Struct;
+  /** Only for protobufjs' `wrappers` registration: the result has protobufjs' shape, not the message's, so don't pass it to `encode`. */
+  wrapDeep(object: { [key: string]: any } | undefined): unknown;
   unwrapDeep(message: Struct): { [key: string]: any };
 }
 
 export interface AnyValueWrapperFns {
   wrap(value: any): Value;
   unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
-  wrapDeep(value: any): Value;
+  /** Only for protobufjs' `wrappers` registration: the result has protobufjs' shape, not the message's, so don't pass it to `encode`. */
+  wrapDeep(value: any): unknown;
   unwrapDeep(message: any): string | number | boolean | Object | null | Array<any> | undefined;
 }
 
 export interface ListValueWrapperFns {
   wrap(array: Array<any> | undefined): ListValue;
   unwrap(message: ListValue): Array<any>;
-  wrapDeep(array: Array<any> | undefined): ListValue;
+  /** Only for protobufjs' `wrappers` registration: the result has protobufjs' shape, not the message's, so don't pass it to `encode`. */
+  wrapDeep(array: Array<any> | undefined): unknown;
   unwrapDeep(message: ListValue): Array<any>;
 }

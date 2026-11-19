@@ -34,7 +34,7 @@ describe("nestjs-struct-encode", () => {
   });
 
   it("still provides the deep wrappers for protobufjs", () => {
-    const wrapped = Struct.wrapDeep({ a: { b: [1, "x", null] } });
+    const wrapped = Struct.wrapDeep({ a: { b: [1, "x", null] } }) as Struct;
     expect(wrapped.fields?.get("a")).toEqual({
       struct_value: {
         fields: new Map([
@@ -43,5 +43,10 @@ describe("nestjs-struct-encode", () => {
       },
     });
     expect(Struct.unwrapDeep(wrapped)).toEqual({ a: { b: [1, "x", null] } });
+  });
+
+  it("does not accept the protobufjs-shaped wrapDeep result as a message", () => {
+    // @ts-expect-error wrapDeep is typed `unknown`, so it can't be passed to ts-proto's encode by accident
+    Value.encode(Value.wrapDeep("hello"));
   });
 });

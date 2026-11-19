@@ -43,6 +43,9 @@ export function generateWrapDeep(
   suffix: DeepSuffix = "",
 ): Code[] {
   const chunks: Code[] = [];
+  // The deep result has protobufjs' shape, so next to the shallow wrappers it must not be typed as the message,
+  // otherwise it would be accepted by ts-proto's `encode` methods, which would silently encode nothing.
+  const returnType = (name: string) => (suffix ? "unknown" : wrapTypeName(ctx.options, name));
   if (isStructTypeName(fullProtoTypeName)) {
     let setStatement = `struct.fields[key] = ${wrapTypeName(ctx.options, "Value")}.wrap${suffix}(object[key]);`;
     let defaultFields = "struct.fields ??= {};";
@@ -52,7 +55,7 @@ export function generateWrapDeep(
     }
     if (ctx.options.useOptionals !== "all") defaultFields = "";
 
-    chunks.push(code`wrap${suffix}(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
+    chunks.push(code`wrap${suffix}(object: {[key: string]: any} | undefined): ${returnType("Struct")} {
       const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
@@ -66,7 +69,7 @@ export function generateWrapDeep(
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     // Turn ts-proto representation --> proto representation
-    chunks.push(code`wrap${suffix}(value: any): ${wrapTypeName(ctx.options, "Value")} {
+    chunks.push(code`wrap${suffix}(value: any): ${returnType("Value")} {
       const result = {} as any;
       if (value === null) {
         result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue", "enum")}.NULL_VALUE;
@@ -89,7 +92,7 @@ export function generateWrapDeep(
 
   if (isListValueTypeName(fullProtoTypeName)) {
     const maybeReadyOnly = ctx.options.useReadonlyTypes ? "Readonly" : "";
-    chunks.push(code`wrap${suffix}(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
+    chunks.push(code`wrap${suffix}(array: ${maybeReadyOnly}Array<any> | undefined): ${returnType("ListValue")} {
       const result = createBase${wrapTypeName(ctx.options, "ListValue")}()${maybeAsAny(ctx.options)};
       result.values = (array ?? []).map(${wrapTypeName(ctx.options, "Value")}.wrap${suffix});
       return result;

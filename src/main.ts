@@ -923,6 +923,8 @@ function makeMessageFns(
     `,
   );
 
+  const doc =
+    "/** Only for protobufjs' `wrappers` registration: the result has protobufjs' shape, not the message's, so don't pass it to `encode`. */\n";
   const deepMembers = (members: string) => (hasShallowAndDeepWrappers(options) ? members : "");
 
   const StructWrapperFns = conditionalOutput(
@@ -931,7 +933,7 @@ function makeMessageFns(
       ${maybeExport} interface StructWrapperFns {
         wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(options, "Struct")};
         unwrap(message: ${wrapTypeName(options, "Struct")}): {[key: string]: any};
-        ${deepMembers(`wrapDeep(object: {[key: string]: any} | undefined): ${wrapTypeName(options, "Struct")};
+        ${deepMembers(`${doc}wrapDeep(object: {[key: string]: any} | undefined): unknown;
         unwrapDeep(message: ${wrapTypeName(options, "Struct")}): {[key: string]: any};`)}
       }
     `,
@@ -943,7 +945,7 @@ function makeMessageFns(
       ${maybeExport} interface AnyValueWrapperFns {
         wrap(value: any): ${wrapTypeName(options, "Value")};
         unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
-        ${deepMembers(`wrapDeep(value: any): ${wrapTypeName(options, "Value")};
+        ${deepMembers(`${doc}wrapDeep(value: any): unknown;
         unwrapDeep(message: any): string | number | boolean | Object | null | Array<any> | undefined;`)}
       }
     `,
@@ -958,10 +960,7 @@ function makeMessageFns(
           "ListValue",
         )};
         unwrap(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "ListValue")}): Array<any>;
-        ${deepMembers(`wrapDeep(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): ${wrapTypeName(
-          options,
-          "ListValue",
-        )};
+        ${deepMembers(`${doc}wrapDeep(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): unknown;
         unwrapDeep(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "ListValue")}): Array<any>;`)}
       }
     `,
