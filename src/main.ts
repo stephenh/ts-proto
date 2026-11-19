@@ -78,6 +78,7 @@ import {
   isLongValueType,
   isMapType,
   isMessage,
+  isNullValueType,
   isObjectId,
   isOptionalProperty,
   isPrimitive,
@@ -181,8 +182,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       );
     },
     options,
-    (fullName, enumDesc, sInfo) => {
-      chunks.push(generateEnum(ctx, fullName, enumDesc, sInfo));
+    (fullName, enumDesc, sInfo, fullProtoTypeName) => {
+      chunks.push(generateEnum(ctx, fullName, enumDesc, sInfo, maybePrefixPackage(fileDesc, fullProtoTypeName)));
     },
   );
 
@@ -2669,6 +2670,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       }
     };
 
+    // `null` is the JSON value of google.protobuf.NullValue, so it marks the field as set rather than absent
+    const isPresent = (from: string): Code =>
+      isNullValueType(field) ? code`${from} !== undefined` : code`${ctx.utils.isSet}(${from})`;
+
     const noDefaultValue =
       !options.initializeFieldsAsUndefined &&
       isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
@@ -2786,13 +2791,13 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       }
 
       const valueName = oneofValueName(fieldKey, options);
-      const ternaryIf = code`${ctx.utils.isSet}(${jsonProperty})`;
+      const ternaryIf = isPresent(jsonProperty);
       const ternaryThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonProperty}`)}`;
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (options.protoJsonFormat && field.name !== field.jsonName) {
         const protoJsonProperty = getPropertyAccessor("object", field.name);
-        const ternaryOriginalIf = code`${ctx.utils.isSet}(${protoJsonProperty})`;
+        const ternaryOriginalIf = isPresent(protoJsonProperty);
         const ternaryOriginalThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${protoJsonProperty}`)}`;
         chunks.push(code`${ternaryOriginalIf} ? ${ternaryOriginalThen}} : `);
       }
@@ -2843,12 +2848,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       const fallback = isWithinOneOf(field) || noDefaultValue ? nullOrUndefined(options) : defaultValue(ctx, field);
       if (options.protoJsonFormat && field.name !== field.jsonName) {
         const protoJsonProperty = getPropertyAccessor("object", field.name);
-        protoJsonComparison = code` : ${ctx.utils.isSet}(${protoJsonProperty}) ? ${readSnippet(
-          `${protoJsonProperty}`,
-        )}`;
+        protoJsonComparison = code` : ${isPresent(protoJsonProperty)} ? ${readSnippet(`${protoJsonProperty}`)}`;
       }
       chunks.push(code`
-        ${fieldKey}: ${ctx.utils.isSet}(${jsonProperty}) ? ${readSnippet(`${jsonProperty}`)}
+        ${fieldKey}: ${isPresent(jsonProperty)} ? ${readSnippet(`${jsonProperty}`)}
         ${protoJsonComparison}
           : ${fallback},
       `);

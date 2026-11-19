@@ -23,6 +23,7 @@ export enum NullValue {
 
 export function nullValueFromJSON(object: any): NullValue {
   switch (object) {
+    case null:
     case 0:
     case "NULL_VALUE":
       return NullValue.NULL_VALUE;
@@ -33,10 +34,10 @@ export function nullValueFromJSON(object: any): NullValue {
   }
 }
 
-export function nullValueToJSON(object: NullValue): string {
+export function nullValueToJSON(object: NullValue): string | null {
   switch (object) {
     case NullValue.NULL_VALUE:
-      return "NULL_VALUE";
+      return null;
     case NullValue.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -432,9 +433,9 @@ export const Value: MessageFns<Value, "google.protobuf.Value"> & AnyValueWrapper
 
   fromJSON(object: any): Value {
     return {
-      nullValue: isSet(object.nullValue)
+      nullValue: object.nullValue !== undefined
         ? nullValueFromJSON(object.nullValue)
-        : isSet(object.null_value)
+        : object.null_value !== undefined
         ? nullValueFromJSON(object.null_value)
         : undefined,
       numberValue: isSet(object.numberValue)

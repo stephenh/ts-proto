@@ -1,6 +1,6 @@
 import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { Simple, StateEnum } from "./simple";
-import { NullValue } from "./google/protobuf/struct";
+import { NullValue, nullValueToJSON } from "./google/protobuf/struct";
 
 describe("simple-string-enums", () => {
   it("encodes", () => {
@@ -40,5 +40,10 @@ describe("simple-string-enums", () => {
     }
     expect(fieldNumbers).toContain(1);
     expect(fieldNumbers).not.toContain(5);
+  });
+
+  it("encodes NullValue as null rather than its name in JSON", () => {
+    expect(nullValueToJSON(NullValue.NULL_VALUE)).toBeNull();
+    expect(Simple.fromJSON({ nullValue: null }).nullValue).toEqual(NullValue.NULL_VALUE);
   });
 });

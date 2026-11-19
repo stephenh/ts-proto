@@ -1082,6 +1082,8 @@ These are called Struct Types, and can be imported in `.proto` files with `impor
 
 `ts-proto` automatically converts back and forth between these Struct Types and their corresponding JSON types.
 
+Fields of the `google.protobuf.NullValue` enum, which `google.protobuf.Value` uses for JSON's `null`, keep the `NullValue` enum type in TypeScript, but use `null` as their JSON value in `toJSON` and `fromJSON`, as in the proto3 JSON mapping.
+
 Example:
 
 ```protobuf

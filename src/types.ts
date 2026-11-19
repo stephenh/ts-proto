@@ -550,6 +550,14 @@ export function isFieldMaskTypeName(typeName: string): boolean {
   return typeName === "google.protobuf.FieldMask" || typeName === ".google.protobuf.FieldMask";
 }
 
+export function isNullValueType(field: FieldDescriptorProto): boolean {
+  return isNullValueTypeName(field.typeName);
+}
+
+export function isNullValueTypeName(typeName: string): boolean {
+  return typeName === "google.protobuf.NullValue" || typeName === ".google.protobuf.NullValue";
+}
+
 export function isListValueType(field: FieldDescriptorProto): boolean {
   return isListValueTypeName(field.typeName);
 }
