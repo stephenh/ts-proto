@@ -945,7 +945,7 @@ function createBaseGroupsNestedTest_Group_Nested_Nested2(): GroupsNestedTest_Gro
 
 export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_Group_Nested_Nested2> = {
   encode(message: GroupsNestedTest_Group_Nested_Nested2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.string1 !== undefined && message.string1 !== "") {
+    if (message.string1 !== undefined) {
       writer.uint32(10).string(message.string1);
     }
     if (message._unknownFields !== undefined) {

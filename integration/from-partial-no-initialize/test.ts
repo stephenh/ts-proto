@@ -33,7 +33,7 @@ function createBaseTPartialMessage(): TPartialMessage {
 
 export const TPartialMessage: MessageFns<TPartialMessage> = {
   encode(message: TPartialMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.field !== undefined && message.field !== "") {
+    if (message.field !== undefined) {
       writer.uint32(10).string(message.field);
     }
     return writer;

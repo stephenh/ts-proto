@@ -51,7 +51,7 @@ function createBaseIssue56(): Issue56 {
 
 export const Issue56: MessageFns<Issue56> = {
   encode(message: Issue56, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.test !== 1) {
+    if (message.test !== undefined) {
       writer.uint32(8).int32(message.test);
     }
     return writer;

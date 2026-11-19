@@ -191,49 +191,49 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optFloat !== undefined && message.optFloat !== 0) {
       writer.uint32(149).float(message.optFloat);
     }
-    if (message.reqId !== 0) {
+    if (message.reqId !== undefined) {
       writer.uint32(168).int32(message.reqId);
     }
     if (message.reqChild !== undefined) {
       Child.encode(message.reqChild, writer.uint32(178).fork()).join();
     }
-    if (message.reqState !== 0) {
+    if (message.reqState !== undefined) {
       writer.uint32(184).int32(message.reqState);
     }
-    if (message.reqLong !== 0) {
+    if (message.reqLong !== undefined) {
       writer.uint32(192).int64(message.reqLong);
     }
-    if (message.reqTruth !== false) {
+    if (message.reqTruth !== undefined) {
       writer.uint32(200).bool(message.reqTruth);
     }
-    if (message.reqDescription !== "") {
+    if (message.reqDescription !== undefined) {
       writer.uint32(210).string(message.reqDescription);
     }
-    if (message.reqData.length !== 0) {
+    if (message.reqData !== undefined) {
       writer.uint32(218).bytes(message.reqData);
     }
-    if (message.reqFloat !== 0) {
+    if (message.reqFloat !== undefined) {
       writer.uint32(229).float(message.reqFloat);
     }
-    if (message.reqDefvalId !== 0) {
+    if (message.reqDefvalId !== undefined) {
       writer.uint32(248).int32(message.reqDefvalId);
     }
-    if (message.reqDefvalState !== 0) {
+    if (message.reqDefvalState !== undefined) {
       writer.uint32(264).int32(message.reqDefvalState);
     }
-    if (message.reqDefvalLong !== 0) {
+    if (message.reqDefvalLong !== undefined) {
       writer.uint32(272).int64(message.reqDefvalLong);
     }
-    if (message.reqDefvalTruth !== false) {
+    if (message.reqDefvalTruth !== undefined) {
       writer.uint32(280).bool(message.reqDefvalTruth);
     }
-    if (message.reqDefvalDescription !== "") {
+    if (message.reqDefvalDescription !== undefined) {
       writer.uint32(290).string(message.reqDefvalDescription);
     }
-    if (message.reqDefvalData.length !== 0) {
+    if (message.reqDefvalData !== undefined) {
       writer.uint32(298).bytes(message.reqDefvalData);
     }
-    if (message.reqDefvalFloat !== 0) {
+    if (message.reqDefvalFloat !== undefined) {
       writer.uint32(309).float(message.reqDefvalFloat);
     }
     if (message.optDefvalId !== undefined && message.optDefvalId !== 0) {

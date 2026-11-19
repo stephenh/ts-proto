@@ -70,7 +70,7 @@ function createBaseExtendable(): Extendable {
 
 export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
   encode(message: Extendable, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.field !== undefined && message.field !== "") {
+    if (message.field !== undefined) {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
@@ -238,7 +238,7 @@ export const Nested: MessageFns<Nested> & ExtensionHolder<"message", Nested[]> =
   },
 
   encode(message: Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.field !== undefined && message.field !== "") {
+    if (message.field !== undefined) {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {

@@ -496,10 +496,10 @@ function createBaseTile_Layer(): Tile_Layer {
 
 export const Tile_Layer: MessageFns<Tile_Layer> = {
   encode(message: Tile_Layer, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.version !== 1) {
+    if (message.version !== undefined) {
       writer.uint32(120).uint32(message.version);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.features) {
