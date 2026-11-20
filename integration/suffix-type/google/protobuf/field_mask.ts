@@ -261,7 +261,9 @@ export const GRPCPFieldMaskGRPCS: MessageFns<GRPCPFieldMaskGRPCS> & FieldMaskWra
   fromJSON(object: any): GRPCPFieldMaskGRPCS {
     return {
       paths: typeof object === "string"
-        ? object.split(",").filter(globalThis.Boolean)
+        ? object.split(",").filter(globalThis.Boolean).map((p: string) =>
+          p.replace(/([a-z0-9])([A-Z])/g, (_: string, prev: string, c: string) => prev + "_" + c.toLowerCase())
+        )
         : globalThis.Array.isArray(object?.paths)
         ? object.paths.map(globalThis.String)
         : [],
@@ -269,7 +271,9 @@ export const GRPCPFieldMaskGRPCS: MessageFns<GRPCPFieldMaskGRPCS> & FieldMaskWra
   },
 
   toJSON(message: GRPCPFieldMaskGRPCS): string {
-    return message.paths.join(",");
+    return message.paths.map((p: string) => p.replace(/_([a-z0-9])/g, (_: string, c: string) => c.toUpperCase())).join(
+      ",",
+    );
   },
 
   create<I extends Exact<DeepPartial<GRPCPFieldMaskGRPCS>, I>>(base?: I): GRPCPFieldMaskGRPCS {

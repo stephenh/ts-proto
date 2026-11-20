@@ -2555,7 +2555,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   const canonicalFromJson: { [key: string]: { [field: string]: (from: string) => Code } } = {
     ["google.protobuf.FieldMask"]: {
       paths: (from: string) => code`typeof(${from}) === 'string'
-        ? ${from}.split(",").filter(${ctx.utils.globalThis}.Boolean)
+        ? ${from}.split(",").filter(${ctx.utils.globalThis}.Boolean).map((p: string) => p.replace(/([a-z0-9])([A-Z])/g, (_: string, prev: string, c: string) => prev + '_' + c.toLowerCase()))
         : ${ctx.utils.globalThis}.Array.isArray(${from}?.paths)
         ? ${from}.paths.map(${ctx.utils.globalThis}.String)
         : []`,
@@ -2881,7 +2881,7 @@ function generateCanonicalToJson(
 
     return code`
     ${messageMethodHead(options, fullName, "toJSON")}(message: ${fullName}): ${returnType} {
-      return message.paths${pathModifier}.join(',');
+      return message.paths${pathModifier}.map((p: string) => p.replace(/_([a-z0-9])/g, (_: string, c: string) => c.toUpperCase())).join(',');
     }
   `;
   }
