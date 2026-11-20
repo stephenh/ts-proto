@@ -2116,7 +2116,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           : writeSnippet(`${messageProperty}`);
       // proto2 required fields always go on the wire, even when they match the default value
       const check =
-        field.label === FieldDescriptorProto_Label.LABEL_REQUIRED
+        !currentFile.isProto3Syntax && field.label === FieldDescriptorProto_Label.LABEL_REQUIRED
           ? code`${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(options, messageProperty)}`
           : notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`);
 
