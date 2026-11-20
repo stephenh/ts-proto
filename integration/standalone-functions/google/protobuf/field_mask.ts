@@ -259,24 +259,20 @@ export function fieldMaskDecode(input: BinaryReader | Uint8Array, length?: numbe
 
 export function fieldMaskFromJSON(object: any): FieldMask {
   return {
-    paths:
-      typeof object === "string"
-        ? object
-            .split(",")
-            .filter(globalThis.Boolean)
-            .map((p: string) =>
-              p.replace(/([a-z0-9])([A-Z])/g, (_: string, prev: string, c: string) => prev + "_" + c.toLowerCase()),
-            )
-        : globalThis.Array.isArray(object?.paths)
-          ? object.paths.map(globalThis.String)
-          : [],
+    paths: typeof object === "string"
+      ? object.split(",").filter(globalThis.Boolean).map((p: string) =>
+        p.replace(/([a-z0-9])([A-Z])/g, (_: string, prev: string, c: string) => prev + "_" + c.toLowerCase())
+      )
+      : globalThis.Array.isArray(object?.paths)
+      ? object.paths.map(globalThis.String)
+      : [],
   };
 }
 
 export function fieldMaskToJSON(message: FieldMask): string {
-  return message.paths
-    .map((p: string) => p.replace(/_([a-z0-9])/g, (_: string, c: string) => c.toUpperCase()))
-    .join(",");
+  return message.paths.map((p: string) => p.replace(/_([a-z0-9])/g, (_: string, c: string) => c.toUpperCase())).join(
+    ",",
+  );
 }
 
 export function fieldMaskCreate<I extends Exact<DeepPartial<FieldMask>, I>>(base?: I): FieldMask {
@@ -300,19 +296,15 @@ export function fieldMaskUnwrap(message: FieldMask): string[] {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends globalThis.Array<infer U>
-    ? globalThis.Array<DeepPartial<U>>
-    : T extends ReadonlyArray<infer U>
-      ? ReadonlyArray<DeepPartial<U>>
-      : T extends {}
-        ? { [K in keyof T]?: DeepPartial<T[K]> }
-        : Partial<T>;
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I> = P extends Builtin
-  ? P
-  : P & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I> = P extends Builtin ? P
+  :
+    & P
+    & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> }
+    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
