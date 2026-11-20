@@ -1,3 +1,11 @@
+## [2.23.4](https://github.com/stephenh/ts-proto/compare/v2.23.3...v2.23.4) (2026-11-20)
+
+
+### Bug Fixes
+
+* always encode proto2 required fields ([#1312](https://github.com/stephenh/ts-proto/issues/1312)) ([8da79a3](https://github.com/stephenh/ts-proto/commit/8da79a3a4eebf66625d69e083c5d78e0324461d3)), closes [#642](https://github.com/stephenh/ts-proto/issues/642)
+* camelCase FieldMask paths in toJSON and snake_case in fromJSON ([#1315](https://github.com/stephenh/ts-proto/issues/1315)) ([b785930](https://github.com/stephenh/ts-proto/commit/b785930d40f00fd0da435f4a918c823d40d79de8)), closes [#1304](https://github.com/stephenh/ts-proto/issues/1304)
+
 ## [2.23.3](https://github.com/stephenh/ts-proto/compare/v2.23.2...v2.23.3) (2026-11-20)
 
 
