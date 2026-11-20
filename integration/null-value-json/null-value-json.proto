@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package nullvalue;
+
+import "google/protobuf/struct.proto";
+
+message NullValueMessage {
+  google.protobuf.NullValue null_value = 1;
+  optional google.protobuf.NullValue optional_null_value = 2;
+  repeated google.protobuf.NullValue repeated_null_value = 3;
+  map<string, google.protobuf.NullValue> map_null_value = 4;
+  oneof kind {
+    google.protobuf.NullValue oneof_null_value = 5;
+    string oneof_string = 6;
+  }
+}

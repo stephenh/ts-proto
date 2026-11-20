@@ -22,6 +22,7 @@ export enum ENullValueKind {
 
 export function eNullValueKindFromJSON(object: any): ENullValueKind {
   switch (object) {
+    case null:
     case 0:
     case "NULL_VALUE":
       return ENullValueKind.NULL_VALUE;
@@ -32,10 +33,10 @@ export function eNullValueKindFromJSON(object: any): ENullValueKind {
   }
 }
 
-export function eNullValueKindToJSON(object: ENullValueKind): string {
+export function eNullValueKindToJSON(object: ENullValueKind): string | null {
   switch (object) {
     case ENullValueKind.NULL_VALUE:
-      return "NULL_VALUE";
+      return null;
     case ENullValueKind.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -421,9 +422,9 @@ export const MsgValueData: MessageFns<MsgValueData> & AnyValueWrapperFns = {
 
   fromJSON(object: any): MsgValueData {
     return {
-      nullValue: isSet(object.nullValue)
+      nullValue: object.nullValue !== undefined
         ? eNullValueKindFromJSON(object.nullValue)
-        : isSet(object.null_value)
+        : object.null_value !== undefined
         ? eNullValueKindFromJSON(object.null_value)
         : undefined,
       numberValue: isSet(object.numberValue)

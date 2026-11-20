@@ -22,6 +22,7 @@ export enum GRPCPNullValueGRPCS {
 
 export function gRPCPNullValueGRPCSFromJSON(object: any): GRPCPNullValueGRPCS {
   switch (object) {
+    case null:
     case 0:
     case "NULL_VALUE":
       return GRPCPNullValueGRPCS.NULL_VALUE;
@@ -32,10 +33,10 @@ export function gRPCPNullValueGRPCSFromJSON(object: any): GRPCPNullValueGRPCS {
   }
 }
 
-export function gRPCPNullValueGRPCSToJSON(object: GRPCPNullValueGRPCS): string {
+export function gRPCPNullValueGRPCSToJSON(object: GRPCPNullValueGRPCS): string | null {
   switch (object) {
     case GRPCPNullValueGRPCS.NULL_VALUE:
-      return "NULL_VALUE";
+      return null;
     case GRPCPNullValueGRPCS.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -421,9 +422,9 @@ export const GRPCPValueGRPCS: MessageFns<GRPCPValueGRPCS> & AnyValueWrapperFns =
 
   fromJSON(object: any): GRPCPValueGRPCS {
     return {
-      nullValue: isSet(object.nullValue)
+      nullValue: object.nullValue !== undefined
         ? gRPCPNullValueGRPCSFromJSON(object.nullValue)
-        : isSet(object.null_value)
+        : object.null_value !== undefined
         ? gRPCPNullValueGRPCSFromJSON(object.null_value)
         : undefined,
       numberValue: isSet(object.numberValue)

@@ -4,6 +4,7 @@ import { maybeAddComment } from "./utils";
 import { uncapitalize, camelToSnake } from "./case";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Context } from "./context";
+import { isNullValueTypeName } from "./types";
 
 type UnrecognizedEnum = { present: false } | { present: true; name: string; originalName: string };
 
@@ -13,10 +14,13 @@ export function generateEnum(
   fullName: string,
   enumDesc: EnumDescriptorProto,
   sourceInfo: SourceInfo,
+  fullProtoTypeName: string,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
   let unrecognizedEnum: UnrecognizedEnum = { present: false };
+  // The canonical JSON of google.protobuf.NullValue is `null`, rather than the value's name or number
+  const isNullValue = isNullValueTypeName(fullProtoTypeName);
 
   maybeAddComment(options, sourceInfo, chunks, enumDesc.options?.deprecated);
 
@@ -77,11 +81,11 @@ export function generateEnum(
     (options.stringEnums && options.outputEncodeMethods)
   ) {
     chunks.push(code`\n`);
-    chunks.push(generateEnumFromJson(ctx, fullName, enumDesc, unrecognizedEnum));
+    chunks.push(generateEnumFromJson(ctx, fullName, enumDesc, unrecognizedEnum, isNullValue));
   }
   if (options.outputJsonMethods === true || options.outputJsonMethods === "to-only") {
     chunks.push(code`\n`);
-    chunks.push(generateEnumToJson(ctx, fullName, enumDesc, unrecognizedEnum));
+    chunks.push(generateEnumToJson(ctx, fullName, enumDesc, unrecognizedEnum, isNullValue));
   }
   if (options.stringEnums && options.outputEncodeMethods) {
     chunks.push(code`\n`);
@@ -97,6 +101,7 @@ export function generateEnumFromJson(
   fullName: string,
   enumDesc: EnumDescriptorProto,
   unrecognizedEnum: UnrecognizedEnum,
+  isNullValue: boolean,
 ): Code {
   const { options, utils } = ctx;
   const chunks: Code[] = [];
@@ -108,6 +113,9 @@ export function generateEnumFromJson(
   for (const valueDesc of enumDesc.value) {
     const memberName = getMemberName(ctx, enumDesc, valueDesc);
     const valueName = getValueName(ctx, fullName, valueDesc);
+    if (isNullValue && valueDesc.number === 0) {
+      chunks.push(code`case null:`);
+    }
     chunks.push(code`
       case ${valueDesc.number}:
       case "${valueName}":
@@ -148,6 +156,7 @@ export function generateEnumToJson(
   fullName: string,
   enumDesc: EnumDescriptorProto,
   unrecognizedEnum: UnrecognizedEnum,
+  isNullValue: boolean,
 ): Code {
   const { options, utils } = ctx;
 
@@ -157,12 +166,15 @@ export function generateEnumToJson(
   chunks.push(
     code`export function ${def(functionName)}(object: ${fullName}): ${
       ctx.options.useNumericEnumForJson ? "number" : "string"
-    } {`,
+    }${isNullValue ? " | null" : ""} {`,
   );
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    if (ctx.options.useNumericEnumForJson) {
+    if (isNullValue && valueDesc.number === 0) {
+      const memberName = getMemberName(ctx, enumDesc, valueDesc);
+      chunks.push(code`case ${fullName}.${memberName}: return null;`);
+    } else if (ctx.options.useNumericEnumForJson) {
       const memberName = getMemberName(ctx, enumDesc, valueDesc);
       chunks.push(code`case ${fullName}.${memberName}: return ${valueDesc.number};`);
     } else {
@@ -188,6 +200,12 @@ export function generateEnumToJson(
           return "${options.unrecognizedEnumName}";
       `);
       }
+    } else if (isNullValue) {
+      // NULL_VALUE is the only value, so it is also the unrecognized one
+      chunks.push(code`
+        default:
+          return null;
+      `);
     } else if (ctx.options.useNumericEnumForJson) {
       chunks.push(code`
         default:

@@ -1,5 +1,5 @@
 import { Simple, StateEnum } from './simple';
-import { NullValue } from './google/protobuf/struct';
+import { NullValue, nullValueToJSON } from './google/protobuf/struct';
 
 describe('use-numeric-enum-json', () => {
   it('encodes', () => {
@@ -18,5 +18,10 @@ describe('use-numeric-enum-json', () => {
 
     // Original object can be recovered from the json.
     expect(Simple.fromJSON(json)).toEqual(s);
+  });
+
+  it('encodes NullValue as null rather than a number', () => {
+    expect(nullValueToJSON(NullValue.NULL_VALUE)).toBeNull();
+    expect(Simple.fromJSON({ nullValue: null }).nullValue).toEqual(NullValue.NULL_VALUE);
   });
 });

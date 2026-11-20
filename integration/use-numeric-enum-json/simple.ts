@@ -172,7 +172,7 @@ export const Simple: MessageFns<Simple> = {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       states: globalThis.Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
-      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : 0,
+      nullValue: object.nullValue !== undefined ? nullValueFromJSON(object.nullValue) : 0,
       stateMap: isObject(object.stateMap)
         ? (globalThis.Object.entries(object.stateMap) as [string, any][]).reduce(
           (acc: { [key: string]: StateEnum }, [key, value]: [string, any]) => {
