@@ -260,7 +260,9 @@ export function fieldMaskDecode(input: BinaryReader | Uint8Array, length?: numbe
 export function fieldMaskFromJSON(object: any): FieldMask {
   return {
     paths: typeof object === "string"
-      ? object.split(",").filter(globalThis.Boolean)
+      ? object.split(",").filter(globalThis.Boolean).map((p: string) =>
+        p.replace(/([a-z0-9])([A-Z])/g, (_: string, prev: string, c: string) => prev + "_" + c.toLowerCase())
+      )
       : globalThis.Array.isArray(object?.paths)
       ? object.paths.map(globalThis.String)
       : [],
@@ -268,7 +270,7 @@ export function fieldMaskFromJSON(object: any): FieldMask {
 }
 
 export function fieldMaskToJSON(message: FieldMask): string {
-  return message.paths.join(",");
+  return message.paths.map((p: string) => p.replace(/_([a-z0-9])/g, (_: string, c: string) => c.toUpperCase())).join(",");
 }
 
 export function fieldMaskCreate<I extends Exact<DeepPartial<FieldMask>, I>>(base?: I): FieldMask {

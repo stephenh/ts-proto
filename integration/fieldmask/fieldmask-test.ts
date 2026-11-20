@@ -51,4 +51,12 @@ describe("fieldmask", () => {
       }
     `);
   });
+
+  it("converts camelCase paths in canonical JSON to snake_case and back", () => {
+    const decoded = FieldMaskMessage.fromJSON({ fieldMask: "fooBar,baz.quxQuux" });
+    expect(decoded).toEqual({ fieldMask: ["foo_bar", "baz.qux_quux"] });
+
+    const encoded = FieldMaskMessage.toJSON({ fieldMask: ["foo_bar", "baz.qux_quux"] });
+    expect(encoded).toEqual({ fieldMask: "fooBar,baz.quxQuux" });
+  });
 });
