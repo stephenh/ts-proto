@@ -1,3 +1,10 @@
+## [2.23.3](https://github.com/stephenh/ts-proto/compare/v2.23.2...v2.23.3) (2026-11-20)
+
+
+### Bug Fixes
+
+* use null as the JSON value of google.protobuf.NullValue ([#1314](https://github.com/stephenh/ts-proto/issues/1314)) ([27441ad](https://github.com/stephenh/ts-proto/commit/27441ad46166346502823e5abc2adb62f244c2a1)), closes [#658](https://github.com/stephenh/ts-proto/issues/658)
+
 ## [2.23.2](https://github.com/stephenh/ts-proto/compare/v2.23.1...v2.23.2) (2026-11-19)
 
 
