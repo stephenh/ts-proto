@@ -4575,10 +4575,10 @@ function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart 
 
 export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePart> = {
   encode(message: UninterpretedOption_NamePart, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.namePart !== "") {
+    if (message.namePart !== undefined) {
       writer.uint32(10).string(message.namePart);
     }
-    if (message.isExtension !== false) {
+    if (message.isExtension !== undefined) {
       writer.uint32(16).bool(message.isExtension);
     }
     return writer;

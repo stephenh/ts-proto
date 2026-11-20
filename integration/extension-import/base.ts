@@ -14,7 +14,7 @@ function createBaseExtendable(): Extendable {
 
 export const Extendable: MessageFns<Extendable> = {
   encode(message: Extendable, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.field !== "") {
+    if (message.field !== undefined) {
       writer.uint32(10).string(message.field);
     }
     return writer;
