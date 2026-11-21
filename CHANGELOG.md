@@ -1,3 +1,10 @@
+## [2.23.5](https://github.com/stephenh/ts-proto/compare/v2.23.4...v2.23.5) (2026-11-21)
+
+
+### Bug Fixes
+
+* **deps:** update ts-poet to 6.12.1 ([#1316](https://github.com/stephenh/ts-proto/issues/1316)) ([7f6ba6a](https://github.com/stephenh/ts-proto/commit/7f6ba6a511b87e6b27c400de985b992ea3b1eada))
+
 ## [2.23.4](https://github.com/stephenh/ts-proto/compare/v2.23.3...v2.23.4) (2026-11-20)
 
 
