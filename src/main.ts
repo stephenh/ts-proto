@@ -630,18 +630,27 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
 function makeByteUtils(options: Options) {
   const globalThisPolyfill = conditionalOutput(
     "gt",
-    code`
-      declare const self: any | undefined;
-      declare const window: any | undefined;
-      declare const global: any | undefined;
-      const gt: any = (() => {
-        if (typeof globalThis !== "undefined") return globalThis;
-        if (typeof self !== "undefined") return self;
-        if (typeof window !== "undefined") return window;
-        if (typeof global !== "undefined") return global;
-        throw "Unable to locate global object";
-      })();
-    `,
+    options.env === EnvOption.NODE
+      ? code`
+          declare const global: any | undefined;
+          const gt: any = (() => {
+            if (typeof globalThis !== "undefined") return globalThis;
+            if (typeof global !== "undefined") return global;
+            throw "Unable to locate global object";
+          })();
+        `
+      : code`
+          declare const self: any | undefined;
+          declare const window: any | undefined;
+          declare const global: any | undefined;
+          const gt: any = (() => {
+            if (typeof globalThis !== "undefined") return globalThis;
+            if (typeof self !== "undefined") return self;
+            if (typeof window !== "undefined") return window;
+            if (typeof global !== "undefined") return global;
+            throw "Unable to locate global object";
+          })();
+        `,
   );
   const globalThis = options.globalThisPolyfill ? globalThisPolyfill : conditionalOutput("globalThis", code``);
 
