@@ -1,3 +1,10 @@
+## [2.23.6](https://github.com/stephenh/ts-proto/compare/v2.23.5...v2.23.6) (2026-11-22)
+
+
+### Bug Fixes
+
+* allow overriding initializeFieldsAsUndefined with nestJs ([#1317](https://github.com/stephenh/ts-proto/issues/1317)) ([7fdd1b0](https://github.com/stephenh/ts-proto/commit/7fdd1b029c081ebc6bfcf5fa93c11bee2d9acfd7)), closes [#1156](https://github.com/stephenh/ts-proto/issues/1156) [#492](https://github.com/stephenh/ts-proto/issues/492)
+
 ## [2.23.5](https://github.com/stephenh/ts-proto/compare/v2.23.4...v2.23.5) (2026-11-21)
 
 
