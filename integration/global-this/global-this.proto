@@ -1,6 +1,8 @@
 syntax = "proto3";
 package simple;
 
+import "google/protobuf/wrappers.proto";
+
 message Object {
   string name = 1;
   map<string, string> metadata = 2;
@@ -24,4 +26,10 @@ message Number {
 
 message Array {
   repeated String values = 1;
+}
+
+message WithWrappers {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.BoolValue enabled = 2;
+  google.protobuf.Int32Value age = 3;
 }

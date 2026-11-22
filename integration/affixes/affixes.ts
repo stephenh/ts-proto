@@ -226,7 +226,7 @@ export const PrefixGoogleSuffix: MessageFns<PrefixGoogleSuffix> = {
 
   fromJSON(object: any): PrefixGoogleSuffix {
     return {
-      guint64: isSet(object.guint64) ? Number(object.guint64) : undefined,
+      guint64: isSet(object.guint64) ? globalThis.Number(object.guint64) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
     };
   },

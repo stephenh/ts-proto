@@ -1016,11 +1016,11 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
 
   fromJSON(object: any): SimpleWithWrappers {
     return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      age: isSet(object.age) ? Number(object.age) : undefined,
-      enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
-      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      name: isSet(object.name) ? globalThis.String(object.name) : undefined,
+      age: isSet(object.age) ? globalThis.Number(object.age) : undefined,
+      enabled: isSet(object.enabled) ? globalThis.Boolean(object.enabled) : undefined,
+      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => globalThis.Number(e)) : [],
+      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => globalThis.String(e)) : [],
     };
   },
 

@@ -70,9 +70,9 @@ export const NestedList: MessageFns<NestedList> = {
   fromJSON(object: any): NestedList {
     return {
       aString: globalThis.Array.isArray(object?.aString)
-        ? object.aString.map((e: any) => String(e))
+        ? object.aString.map((e: any) => globalThis.String(e))
         : globalThis.Array.isArray(object?.a_string)
-        ? object.a_string.map((e: any) => String(e))
+        ? object.a_string.map((e: any) => globalThis.String(e))
         : [],
     };
   },
