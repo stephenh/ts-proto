@@ -237,6 +237,13 @@ describe("options", () => {
     });
   });
 
+  it("can set initializeFieldsAsUndefined with nestJs=true", () => {
+    expect(optionsFromParameter("nestJs=true,initializeFieldsAsUndefined=true")).toMatchObject({
+      nestJs: ["client", "server"],
+      initializeFieldsAsUndefined: true,
+    });
+  });
+
   it("nestJs=false disables the nestjs output", () => {
     expect(optionsFromParameter("nestJs=false")).toMatchObject({
       nestJs: [],

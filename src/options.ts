@@ -233,6 +233,7 @@ const nestJsOptions: Partial<Options> = {
   outputPartialMethods: false,
   outputClientImpl: false,
   useDate: DateOption.TIMESTAMP,
+  initializeFieldsAsUndefined: false,
 };
 
 export function optionsFromParameter(parameter: string | undefined): Options {
@@ -344,9 +345,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
   }
 
-  if (options.nestJs.length > 0) {
-    options.initializeFieldsAsUndefined = false;
-  } else {
+  if (options.nestJs.length === 0) {
     // useNestjsFqnServiceName requires nestJs=true
     options.useNestjsFqnServiceName = false;
   }

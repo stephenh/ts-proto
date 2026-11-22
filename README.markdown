@@ -588,7 +588,7 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
 - With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
 
-- With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omitted from the generated base instances. This can be useful if you're using Next.js and `getServerSideProps`, see [#492](https://github.com/stephenh/ts-proto/issues/492). The default is `true` to ideally get the best v8 performance by avoiding "changing shapes" as fields are incrementally set.
+- With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omitted from the generated base instances. This can be useful if you're using Next.js and `getServerSideProps`, see [#492](https://github.com/stephenh/ts-proto/issues/492). The default is `true` to ideally get the best v8 performance by avoiding "changing shapes" as fields are incrementally set. With `nestJs=true` the default is `false`.
 
 - With `--ts_proto_opt=disableProto2Optionals=true`, all optional fields on proto2 files will not be set to be optional. Please note that this flag is primarily for preserving ts-proto's legacy handling of proto2 files, to avoid breaking changes, and as a result, it is not intended to be used moving forward.
 
