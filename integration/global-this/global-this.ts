@@ -3,6 +3,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BoolValue, Int32Value, StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "simple";
 
@@ -36,6 +37,12 @@ export interface Number {
 
 export interface Array {
   values: String[];
+}
+
+export interface WithWrappers {
+  name: string | undefined;
+  enabled: boolean | undefined;
+  age: number | undefined;
 }
 
 function createBaseObject(): Object {
@@ -569,6 +576,107 @@ export const Array: MessageFns<Array> = {
   fromPartial<I extends Exact<DeepPartial<Array>, I>>(object: I): Array {
     const message = createBaseArray();
     message.values = object.values?.map((e) => String.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseWithWrappers(): WithWrappers {
+  return { name: undefined, enabled: undefined, age: undefined };
+}
+
+export const WithWrappers: MessageFns<WithWrappers> = {
+  encode(message: WithWrappers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== undefined) {
+      StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).join();
+    }
+    if (message.enabled !== undefined) {
+      BoolValue.encode({ value: message.enabled! }, writer.uint32(18).fork()).join();
+    }
+    if (message.age !== undefined) {
+      Int32Value.encode({ value: message.age! }, writer.uint32(26).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): WithWrappers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new gt.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseWithWrappers();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.name = StringValue.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.enabled = BoolValue.decode(reader, reader.uint32()).value;
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            message.age = Int32Value.decode(reader, reader.uint32()).value;
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): WithWrappers {
+    return {
+      name: isSet(object.name) ? gt.String(object.name) : undefined,
+      enabled: isSet(object.enabled) ? gt.Boolean(object.enabled) : undefined,
+      age: isSet(object.age) ? gt.Number(object.age) : undefined,
+    };
+  },
+
+  toJSON(message: WithWrappers): unknown {
+    const obj: any = {};
+    if (message.name !== undefined) {
+      obj.name = message.name;
+    }
+    if (message.enabled !== undefined) {
+      obj.enabled = message.enabled;
+    }
+    if (message.age !== undefined) {
+      obj.age = message.age;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WithWrappers>, I>>(base?: I): WithWrappers {
+    return WithWrappers.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<WithWrappers>, I>>(object: I): WithWrappers {
+    const message = createBaseWithWrappers();
+    message.name = object.name ?? undefined;
+    message.enabled = object.enabled ?? undefined;
+    message.age = object.age ?? undefined;
     return message;
   },
 };

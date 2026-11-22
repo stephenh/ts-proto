@@ -1,4 +1,4 @@
-import { Object, Error, String, Boolean, Number, Array } from "./global-this";
+import { Object, Error, String, Boolean, Number, Array, WithWrappers } from "./global-this";
 
 describe("global-this", () => {
   it("generates types correctly", () => {
@@ -39,5 +39,11 @@ describe("global-this", () => {
     const decoded = Object.decode(encoded);
     expect(decoded.name).toBe("test");
     expect(decoded.metadata).toEqual({ key1: "value1", key2: "value2" });
+  });
+
+  it("handles wrapper fields in fromJSON", () => {
+    const message = WithWrappers.fromJSON({ name: "test", enabled: true, age: 42 });
+    expect(message).toEqual({ name: "test", enabled: true, age: 42 });
+    expect(WithWrappers.toJSON(message)).toEqual({ name: "test", enabled: true, age: 42 });
   });
 });
