@@ -1,3 +1,10 @@
+## [2.23.7](https://github.com/stephenh/ts-proto/compare/v2.23.6...v2.23.7) (2026-11-22)
+
+
+### Bug Fixes
+
+* use globalThis for wrapper types in fromJSON ([#1318](https://github.com/stephenh/ts-proto/issues/1318)) ([6931a33](https://github.com/stephenh/ts-proto/commit/6931a3325590ce6cc00df7a4c43775cf4b91e6ff)), closes [#1180](https://github.com/stephenh/ts-proto/issues/1180) [#930](https://github.com/stephenh/ts-proto/issues/930)
+
 ## [2.23.6](https://github.com/stephenh/ts-proto/compare/v2.23.5...v2.23.6) (2026-11-22)
 
 
