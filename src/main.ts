@@ -1205,7 +1205,7 @@ function makeTimestampMethods(
             if (fraction === null) {
               return ${toTimestamp}(new ${bytes.globalThis}.Date(o));
             }
-            const fractionNanos = Number(fraction[0].slice(4, 13).padEnd(9, "0"));
+            const fractionNanos = ${bytes.globalThis}.Number(fraction[0].slice(4, 13).padEnd(9, "0"));
             const wholeSeconds = new ${bytes.globalThis}.Date(o.replace(fraction[0], fraction[0].slice(0, 3)));
             const timestamp = ${toTimestamp}(
               new ${bytes.globalThis}.Date(wholeSeconds.getTime() + Math.trunc(fractionNanos / 1_000_000)),
