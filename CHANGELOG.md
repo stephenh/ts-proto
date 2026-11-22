@@ -1,3 +1,10 @@
+## [2.23.8](https://github.com/stephenh/ts-proto/compare/v2.23.7...v2.23.8) (2026-11-22)
+
+
+### Bug Fixes
+
+* only check node globals in the globalThis polyfill with env=node ([#1319](https://github.com/stephenh/ts-proto/issues/1319)) ([dcb3c20](https://github.com/stephenh/ts-proto/commit/dcb3c200d692be736760abce33add8cde409ec98)), closes [#514](https://github.com/stephenh/ts-proto/issues/514)
+
 ## [2.23.7](https://github.com/stephenh/ts-proto/compare/v2.23.6...v2.23.7) (2026-11-22)
 
 
