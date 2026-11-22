@@ -151,7 +151,7 @@ export const MsgAwesomeMessageData: MessageFns<MsgAwesomeMessageData> = {
       kind: isSet(object.kind) ? eAwesomeEnumKindFromJSON(object.kind) : 0,
       value: isSet(object?.value) ? object.value : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-      guint64: isSet(object.guint64) ? Number(object.guint64) : undefined,
+      guint64: isSet(object.guint64) ? globalThis.Number(object.guint64) : undefined,
     };
   },
 

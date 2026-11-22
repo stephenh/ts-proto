@@ -244,7 +244,7 @@ export const Numbers: MessageFns<Numbers> = {
       fixed64: isSet(object.fixed64) ? globalThis.String(object.fixed64) : "0",
       sfixed32: isSet(object.sfixed32) ? globalThis.Number(object.sfixed32) : 0,
       sfixed64: isSet(object.sfixed64) ? globalThis.String(object.sfixed64) : "0",
-      guint64: isSet(object.guint64) ? String(object.guint64) : undefined,
+      guint64: isSet(object.guint64) ? globalThis.String(object.guint64) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
     };
   },

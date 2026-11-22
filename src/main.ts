@@ -2452,7 +2452,7 @@ function valueTypeFromJson(ctx: Context, field: FieldDescriptorProto, from: stri
     }
     return code`${ctx.utils.bytesFromBase64}(${from})`;
   } else {
-    return code`${capitalize(valueType.toCodeString([]))}(${from})`;
+    return code`${ctx.utils.globalThis}.${capitalize(valueType.toCodeString([]))}(${from})`;
   }
 }
 

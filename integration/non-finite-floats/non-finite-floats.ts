@@ -205,8 +205,8 @@ export const Floats: MessageFns<Floats> = {
           {},
         )
         : {},
-      dw: isSet(object.dw) ? Number(object.dw) : undefined,
-      fw: isSet(object.fw) ? Number(object.fw) : undefined,
+      dw: isSet(object.dw) ? globalThis.Number(object.dw) : undefined,
+      fw: isSet(object.fw) ? globalThis.Number(object.fw) : undefined,
       fwm: isObject(object.fwm)
         ? (globalThis.Object.entries(object.fwm) as [string, any][]).reduce(
           (acc: { [key: string]: number | undefined }, [key, value]: [string, any]) => {
@@ -448,7 +448,7 @@ export const Floats_FwmEntry: MessageFns<Floats_FwmEntry> = {
   fromJSON(object: any): Floats_FwmEntry {
     return {
       key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? Number(object.value) : undefined,
+      value: isSet(object.value) ? globalThis.Number(object.value) : undefined,
     };
   },
 

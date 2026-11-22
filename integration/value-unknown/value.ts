@@ -113,7 +113,7 @@ export const ValueMessage: MessageFns<ValueMessage> = {
       anyList: globalThis.Array.isArray(object.anyList) ? [...object.anyList] : undefined,
       repeatedAny: globalThis.Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [],
       repeatedStrings: globalThis.Array.isArray(object?.repeatedStrings)
-        ? object.repeatedStrings.map((e: any) => String(e))
+        ? object.repeatedStrings.map((e: any) => globalThis.String(e))
         : [],
       structValue: isObject(object.structValue) ? object.structValue : undefined,
     };
