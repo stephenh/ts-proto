@@ -480,6 +480,8 @@ With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disable
 
   You'll need to add the `@improbable-eng/grpc-web` and a transport to your project's `package.json`; see the `integration/grpc-web` directory for a working example. Also see [#504](https://github.com/stephenh/ts-proto/issues/504) for integrating with [grpc-web-devtools](https://github.com/SafetyCulture/grpc-web-devtools).
 
+- With `--ts_proto_opt=outputClientImpl=./my-client.js` or `=my-package` (any value other than `true`, `false` or `grpc-web`), ts-proto loads that module to generate the client (values starting with `.` or `/` are paths resolved against the cwd; anything else, e.g. `outputClientImpl=@my-org/ts-proto-client`, is a package name resolved from the cwd's `node_modules`), so custom clients can live outside this repo. The module may export any of: `generateClientImpl(ctx, fileDesc, serviceDesc)`, called once per service, and `generateClientMisc(ctx, fileDesc)`, called once per file with services (e.g. a shared `Rpc` type), both returning ts-poet `Code` that is written inline in the generated file; and `generateFiles(ctx, fileDesc)`, returning `[path, content][]` for extra files (`content` is `Code` or a string). The `ClientGenerator` and `Context` types are exported from `ts-proto`; see `src/client-generator.ts`.
+
 - With `--ts_proto_opt=returnObservable=true`, the return type of service methods will be `Observable<T>` instead of `Promise<T>`.
 
 - With`--ts_proto_opt=addGrpcMetadata=true`, the last argument of service methods will accept the grpc `Metadata` type, which contains additional information with the call (i.e. access tokens/etc.).
