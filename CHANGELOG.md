@@ -1,3 +1,10 @@
+## [2.23.9](https://github.com/stephenh/ts-proto/compare/v2.23.8...v2.23.9) (2026-11-24)
+
+
+### Bug Fixes
+
+* keep all values of an option passed more than twice ([#1322](https://github.com/stephenh/ts-proto/issues/1322)) ([e798e93](https://github.com/stephenh/ts-proto/commit/e798e93fa6a5cbafd62a391e4448d68a55fad97e))
+
 ## [2.23.8](https://github.com/stephenh/ts-proto/compare/v2.23.7...v2.23.8) (2026-11-22)
 
 
