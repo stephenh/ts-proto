@@ -127,6 +127,15 @@ describe("options", () => {
     });
   });
 
+  it("can set outputServices more than twice", () => {
+    const options = optionsFromParameter(
+      "outputServices=grpc-js,outputServices=generic-definitions,outputServices=default",
+    );
+    expect(options).toMatchObject({
+      outputServices: [ServiceOption.GRPC, ServiceOption.GENERIC, ServiceOption.DEFAULT],
+    });
+  });
+
   it("can set useOptionals to boolean", () => {
     const options = optionsFromParameter("useOptionals=true");
     expect(options).toMatchObject({
