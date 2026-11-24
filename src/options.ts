@@ -405,7 +405,7 @@ function parseParameter(parameter: string): Options {
         options.M[mKey] = value;
       }
     } else if (options[key]) {
-      options[key] = [options[key], value];
+      options[key] = Array.isArray(options[key]) ? [...options[key], value] : [options[key], value];
     } else {
       options[key] = value;
     }
