@@ -6,10 +6,12 @@ import {
   FileDescriptorProto,
 } from "ts-proto-descriptors";
 import { promisify } from "util";
+import { Code } from "ts-poet";
 import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer } from "./utils";
+import { loadClientGenerator } from "./client-generator";
 import { generateFile, makeUtils } from "./main";
 import { createTypeMap } from "./types";
-import { BaseContext, createFileContext } from "./context";
+import { BaseContext, Context, createFileContext } from "./context";
 import { getTsPoetOpts, optionsFromParameter } from "./options";
 import { generateTypeRegistry } from "./generate-type-registry";
 
@@ -56,6 +58,25 @@ async function main() {
       return { name: path, content };
     }),
   );
+
+  const generators: ((ctx: Context, file: FileDescriptorProto) => [string, Code | string][])[] = [];
+  const generateFiles =
+    typeof options.outputClientImpl === "string" && options.outputClientImpl !== "grpc-web"
+      ? loadClientGenerator(options.outputClientImpl).generateFiles
+      : undefined;
+  if (generateFiles) generators.push(generateFiles);
+  for (const file of filesToGenerate) {
+    const fileCtx = { ...ctx, currentFile: createFileContext(file) };
+    for (const generate of generators) {
+      for (const [path, code] of generate(fileCtx, file)) {
+        const content =
+          typeof code === "string"
+            ? code
+            : code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion, file.name), path });
+        files.push({ name: path, content });
+      }
+    }
+  }
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);

@@ -87,7 +87,7 @@ export type Options = {
   constEnums: boolean;
   removeEnumPrefix: boolean;
   enumsAsLiterals: boolean;
-  outputClientImpl: boolean | "grpc-web";
+  outputClientImpl: boolean | "grpc-web" | (string & {});
   outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
   metadataType: string | undefined;

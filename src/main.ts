@@ -13,6 +13,7 @@ import { Context } from "./context";
 import { generateEnum } from "./enums";
 import { generateDecodeTransform, generateEncodeTransform } from "./generate-async-iterable";
 import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
+import { loadClientGenerator } from "./client-generator";
 import { generateGrpcJsService } from "./generate-grpc-js";
 import {
   addGrpcWebMisc,
@@ -443,6 +444,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
               hasServerStreamingMethods = true;
             }
           });
+        } else if (options.outputClientImpl) {
+          const impl = loadClientGenerator(options.outputClientImpl).generateClientImpl?.(ctx, fileDesc, serviceDesc);
+          if (impl) chunks.push(impl);
         }
       }
     });
@@ -463,6 +467,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
+    } else {
+      const misc = loadClientGenerator(options.outputClientImpl).generateClientMisc?.(ctx, fileDesc);
+      if (misc) chunks.push(misc);
     }
   }
 

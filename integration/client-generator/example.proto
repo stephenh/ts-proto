@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package extension;
+
+message Greeting {
+  string name = 1;
+}
+
+service Greeter {
+  rpc SayHello(Greeting) returns (Greeting);
+  rpc Wave(Greeting) returns (Greeting);
+}
