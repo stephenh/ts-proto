@@ -14,6 +14,15 @@ export interface Point {
   dataWrapped: Buffer | undefined;
 }
 
+export interface PointMap {
+  points: { [key: string]: Buffer | undefined };
+}
+
+export interface PointMap_PointsEntry {
+  key: string;
+  value: Buffer | undefined;
+}
+
 function createBasePoint(): Point {
   return { data: Buffer.alloc(0), dataWrapped: undefined };
 }
@@ -99,6 +108,192 @@ export const Point: MessageFns<Point> = {
   },
 };
 
+function createBasePointMap(): PointMap {
+  return { points: {} };
+}
+
+export const PointMap: MessageFns<PointMap> = {
+  encode(message: PointMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    globalThis.Object.entries(message.points).forEach(([key, value]: [string, Buffer | undefined]) => {
+      if (value !== undefined) {
+        PointMap_PointsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
+      }
+    });
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PointMap {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBasePointMap();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            const entry1 = PointMap_PointsEntry.decode(reader, reader.uint32());
+            if (entry1.value !== undefined) {
+              message.points[entry1.key] = entry1.value;
+            }
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): PointMap {
+    return {
+      points: isObject(object.points)
+        ? (globalThis.Object.entries(object.points) as [string, any][]).reduce(
+          (acc: { [key: string]: Buffer | undefined }, [key, value]: [string, any]) => {
+            globalThis.Object.defineProperty(acc, key, {
+              value: Buffer.from(bytesFromBase64(value)),
+              enumerable: true,
+              configurable: true,
+              writable: true,
+            });
+            return acc;
+          },
+          {},
+        )
+        : {},
+    };
+  },
+
+  toJSON(message: PointMap): unknown {
+    const obj: any = {};
+    if (message.points) {
+      const entries = globalThis.Object.entries(message.points) as [string, Buffer | undefined][];
+      if (entries.length > 0) {
+        obj.points = {};
+        entries.forEach(([k, v]) => {
+          obj.points[k] = v !== undefined ? base64FromBytes(v) : undefined;
+        });
+      }
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PointMap>, I>>(base?: I): PointMap {
+    return PointMap.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PointMap>, I>>(object: I): PointMap {
+    const message = createBasePointMap();
+    message.points = (globalThis.Object.entries(object.points ?? {}) as [string, Buffer | undefined][]).reduce(
+      (acc: { [key: string]: Buffer | undefined }, [key, value]: [string, Buffer | undefined]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {},
+    );
+    return message;
+  },
+};
+
+function createBasePointMap_PointsEntry(): PointMap_PointsEntry {
+  return { key: "", value: undefined };
+}
+
+export const PointMap_PointsEntry: MessageFns<PointMap_PointsEntry> = {
+  encode(message: PointMap_PointsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      BytesValue.encode({ value: message.value! }, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PointMap_PointsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBasePointMap_PointsEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.key = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
+
+            message.value = BytesValue.decode(reader, reader.uint32()).value;
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): PointMap_PointsEntry {
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? Buffer.from(bytesFromBase64(object.value)) : undefined,
+    };
+  },
+
+  toJSON(message: PointMap_PointsEntry): unknown {
+    const obj: any = {};
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = base64FromBytes(message.value);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PointMap_PointsEntry>, I>>(base?: I): PointMap_PointsEntry {
+    return PointMap_PointsEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PointMap_PointsEntry>, I>>(object: I): PointMap_PointsEntry {
+    const message = createBasePointMap_PointsEntry();
+    message.key = object.key ?? "";
+    message.value = object.value ?? undefined;
+    return message;
+  },
+};
+
 function bytesFromBase64(b64: string): Uint8Array {
   return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
 }
@@ -121,6 +316,10 @@ export type Exact<P, I> = P extends Builtin ? P
     & P
     & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> }
     & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function isObject(value: any): boolean {
+  return typeof value === "object" && value !== null;
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
