@@ -1,0 +1,1 @@
+useEncodedNestedMessages=true,outputClientImpl=false,outputPartialMethods=true,outputJsonMethods=false

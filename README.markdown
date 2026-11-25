@@ -438,6 +438,8 @@ The keys and values are the same as the `--ts_proto_opt` options below, and opti
 - With `--ts_proto_opt=protoJsonFormat=true` (default), the `toJSON` and `fromJSON`  methods follow the [protoJSON format](https://protobuf.dev/programming-guides/json). This means `toJSON` will output standard lowerCamelCase keys (or custom `json_name` if set). `fromJSON` will accept both the lowerCamelCase key (or `json_name`) AND the original proto field name.
 With `--ts_proto_opt=protoJsonFormat=false`, strict proto3 compliance is disabled. The JSON keys will simply follow the `snakeToCamel` option, and `fromJSON` will only accept that specific format.
 
+- With `--ts_proto_opt=useEncodedNestedMessages=true`, `Message.encode` accepts already-encoded nested children (branded `Uint8Array`s from `Child.encodeBytes(...)` / `Child.encode(...).finish()`), writing them as length-delimited field bytes without re-encoding. Also emits `encodeBytes` which returns `EncodedMessage<T>`.
+
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
   This is useful if you want "only types".

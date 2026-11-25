@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package encoded_nested;
+
+message StatusError {
+  string message = 1;
+  int32 code = 2;
+}
+
+message Envelope {
+  repeated StatusError errors = 1;
+  StatusError single = 2;
+}
