@@ -3114,7 +3114,7 @@ function generateToJson(
           // Map values of wrapper types are declared `| undefined`.
           return code`${from}?.toString()`;
         } else if (isBytesValueType(valueType)) {
-          return code`${from} !== undefined ? ${utils.base64FromBytes}(${from}) : undefined`;
+          return code`${from} !== undefined && ${from} !== null ? ${utils.base64FromBytes}(${from}) : ${nullOrUndefined(options)}`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else if (isAnyValueType(valueType)) {

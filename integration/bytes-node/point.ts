@@ -184,7 +184,7 @@ export const PointMap: MessageFns<PointMap> = {
       if (entries.length > 0) {
         obj.points = {};
         entries.forEach(([k, v]) => {
-          obj.points[k] = v !== undefined ? base64FromBytes(v) : undefined;
+          obj.points[k] = v !== undefined && v !== null ? base64FromBytes(v) : undefined;
         });
       }
     }
