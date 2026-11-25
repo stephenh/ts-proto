@@ -34,4 +34,11 @@ describe('point', () => {
     expect(Buffer.isBuffer(pointMapDecoded.points.a)).toBe(true);
     expect(pointMapDecoded.points.a?.toString('hex')).toEqual('74657374626c6f62');
   });
+
+  it('keeps unset BytesValue map values through json', () => {
+    const json = PointMap.toJSON({ points: { a: undefined } });
+    expect(json).toEqual({ points: { a: undefined } });
+    expect(PointMap.fromJSON(json)).toEqual({ points: { a: undefined } });
+    expect(PointMap.fromJSON({ points: { a: null } })).toEqual({ points: { a: undefined } });
+  });
 });
