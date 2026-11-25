@@ -164,7 +164,7 @@ export const PointMap: MessageFns<PointMap> = {
         ? (globalThis.Object.entries(object.points) as [string, any][]).reduce(
           (acc: { [key: string]: Buffer | undefined }, [key, value]: [string, any]) => {
             globalThis.Object.defineProperty(acc, key, {
-              value: Buffer.from(bytesFromBase64(value)),
+              value: isSet(value) ? Buffer.from(bytesFromBase64(value)) : undefined,
               enumerable: true,
               configurable: true,
               writable: true,

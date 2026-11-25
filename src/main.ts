@@ -2667,7 +2667,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
-          } else if (isLongValueType(valueField) || isBytesValueType(valueField)) {
+          } else if (isBytesValueType(valueField)) {
+            return code`${utils.isSet}(${from}) ? ${valueTypeFromJson(ctx, valueField, from)} : ${nullOrUndefined(options)}`;
+          } else if (isLongValueType(valueField)) {
             return valueTypeFromJson(ctx, valueField, from);
           } else if (isValueType(ctx, valueField)) {
             return code`${from} as ${valueType}`;
