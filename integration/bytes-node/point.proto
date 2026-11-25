@@ -7,3 +7,7 @@ message Point {
   google.protobuf.BytesValue dataWrapped = 2;
 }
 
+
+message PointMap {
+  map<string, google.protobuf.BytesValue> points = 1;
+}

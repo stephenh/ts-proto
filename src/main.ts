@@ -2667,6 +2667,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
+          } else if (isBytesValueType(valueField)) {
+            return code`${utils.isSet}(${from}) ? ${valueTypeFromJson(ctx, valueField, from)} : ${nullOrUndefined(options)}`;
           } else if (isLongValueType(valueField)) {
             return valueTypeFromJson(ctx, valueField, from);
           } else if (isValueType(ctx, valueField)) {
@@ -3111,6 +3113,8 @@ function generateToJson(
         } else if (isLongValueTypeAsObject(options, valueType)) {
           // Map values of wrapper types are declared `| undefined`.
           return code`${from}?.toString()`;
+        } else if (isBytesValueType(valueType)) {
+          return code`${from} !== undefined && ${from} !== null ? ${utils.base64FromBytes}(${from}) : ${nullOrUndefined(options)}`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else if (isAnyValueType(valueType)) {
