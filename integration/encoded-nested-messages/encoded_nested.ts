@@ -157,49 +157,44 @@ export const Envelope: MessageFns<Envelope> = {
   fromPartial<I extends Exact<DeepPartial<Envelope>, I>>(object: I): Envelope {
     const message = createBaseEnvelope();
     message.errors = object.errors?.map((e) => StatusError.fromPartial(e)) || [];
-    message.single =
-      object.single !== undefined && object.single !== null ? StatusError.fromPartial(object.single) : undefined;
+    message.single = (object.single !== undefined && object.single !== null)
+      ? StatusError.fromPartial(object.single)
+      : undefined;
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends globalThis.Array<infer U>
-    ? globalThis.Array<DeepPartial<U>>
-    : T extends ReadonlyArray<infer U>
-      ? ReadonlyArray<DeepPartial<U>>
-      : T extends {}
-        ? { [K in keyof T]?: DeepPartial<T[K]> }
-        : Partial<T>;
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I> = P extends Builtin
-  ? P
-  : P & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> } & {
-      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
-    };
+export type Exact<P, I> = P extends Builtin ? P
+  :
+    & P
+    & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> }
+    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 export type EncodedMessage<T> = Uint8Array & { readonly $encodedType?: T };
 
-export type EncodeInput<T> = T extends Builtin
-  ? T
+export type EncodeInput<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U>
     ? globalThis.Array<EncodeInput<U> | (U extends Builtin ? never : EncodedMessage<U>)>
-    : T extends ReadonlyArray<infer U>
-      ? ReadonlyArray<EncodeInput<U> | (U extends Builtin ? never : EncodedMessage<U>)>
-      : T extends {}
-        ? {
-            [K in keyof T]: NonNullable<T[K]> extends Builtin
-              ? T[K]
-              : NonNullable<T[K]> extends globalThis.Array<infer U>
-                ? | globalThis.Array<EncodeInput<U> | (U extends Builtin ? never : EncodedMessage<U>)>
-                  | Extract<T[K], undefined>
-                : EncodeInput<NonNullable<T[K]>> | EncodedMessage<NonNullable<T[K]>> | Extract<T[K], undefined>;
-          }
-        : T;
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<EncodeInput<U> | (U extends Builtin ? never : EncodedMessage<U>)>
+  : T extends {}
+    ? {
+      [K in keyof T]: NonNullable<T[K]> extends Builtin ? T[K]
+        : NonNullable<T[K]> extends globalThis.Array<infer U>
+          ?
+            | globalThis.Array<EncodeInput<U> | (U extends Builtin ? never : EncodedMessage<U>)>
+            | Extract<T[K], undefined>
+        : EncodeInput<NonNullable<T[K]>> | EncodedMessage<NonNullable<T[K]>> | Extract<T[K], undefined>;
+    }
+  : T;
 
 export interface MessageFns<T> {
   encode(message: EncodeInput<T>, writer?: BinaryWriter): BinaryWriter;
