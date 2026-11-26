@@ -262,6 +262,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
               new RegExp(options.outputEncodeIncludeTypes).test(fullTypeName)
             ) {
               staticMembers.push(generateEncode(ctx, fullName, message));
+              if (options.useEncodedNestedMessages) {
+                staticMembers.push(generateEncodeBytes(ctx, fullName));
+              }
 
               if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
                 staticMembers.push(generateSetExtension(ctx, fullName));
@@ -820,7 +823,41 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     `,
   );
 
-  return { Builtin, DeepPartial, Exact };
+  // Branded bytes produced by encodeBytes / encode().finish() for nestable message fields.
+  // See https://github.com/stephenh/ts-proto/issues/518
+  const EncodedMessage = options.useEncodedNestedMessages
+    ? conditionalOutput(
+        "EncodedMessage",
+        code`
+          ${maybeExport} type EncodedMessage<T> = Uint8Array & { readonly $encodedType?: T };
+        `,
+      )
+    : undefined;
+
+  const EncodeInput = options.useEncodedNestedMessages
+    ? conditionalOutput(
+        "EncodeInput",
+        code`
+          ${maybeExport} type EncodeInput<T> = ${maybeUnknownT} T extends ${Builtin}
+            ? T
+            : T extends globalThis.Array<infer U>
+            ? globalThis.Array<EncodeInput<U> | (U extends ${Builtin} ? never : EncodedMessage<U>)>
+            : T extends ReadonlyArray<infer U>
+            ? ReadonlyArray<EncodeInput<U> | (U extends ${Builtin} ? never : EncodedMessage<U>)>
+            : T extends {}
+            ? {
+                [K in ${keys}]: NonNullable<T[K]> extends ${Builtin}
+                  ? T[K]
+                  : NonNullable<T[K]> extends globalThis.Array<infer U>
+                  ? globalThis.Array<EncodeInput<U> | (U extends ${Builtin} ? never : EncodedMessage<U>)> | Extract<T[K], undefined>
+                  : EncodeInput<NonNullable<T[K]>> | EncodedMessage<NonNullable<T[K]>> | Extract<T[K], undefined>;
+              }
+            : T;
+        `,
+      )
+    : undefined;
+
+  return { Builtin, DeepPartial, Exact, EncodedMessage, EncodeInput };
 }
 
 function makeMessageFns(
@@ -830,7 +867,7 @@ function makeMessageFns(
 ) {
   const BinaryWriter = imp("t:BinaryWriter@@bufbuild/protobuf/wire");
   const BinaryReader = imp("t:BinaryReader@@bufbuild/protobuf/wire");
-  const { Exact, DeepPartial } = deepPartial;
+  const { Exact, DeepPartial, EncodeInput, EncodedMessage } = deepPartial;
   const { Extension } = extension;
   const commonStaticMembers: Code[] = [];
   const extensionStaticMembers = [];
@@ -846,9 +883,15 @@ function makeMessageFns(
       options.outputEncodeMethods === "encode-only" ||
       options.outputEncodeMethods === "encode-no-creation"
     ) {
+      const encodeMessageType = options.useEncodedNestedMessages && EncodeInput ? code`${EncodeInput}<T>` : code`T`;
       commonStaticMembers.push(code`
-        encode(message: T, writer?: ${BinaryWriter}): ${BinaryWriter};
+        encode(message: ${encodeMessageType}, writer?: ${BinaryWriter}): ${BinaryWriter};
       `);
+      if (options.useEncodedNestedMessages && EncodedMessage && EncodeInput) {
+        commonStaticMembers.push(code`
+          encodeBytes(message: ${EncodeInput}<T>): ${EncodedMessage}<T>;
+        `);
+      }
 
       if (options.outputExtensions && options.unknownFields) {
         extensionStaticMembers.push(code`
@@ -1928,6 +1971,13 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     }
 
     const tag = ((field.number << 3) | 2) >>> 0;
+    if (options.useEncodedNestedMessages) {
+      // Already-encoded nested children are branded Uint8Arrays; write length-delimited bytes directly.
+      return (place) =>
+        code`${place} instanceof Uint8Array
+          ? writer.uint32(${tag}).bytes(${place})
+          : ${encode}(${place}, writer.uint32(${tag}).fork()).join()`;
+    }
     return (place) => code`${encode}(${place}, writer.uint32(${tag}).fork()).join()`;
   } else {
     throw new Error(`Unhandled field ${field}`);
@@ -1953,11 +2003,13 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   const chunks: Code[] = [];
 
   const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
+  const encodeParamType =
+    options.useEncodedNestedMessages && utils.EncodeInput ? code`${utils.EncodeInput}<${fullName}>` : code`${fullName}`;
 
   // create the basic function declaration
   chunks.push(code`
     ${messageMethodHead(options, fullName, "encode")}(
-      ${messageDesc.field.length > 0 || options.unknownFields ? "message" : "_"}: ${fullName},
+      ${messageDesc.field.length > 0 || options.unknownFields ? "message" : "_"}: ${encodeParamType},
       writer: ${BinaryWriter} = new ${BinaryWriter}(),
     ): ${BinaryWriter} {
   `);
@@ -2185,6 +2237,18 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   chunks.push(code`return writer;`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
+}
+
+function generateEncodeBytes(ctx: Context, fullName: string): Code {
+  const { options, utils } = ctx;
+  const encodeFn = localMessageMethod(options, fullName, "encode");
+  return code`
+    ${messageMethodHead(options, fullName, "encodeBytes")}(
+      message: ${utils.EncodeInput}<${fullName}>,
+    ): ${utils.EncodedMessage}<${fullName}> {
+      return ${encodeFn}(message).finish() as ${utils.EncodedMessage}<${fullName}>;
+    }
+  `;
 }
 
 function generateSetExtension(ctx: Context, fullName: string) {

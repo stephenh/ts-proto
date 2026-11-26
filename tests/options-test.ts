@@ -78,6 +78,7 @@ describe("options", () => {
         "useContextDataloaders": true,
         "useDate": "timestamp",
         "useDuration": "duration",
+        "useEncodedNestedMessages": false,
         "useExactTypes": true,
         "useJsTypeOverride": false,
         "useJsonName": false,

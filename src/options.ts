@@ -78,6 +78,8 @@ export type Options = {
   outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation";
   outputEncodeIncludeTypes: string;
   outputDecodeIncludeTypes: string;
+  /** Allow encode() to accept already-encoded nested messages (branded Uint8Array). */
+  useEncodedNestedMessages: boolean;
   outputJsonMethods: true | false | "to-only" | "from-only";
   outputPartialMethods: boolean;
   outputStandaloneFunctions: boolean;
@@ -163,6 +165,7 @@ export function defaultOptions(): Options {
     outputEncodeMethods: true,
     outputEncodeIncludeTypes: "",
     outputDecodeIncludeTypes: "",
+    useEncodedNestedMessages: false,
     outputJsonMethods: true,
     outputPartialMethods: true,
     outputStandaloneFunctions: false,
