@@ -1554,7 +1554,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
       boolLookup: isObject(object.boolLookup)
         ? (globalThis.Object.entries(object.boolLookup) as [string, any][]).reduce(
           (acc: Map<boolean, number>, [key, value]: [string, any]) => {
-            acc.set(globalThis.Boolean(key), globalThis.Number(value));
+            acc.set(key === "true", globalThis.Number(value));
             return acc;
           },
           new Map(),
