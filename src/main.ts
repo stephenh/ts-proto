@@ -3473,7 +3473,7 @@ function convertFromObjectKey(
       return code`${ctx.utils.globalThis}.Number(${variableName})`;
     }
   } else if (keyField.type === FieldDescriptorProto_Type.TYPE_BOOL) {
-    return code`${ctx.utils.globalThis}.Boolean(${variableName})`;
+    return code`${variableName} === "true"`;
   } else {
     return code`${ctx.utils.globalThis}.Number(${variableName})`;
   }

@@ -209,6 +209,16 @@ describe("simple json", () => {
     expect(SimpleWithMap.fromJSON(s1).entitiesById[1].id).toEqual(1);
   });
 
+  it("decodes false bool map keys", () => {
+    const s1 = SimpleWithMap.fromJSON({ boolLookup: { true: 1, false: 2 } });
+    expect(s1.boolLookup).toEqual(
+      new Map([
+        [true, 1],
+        [false, 2],
+      ]),
+    );
+  });
+
   it("decodes maps of timestamps", () => {
     const json = {
       mapOfTimestamps: {
